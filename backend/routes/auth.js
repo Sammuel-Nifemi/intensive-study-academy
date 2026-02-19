@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const authController = require("../controllers/authController");
 const authRoles = require("../middleware/authRoles");
 const authStudent = require("../middleware/authStudent");
-const User = require("../models/user"); // ADD THIS AT TOP
+const User = require("../models/User"); // ADD THIS AT TOP
 
 /* ======================
    TEMP SEED ROUTES
