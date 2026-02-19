@@ -1,7 +1,7 @@
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const User = require("../models/user");
+const User = require("../models/User");
 const Staff = require("../models/Staff");
 const { generateOtp, normalizeOtp } = require("../utils/staffAuth");
 const { sendMail } = require("../utils/mailer");
