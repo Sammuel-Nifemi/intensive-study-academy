@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mock Exams | Intensive Study Academy</title>
+
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="/frontend/css/watermark.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+  <style>
+    .page-mock-exams .dashboard-main {
+      padding: 36px 40px 48px;
+    }
+
+    .page-mock-exams .page-header {
+      padding: 20px 28px;
+      margin-bottom: 28px;
+    }
+
+    .page-mock-exams .page-header h1 {
+      margin-bottom: 8px;
+      font-size: 2.1rem;
+      line-height: 1.12;
+    }
+
+    .page-mock-exams .page-header p {
+      font-size: 1.1rem;
+      line-height: 1.45;
+    }
+
+    .page-mock-exams .dashboard-section {
+      padding: 30px;
+    }
+
+    .page-mock-exams .dashboard-section h2 {
+      margin-bottom: 10px;
+      font-size: 2rem;
+      line-height: 1.2;
+    }
+
+    .page-mock-exams #attemptInfo {
+      font-size: 1.06rem;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .page-mock-exams .dashboard-main {
+        padding: 26px 22px 36px;
+      }
+
+      .page-mock-exams .page-header,
+      .page-mock-exams .dashboard-section {
+        padding: 20px;
+      }
+
+      .page-mock-exams .page-header h1 {
+        font-size: 1.8rem;
+      }
+
+      .page-mock-exams .dashboard-section h2 {
+        font-size: 1.55rem;
+      }
+    }
+  </style>
+</head>
+<body class="page-student-dashboard page-mock-exams">
+
+<header class="dashboard-header">
+  <div class="header-container">
+    <div class="logo">
+      <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+    </div>
+    <div class="user-text">
+      <span class="welcome-text" id="studentName">Loading...</span>
+    </div>
+    <div class="notification-wrapper">
+      <button id="notificationBell" class="notification-bell" type="button" aria-label="Notifications">
+        <span class="bell-icon">🔔</span>
+        <span id="notificationBadge" class="notification-badge" hidden>0</span>
+      </button>
+      <div id="notificationDropdown" class="notification-dropdown" hidden></div>
+    </div>
+  </div>
+</header>
+
+<div class="dashboard-layout">
+  <nav class="dashboard-sidebar" aria-label="Student Navigation">
+    <ul class="sidebar-top">
+      <li><a href="/frontend/pages/student-dashboard.html">Dashboard</a></li>
+      <li><a href="/frontend/pages/course-materials.html">Course Materials</a></li>
+      <li><a href="/frontend/pages/mock-exams.html" class="active">Mock Exams</a></li>
+      <li><a id="feeAnalyzerLink" href="/frontend/pages/fees.html">Fee Analyzer</a></li>
+      <li><a href="/frontend/pages/exam-timetable.html">Exam Timetable</a></li>
+      <li><a href="/frontend/pages/past-questions.html">Past Questions</a></li>
+      <li><a href="live-classes.html">Live Classes</a></li>
+      <li class="divider"></li>
+      <li><a href="/frontend/pages/ai-assistant.html">AI Assistant</a></li>
+      <li><a href="/frontend/pages/student-profile.html">Profile</a></li>
+      <li><a href="/frontend/pages/student-settings.html">Settings</a></li>
+    </ul>
+
+    <div class="sidebar-bottom">
+      <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+    </div>
+  </nav>
+
+  <main class="dashboard-main">
+    <section class="page-header">
+      <h1 id="examTitle">Mock Exams</h1>
+      <p>Answer all questions before the timer ends.</p>
+    </section>
+
+    <section class="dashboard-section" id="startSection">
+      <h2>Ace your exams with our well-tailored mock questions</h2>
+      <p id="attemptInfo">Prepared directly from your course materials to help you practice smarter.</p>
+      <div class="modal-actions">
+        <button id="startExamBtn" class="primary-btn" type="button">Start Mock</button>
+      </div>
+    </section>
+
+    <section class="dashboard-section" id="coursePickerSection" hidden>
+      <h2>Choose a course to begin</h2>
+      <div class="form-row">
+        <input
+          id="courseSearchInput"
+          type="text"
+          placeholder="Search course code or title"
+          style="width:100%;padding:10px;border:1px solid #d0d7de;border-radius:8px;"
+        />
+      </div>
+      <p id="coursePickerStatus" class="status-text">Loading available courses...</p>
+      <div id="courseGrid" class="dashboard-cards"></div>
+    </section>
+
+    <section class="dashboard-section" id="examSection" hidden>
+      <div id="examTimer" class="access-card">Time left: 90:00</div>
+      <div id="examStatus">Loading questions...</div>
+      <form id="examForm">
+        <section class="mock-question-shell">
+          <div id="mockQuestionNavigator" class="mock-question-nav"></div>
+          <article id="mockQuestionCard" class="mock-question-card"></article>
+        </section>
+      </form>
+      <button id="submitExamBtn" class="primary-btn" type="button">Submit All</button>
+    </section>
+  </main>
+</div>
+
+<script src="/frontend/js/student-auth-guard.js"></script>
+<script src="../js/notifications.js"></script>
+<script src="/frontend/js/pdf-export.js"></script>
+<script src="/frontend/js/learning-content.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="../js/learning-protection.js"></script>
+<script src="../js/mock-post-exam.js"></script>
+<script src="../js/mock-exams.js"></script>
+  <script src="../js/theme.js"></script>
+</body>
+</html>
+
+

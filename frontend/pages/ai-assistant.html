@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Assistant | Student Dashboard</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css">
+  <link rel="stylesheet" href="../css/theme.css">
+  <link rel="stylesheet" href="/frontend/css/watermark.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+  <style>
+    .advisor-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid #e5e7eb;
+    }
+    .quick-card {
+      cursor: pointer;
+    }
+    .quick-card.active {
+      border: 1px solid #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+    }
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .course-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 12px;
+      background: #fff;
+      cursor: pointer;
+    }
+    .course-card:hover {
+      border-color: #2563eb;
+    }
+    .hidden {
+      display: none;
+    }
+    .notice-box {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      background: #fff7ed;
+      border: 1px solid #fdba74;
+      color: #9a3412;
+      font-size: 0.9rem;
+    }
+    #courseSearchInput {
+      width: min(360px, 100%);
+      min-height: 40px;
+      padding: 0 12px;
+    }
+  </style>
+</head>
+<body class="page-student-dashboard">
+
+<header class="dashboard-header">
+  <div class="header-container">
+    <div class="logo">
+      <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+    </div>
+    <div class="user-text">
+      <span class="welcome-text" id="studentName">Loading...</span>
+    </div>
+    <div class="notification-wrapper">
+      <button id="notificationBell" class="notification-bell" type="button" aria-label="Notifications">
+        <span class="bell-icon">&#128276;</span>
+        <span id="notificationBadge" class="notification-badge" hidden>0</span>
+      </button>
+      <div id="notificationDropdown" class="notification-dropdown" hidden></div>
+    </div>
+  </div>
+</header>
+
+<div class="dashboard-layout">
+  <nav class="dashboard-sidebar" aria-label="Student Navigation">
+    <ul class="sidebar-top">
+      <li><a href="/frontend/pages/student-dashboard.html">Dashboard</a></li>
+      <li><a href="/frontend/pages/course-materials.html">Course Materials</a></li>
+      <li><a href="/frontend/pages/mock-exams.html">Mock Exams</a></li>
+      <li><a href="/frontend/pages/fees.html">Fee Analyzer</a></li>
+      <li><a href="/frontend/pages/exam-timetable.html">Exam Timetable</a></li>
+      <li><a href="/frontend/pages/past-questions.html">Past Questions</a></li>
+      <li><a href="/frontend/pages/live-classes.html">Live Classes</a></li>
+      <li class="divider"></li>
+      <li><a href="/frontend/pages/ai-assistant.html" class="active">AI Assistant</a></li>
+      <li><a href="/frontend/pages/student-profile.html">Profile</a></li>
+      <li><a href="/frontend/pages/student-settings.html">Settings</a></li>
+    </ul>
+
+    <div class="sidebar-bottom">
+      <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+    </div>
+  </nav>
+
+  <main class="dashboard-main">
+    <section class="page-header">
+      <h1>&#129302; Your AI Academic Advisor</h1>
+    </section>
+
+    <section id="advisorFeedbackSection" class="dashboard-section hidden">
+      <h2>&#127891; Advisor Feedback</h2>
+      <div class="advisor-card">
+        <p id="advisorFeedbackText" class="status-text">Loading advisor feedback...</p>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Quick Actions</h2>
+      <div class="dashboard-cards">
+        <article class="dashboard-card quick-card" data-action="explain-course">
+          <h3>Explain a Course</h3>
+          <p>Get a simple guide for any course.</p>
+        </article>
+        <article class="dashboard-card quick-card" data-action="exam-prep">
+          <h3>Exam Preparation</h3>
+          <p>Get focused prep strategy.</p>
+        </article>
+        <article class="dashboard-card quick-card" data-action="summarize-materials">
+          <h3>Summarize Materials</h3>
+          <p>Turn long notes into simple summaries.</p>
+        </article>
+        <article class="dashboard-card quick-card" data-action="study-planning">
+          <h3>Study Planning</h3>
+          <p>Build a practical study plan.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="explainCourseSection" class="dashboard-section hidden">
+      <h2>Explain a Course</h2>
+      <div class="form-row">
+        <input id="courseSearchInput" type="text" placeholder="Search course code or title" />
+      </div>
+      <p id="courseSearchStatus" class="status-text">Loading courses...</p>
+      <div id="courseGrid" class="course-grid"></div>
+      <div id="courseExplainResult" class="advisor-card" style="margin-top:12px;" hidden>
+        <h3>Course Explanation</h3>
+        <p id="courseExplainText"></p>
+        <button id="downloadCourseExplainPdfBtn" class="primary-btn" type="button">Download explanation as PDF</button>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Ask Your Advisor</h2>
+      <div class="form-row">
+        <textarea id="advisorQuestionInput" rows="4" placeholder="Ask your academic advisor anything..."></textarea>
+      </div>
+      <button id="askAdvisorBtn" class="primary-btn" type="button">Ask Advisor</button>
+      <p id="askAdvisorStatus" class="status-text" style="margin-top:8px;"></p>
+      <div id="advisorAnswerWrap" class="advisor-card" style="margin-top:12px;" hidden>
+        <h3>Advisor Response</h3>
+        <p id="advisorAnswerText"></p>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <div class="notice-box">
+        NB: AI currently supports GST, PCR, MAC and general courses only. Maths, Physics, Biology and Chemistry are not yet supported. Contact Admin for help.
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="/frontend/js/student-auth-guard.js"></script>
+<script src="../js/notifications.js"></script>
+<script src="/frontend/js/pdf-export.js"></script>
+<script src="/frontend/js/learning-content.js"></script>
+<script src="../js/learning-protection.js"></script>
+<script src="../pages/student/js/ai-assistant.js"></script>
+<script src="../js/theme.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,234 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Classes | Intensive Study Academy</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+</head>
+<body class="page-student-dashboard">
+
+<header class="dashboard-header">
+  <div class="header-container">
+    <div class="logo">
+      <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+    </div>
+    <div class="user-text">
+      <span class="welcome-text" id="studentName">Loading...</span>
+    </div>
+    <div class="notification-wrapper">
+      <button id="notificationBell" class="notification-bell" type="button" aria-label="Notifications">
+        <span class="bell-icon">&#128276;</span>
+        <span id="notificationBadge" class="notification-badge" hidden>0</span>
+      </button>
+      <div id="notificationDropdown" class="notification-dropdown" hidden></div>
+    </div>
+  </div>
+</header>
+
+<div class="dashboard-layout">
+  <nav class="dashboard-sidebar" aria-label="Student Navigation">
+    <ul class="sidebar-top">
+      <li><a href="/frontend/pages/student-dashboard.html">Dashboard</a></li>
+      <li><a href="/frontend/pages/course-materials.html">Course Materials</a></li>
+      <li><a href="/frontend/pages/mock-exams.html">Mock Exams</a></li>
+      <li><a id="feeAnalyzerLink" href="/frontend/pages/fees.html">Fee Analyzer</a></li>
+      <li><a href="/frontend/pages/exam-timetable.html">Exam Timetable</a></li>
+      <li><a href="/frontend/pages/past-questions.html">Past Questions</a></li>
+      <li><a href="live-classes.html" class="active">Live Classes</a></li>
+      <li class="divider"></li>
+      <li><a href="/frontend/pages/ai-assistant.html">AI Assistant</a></li>
+      <li><a href="/frontend/pages/student-profile.html">Profile</a></li>
+      <li><a href="/frontend/pages/student-settings.html">Settings</a></li>
+    </ul>
+
+    <div class="sidebar-bottom">
+      <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+    </div>
+  </nav>
+
+  <main class="dashboard-main">
+    <section class="page-header">
+      <h1>Live Classes</h1>
+      <p>Live classes are structured academic sessions designed to provide focused support.</p>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Live Classes Overview</h2>
+      <p>
+        Live classes are structured academic sessions designed to provide
+        focused support for specific courses. All sessions are booking-based
+        and require confirmation before attendance.
+      </p>
+      <p>
+        <strong>Note:</strong> Free or open sessions may be announced occasionally.
+        Regular live classes are paid and scheduled.
+      </p>
+    </section>
+
+    <section class="dashboard-section">
+      <h3>Upcoming Live Classes</h3>
+      <div id="liveClassesContainer"></div>
+    </section>
+
+    <section class="dashboard-section">
+      <h3>Session Types</h3>
+      <div class="modules-grid">
+        <div class="module-card">
+          <h4>Individual Session (1-on-1)</h4>
+          <p><strong>Duration:</strong> 1 Hour</p>
+          <p><strong>Fee:</strong> ?1,000</p>
+          <ul>
+            <li>Personalised explanation</li>
+            <li>Exam-focused tips</li>
+            <li>Private Q&A</li>
+            <li>Study strategy guidance</li>
+          </ul>
+        </div>
+
+        <div class="module-card">
+          <h4>Group Session (Max 5 students)</h4>
+          <p><strong>Duration:</strong> 1 – 1.5 Hours</p>
+          <p><strong>Fee:</strong> ?500 per student</p>
+          <ul>
+            <li>Shared explanation</li>
+            <li>Collaborative learning</li>
+            <li>Group Q&A</li>
+            <li>Same course code required</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <h3>Book a Live Session</h3>
+      <form class="summary-box">
+        <p>
+          <label>
+            <strong>Session Type:</strong><br>
+            <input type="radio" name="sessionType" required> Individual (?1,000)
+            <br>
+            <input type="radio" name="sessionType"> Group (?500 per student)
+          </label>
+        </p>
+
+        <p>
+          <label>
+            <strong>Course Code:</strong><br>
+            <input type="text" placeholder="e.g. GST105" required>
+          </label>
+        </p>
+
+        <p>
+          <label>
+            <strong>Preferred Day:</strong><br>
+            <select required>
+              <option value="">Select a day</option>
+              <option>Monday</option>
+              <option>Tuesday</option>
+              <option>Wednesday</option>
+              <option>Thursday</option>
+              <option>Friday</option>
+              <option>Saturday</option>
+            </select>
+          </label>
+        </p>
+
+        <p>
+          <label>
+            <strong>Preferred Time:</strong><br>
+            <select required>
+              <option value="">Select time</option>
+              <option>10:00 AM – 11:00 AM</option>
+              <option>12:00 PM – 1:00 PM</option>
+              <option>3:00 PM – 4:00 PM</option>
+              <option>6:00 PM – 7:00 PM</option>
+              <option>8:00 PM – 9:00 PM</option>
+            </select>
+          </label>
+        </p>
+
+        <p>
+          <label>
+            <strong>Additional Notes (optional):</strong><br>
+            <textarea rows="3" placeholder="Specific topic, exam focus, or concerns"></textarea>
+          </label>
+        </p>
+
+        <button type="submit">Submit Booking Request</button>
+      </form>
+    </section>
+  </main>
+</div>
+
+<script src="/frontend/js/student-auth-guard.js"></script>
+<script src="../js/notifications.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    try {
+      const profile = window.loadStudent ? await window.loadStudent() : null;
+      if (!profile) return;
+      const hour = new Date().getHours();
+      const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+      const name = profile.fullName || profile.name || "Student";
+      const headerName = document.getElementById("studentName");
+      if (headerName) headerName.textContent = `${greeting}, ${name}`;
+    } catch (err) {
+      console.error("Header greeting error:", err);
+    }
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const token = localStorage.getItem("studentToken");
+    const container = document.getElementById("liveClassesContainer");
+    if (!container) return;
+
+    if (!token) {
+      container.textContent = "No live classes scheduled for your registered courses.";
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:5000/student/live-classes", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const classes = await res.json();
+
+      if (!res.ok || !Array.isArray(classes) || classes.length === 0) {
+        container.textContent = "No live classes scheduled for your registered courses.";
+        return;
+      }
+
+      container.innerHTML = classes.map(c => {
+        const date = c.date ? new Date(c.date).toLocaleDateString() : "";
+        return `
+          <div class="dashboard-card">
+            <h3>${c.title || "Live Class"}</h3>
+            <p><strong>Date:</strong> ${date}</p>
+            <p><strong>Time:</strong> ${c.start_time} – ${c.end_time}</p>
+            <a class="primary-btn" href="${c.meeting_link}" target="_blank" rel="noopener noreferrer">Join Class</a>
+          </div>
+        `;
+      }).join("");
+    } catch (err) {
+      console.error(err);
+      container.textContent = "No live classes scheduled for your registered courses.";
+    }
+  });
+</script>
+
+  <script src="../js/theme.js"></script>
+</body>
+</html>
+
+
+

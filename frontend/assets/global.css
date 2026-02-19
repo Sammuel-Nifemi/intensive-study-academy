@@ -1,0 +1,188 @@
+/* ===============================
+   GLOBAL RESET & BASE
+================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background-color: #ffffff;
+  color: #111827;
+  line-height: 1.6;
+}
+
+/* ===============================
+   HEADER & NAVBAR
+================================ */
+.header {
+  background-color: #ffffff;
+  padding: 18px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.logo {
+  height: 48px;
+  width: auto;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 28px;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #1e3a8a;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.navbar a:hover {
+  text-decoration: underline;
+}
+
+/* ===============================
+   FOOTER
+================================ */
+.site-footer {
+  background: linear-gradient(135deg, #0f172a, #020617);
+  color: #e5e7eb;
+  padding: 60px 40px 30px;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 40px;
+}
+
+.footer-brand img {
+  width: 60px;
+  margin-bottom: 15px;
+}
+
+.footer-brand p {
+  font-size: 14px;
+  color: #cbd5f5;
+}
+
+.footer-contact h4,
+.footer-social h4 {
+  margin-bottom: 12px;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.footer-contact p {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.footer-social .social-icons {
+  display: flex;
+  gap: 14px;
+  font-size: 18px;
+}
+
+.footer-social a {
+  color: #e5e7eb;
+  transition: 0.2s ease;
+}
+
+.footer-social a:hover {
+  color: #60a5fa;
+}
+
+.footer-bottom {
+  margin-top: 40px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  font-size: 13px;
+  color: #cbd5f5;
+}
+
+/* ===============================
+   WHATSAPP FLOATING ICON
+================================ */
+.whatsapp-icon {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 54px;
+  height: 54px;
+  background: #25D366;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  transition: transform 0.25s ease;
+}
+
+.whatsapp-icon img {
+  width: 28px;
+  height: 28px;
+}
+
+.whatsapp-icon:hover {
+  transform: scale(1.12);
+}
+
+/* ===============================
+   MOBILE NAV TWEAKS
+================================ */
+@media (max-width: 768px) {
+  .header {
+    padding: 16px 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .navbar ul {
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+}
+
+/* Accordion */
+.accordion {
+  margin-top: 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.accordion summary {
+  padding: 12px 15px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #f9fafb;
+}
+
+.accordion-content {
+  padding: 15px;
+}
+
+.hint {
+  margin: 4px 0 10px 22px;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+.resource-list {
+  padding-left: 20px;
+}
+
+.resource-list li {
+  margin-bottom: 8px;
+}

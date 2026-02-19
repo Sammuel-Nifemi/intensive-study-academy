@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Academic Slip</title>
+
+  <style>
+    body {
+      font-family: "Times New Roman", serif;
+      background: #f4f4f4;
+      padding: 30px;
+    }
+
+    .slip-container {
+      max-width: 800px;
+      margin: auto;
+      background: #ffffff;
+      padding: 40px;
+      border: 1px solid #000;
+    }
+
+    .slip-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .slip-header h1 {
+      margin: 0;
+      font-size: 22px;
+      text-transform: uppercase;
+    }
+
+    .slip-header p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+
+    .slip-title {
+      text-align: center;
+      margin: 30px 0;
+      font-size: 18px;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 25px;
+    }
+
+    .info-table td {
+      padding: 8px;
+      vertical-align: top;
+    }
+
+    .info-table td.label {
+      width: 35%;
+      font-weight: bold;
+    }
+
+    .section-title {
+      font-weight: bold;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      text-decoration: underline;
+    }
+
+    .signature-row {
+      margin-top: 50px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .signature-box {
+      width: 40%;
+      text-align: center;
+    }
+
+    .signature-line {
+      border-top: 1px solid #000;
+      margin-top: 40px;
+    }
+
+    .footer-note {
+      margin-top: 40px;
+      font-size: 12px;
+      text-align: center;
+      font-style: italic;
+    }
+
+    @media print {
+      body {
+        background: none;
+        padding: 0;
+      }
+
+      .slip-container {
+        border: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slip-container">
+
+    <!-- HEADER -->
+    <div class="slip-header">
+      <h1>National Open University of Nigeria</h1>
+      <p>Academic Affairs Unit</p>
+      <p>Official Academic Clearance Slip</p>
+    </div>
+
+    <!-- TITLE -->
+    <div class="slip-title">
+      DES 303 – Project Proposal Slip
+    </div>
+
+    <!-- STUDENT INFORMATION -->
+    <table class="info-table">
+      <tr>
+        <td class="label">Student Name:</td>
+        <td>____________________________</td>
+      </tr>
+      <tr>
+        <td class="label">Matric Number:</td>
+        <td>____________________________</td>
+      </tr>
+      <tr>
+        <td class="label">Programme / Department:</td>
+        <td>____________________________</td>
+      </tr>
+      <tr>
+        <td class="label">Academic Session:</td>
+        <td>____________________________</td>
+      </tr>
+    </table>
+
+    <!-- SLIP DETAILS -->
+    <div class="section-title">Slip Details</div>
+
+    <table class="info-table">
+      <tr>
+        <td class="label">Slip Type:</td>
+        <td>DES 303 Slip</td>
+      </tr>
+      <tr>
+        <td class="label">DES 303 Stage:</td>
+        <td>Project Proposal</td>
+      </tr>
+      <tr>
+        <td class="label">Purpose / Title:</td>
+        <td>____________________________</td>
+      </tr>
+      <tr>
+        <td class="label">Date Generated:</td>
+        <td>____________________________</td>
+      </tr>
+      <tr>
+        <td class="label">Status:</td>
+        <td>Approved / Pending</td>
+      </tr>
+    </table>
+
+    <!-- SIGNATURES -->
+    <div class="signature-row">
+      <div class="signature-box">
+        <div class="signature-line"></div>
+        <p>Academic Officer</p>
+      </div>
+
+      <div class="signature-box">
+        <div class="signature-line"></div>
+        <p>Departmental Approval</p>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer-note">
+      This document is system-generated and valid only when duly approved.
+    </div>
+
+  </div>
+
+</body>
+</html>

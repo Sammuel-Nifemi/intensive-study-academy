@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Classes | Intensive Study Academy</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+</head>
+<body class="page-live-classes">
+
+  <!-- ================= HEADER ================= -->
+  <header class="dashboard-header">
+    <div class="logo">
+      <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+    </div>
+
+    <div class="user-info">
+      <span class="welcome-text">Welcome, <strong>Cynthia</strong></span>
+      <span class="matric">Matric No: NOU/2023/123456</span>
+    </div>
+  </header>
+
+  <!-- ================= LAYOUT ================= -->
+  <div class="dashboard-layout">
+
+    <!-- ===== SIDEBAR ===== -->
+    
+      <nav class="dashboard-sidebar">
+  <ul>
+    <li><a href="staff-dashboard.html">Dashboard</a></li>
+    <li><a href="staff-live-classes.html">Live Classes</a></li>
+    <li><a href="staff-ai-assistant.html">AI-Assistant</a></li>
+    <li><a href="staff-profile.html">Profile</a></li>
+    <li><a href="logout.html">Logout</a></li>
+  </ul>
+</nav>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="dashboard-main">
+
+      <!-- INTRO -->
+      <section class="dashboard-section">
+        <h2>Live Classes</h2>
+        <p>
+          Live classes are structured academic sessions designed to provide
+          focused support for specific courses. All sessions are booking-based
+          and require confirmation before attendance.
+        </p>
+        <p>
+          <strong>Note:</strong> Free or open sessions may be announced occasionally.
+          Regular live classes are paid and scheduled.
+        </p>
+      </section>
+
+      <!-- SESSION TYPES -->
+      <section class="dashboard-section">
+        <h3>Session Types</h3>
+
+        <div class="modules-grid">
+
+          <div class="module-card">
+            <h4>Individual Session (1-on-1)</h4>
+            <p><strong>Duration:</strong> 1 Hour</p>
+            <p><strong>Fee:</strong> ₦1,000</p>
+            <ul>
+              <li>Personalised explanation</li>
+              <li>Exam-focused tips</li>
+              <li>Private Q&A</li>
+              <li>Study strategy guidance</li>
+            </ul>
+          </div>
+
+          <div class="module-card">
+            <h4>Group Session (Max 5 students)</h4>
+            <p><strong>Duration:</strong> 1 – 1.5 Hours</p>
+            <p><strong>Fee:</strong> ₦500 per student</p>
+            <ul>
+              <li>Shared explanation</li>
+              <li>Collaborative learning</li>
+              <li>Group Q&A</li>
+              <li>Same course code required</li>
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- BOOKING FORM -->
+      <section class="dashboard-section">
+        <h3>Book a Live Session</h3>
+
+        <form class="summary-box">
+
+          <p>
+            <label>
+              <strong>Session Type:</strong><br>
+              <input type="radio" name="sessionType" required> Individual (₦1,000)
+              <br>
+              <input type="radio" name="sessionType"> Group (₦500 per student)
+            </label>
+          </p>
+
+          <p>
+            <label>
+              <strong>Course Code:</strong><br>
+              <input type="text" placeholder="e.g. GST105" required>
+            </label>
+          </p>
+
+          <p>
+            <label>
+              <strong>Preferred Day:</strong><br>
+              <select required>
+                <option value="">Select a day</option>
+                <option>Monday</option>
+                <option>Tuesday</option>
+                <option>Wednesday</option>
+                <option>Thursday</option>
+                <option>Friday</option>
+                <option>Saturday</option>
+              </select>
+            </label>
+          </p>
+
+          <p>
+            <label>
+              <strong>Preferred Time:</strong><br>
+              <select required>
+                <option value="">Select time</option>
+                <option>10:00 AM – 11:00 AM</option>
+                <option>12:00 PM – 1:00 PM</option>
+                <option>3:00 PM – 4:00 PM</option>
+                <option>6:00 PM – 7:00 PM</option>
+                <option>8:00 PM – 9:00 PM</option>
+              </select>
+            </label>
+          </p>
+
+          <p>
+            <label>
+              <strong>Additional Notes (optional):</strong><br>
+              <textarea rows="3" placeholder="Specific topic, exam focus, or concerns"></textarea>
+            </label>
+          </p>
+
+          <button type="submit">Submit Booking Request</button>
+
+        </form>
+      </section

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff-Student | Intensive Study Academy</title>
+      <link rel="stylesheet" href="../css/dashboard.css" />
+
+
+</head>
+<body>
+<header class="dashboard-header">
+  <h1>Intensive Study Academy</h1>
+  <div>Logged in as <strong>Staff</strong></div>
+</header>
+
+<div class="dashboard-container">
+
+  <aside class="dashboard-sidebar">
+    <ul>
+      <li><a href="staff-dashboard.html">Dashboard</a></li>
+      <li><a href="staff-e-slip.html">E-Slip</a></li>
+      <li><a href="staff-students.html" class="active">Students</a></li>
+      <li><a href="course-materials.html">Course Materials</a></li>
+      <li><a href="staff-mock-exams.html">Mock Exams</a></li>
+      <li><a href="logout.html">Logout</a></li>
+    </ul>
+  </aside>
+
+  <main class="dashboard-main">
+    <h2>Students</h2>
+    <p>Manage registered students and monitor activity.</p>
+
+    <div class="card">
+      <h3>Student List</h3>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Full Name</th>
+            <th>Matric Number</th>
+            <th>Programme</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td><span class="status active">Active</span></td>
+            <td>
+              <a href="#" class="action-link">View</a> |
+              <a href="#" class="action-link">Edit</a>
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td><span class="status inactive">Inactive</span></td>
+            <td>
+              <a href="#" class="action-link">View</a> |
+              <a href="#" class="action-link">Edit</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+</div>
+</body>
+</html>

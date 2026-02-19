@@ -1,0 +1,173 @@
+/* ===============================
+   ACADEMIC HUB – PAGE STYLES
+================================ */
+
+/* Page wrapper */
+body {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: #f5f7fa;
+  color: #222;
+  margin: 0;
+  padding: 0;
+}
+
+/* Main container */
+.academic-hub {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 32px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+/* Page title */
+.academic-hub h1 {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.academic-hub .subtitle {
+  color: #555;
+  margin-bottom: 30px;
+}
+
+/* Section blocks */
+.hub-section {
+  margin-bottom: 40px;
+}
+
+.hub-section h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 6px;
+}
+
+/* Description text */
+.hub-section p {
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* Forms */
+.hub-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.hub-form input,
+.hub-form select {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.hub-form input:focus,
+.hub-form select:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+/* Buttons */
+.hub-form button {
+  grid-column: span 2;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.hub-form button:hover {
+  background: #1e4fd8;
+}
+
+/* Status tags */
+.status {
+  font-weight: 600;
+}
+
+.status.active {
+  color: green;
+}
+
+.status.config {
+  color: #c2410c;
+}
+
+.status.linked {
+  color: #1d4ed8;
+}
+/* ===============================
+   HUB TREE (UL / LI STYLING)
+================================ */
+
+.hub-tree ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.hub-tree > ul > li {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+
+.hub-tree li ul {
+  margin-top: 12px;
+  padding-left: 18px;
+}
+
+.hub-tree li ul li {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+/* Status labels */
+.hub-tree li:has(:contains("ACTIVE")) {
+  border-left: 4px solid green;
+}
+
+.hub-tree li:has(:contains("CONFIG")) {
+  border-left: 4px solid #f97316;
+}
+
+.hub-tree li:has(:contains("LINKED")) {
+  border-left: 4px solid #2563eb;
+}
+.status {
+  margin-left: 10px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.status.active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status.config {
+  background: #ffedd5;
+  color: #9a3412;
+}
+
+.status.linked {
+  background: #dbeafe;
+  color: #1e40af;
+}

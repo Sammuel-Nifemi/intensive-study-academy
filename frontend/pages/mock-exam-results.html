@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mock Exam Results | Intensive Study Academy</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/theme.css" />
+  <style>
+    .result-item {
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+      margin-bottom: 12px;
+    }
+
+    .mark-ok {
+      color: #16a34a;
+      font-weight: 700;
+    }
+
+    .mark-bad {
+      color: #dc2626;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body class="page-student-dashboard">
+  <header class="dashboard-header">
+    <div class="header-container">
+      <div class="logo">
+        <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+      </div>
+      <div class="user-text">
+        <strong>Mock Exams</strong>
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-layout">
+    <nav id="mockPostSidebar" class="dashboard-sidebar" aria-label="Mock Navigation"></nav>
+
+    <main class="dashboard-main">
+      <section class="page-header">
+        <h1>Results</h1>
+        <p>Detailed marks for each question.</p>
+      </section>
+
+      <section class="dashboard-section">
+        <p><strong>Score:</strong> <span id="resultScoreLine">0 / 0 (0%)</span></p>
+        <button id="downloadResultPdfBtn" class="primary-btn" type="button">Download PDF</button>
+      </section>
+
+      <section class="dashboard-section" id="resultList"></section>
+    </main>
+  </div>
+
+  <script src="/frontend/js/student-auth-guard.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/mock-post-exam.js"></script>
+  <script src="/frontend/js/pdf-export.js"></script>
+  <script>
+    const attempt = window.MockPostExam.getCurrentMockAttemptOrRedirect("/frontend/pages/mock-exams.html");
+    if (attempt) {
+      window.MockPostExam.renderMockPostSidebar("results");
+      document.getElementById("resultScoreLine").textContent =
+        `${attempt.correct || 0} / ${attempt.total || 0} (${attempt.accuracy || 0}%)`;
+
+      const rows = Array.isArray(attempt.questions) ? attempt.questions : [];
+      document.getElementById("resultList").innerHTML = rows.map((q, index) => `
+        <article class="result-item">
+          <p><strong>Q${index + 1}.</strong> ${window.MockPostExam.escapeHtml(q.questionText || "")}</p>
+          <p><strong>Your answer:</strong> ${window.MockPostExam.escapeHtml(q.studentAnswer || "(No answer)")}</p>
+          <p><strong>Correct answer:</strong> ${window.MockPostExam.escapeHtml(q.correctAnswer || "-")}</p>
+          <p><strong>Mark:</strong> <span class="${q.isCorrect ? "mark-ok" : "mark-bad"}">${q.isCorrect ? "1" : "0"}</span></p>
+        </article>
+      `).join("");
+    }
+
+    document.getElementById("downloadResultPdfBtn")?.addEventListener("click", async () => {
+      if (!attempt || !window.PDFExport?.payAndExport) return;
+      const lines = (attempt.questions || []).map((q, idx) => (
+        `Q${idx + 1}: ${q.questionText}\n` +
+        `Your answer: ${q.studentAnswer}\n` +
+        `Correct answer: ${q.correctAnswer}\n` +
+        `Mark: ${q.isCorrect ? "1" : "0"}`
+      ));
+      await window.PDFExport.payAndExport({
+        title: `Mock Results - ${attempt.courseCode || "Mock"}`,
+        fileName: `${String(attempt.courseCode || "mock").toLowerCase()}-results.pdf`,
+        content: [
+          `Student: ${attempt.studentName || "Student"}`,
+          `Score: ${attempt.correct || 0} / ${attempt.total || 0} (${attempt.accuracy || 0}%)`,
+          `Time Spent: ${window.MockPostExam.formatDuration(attempt.timeSpentSeconds || 0)}`,
+          "",
+          lines.join("\n\n")
+        ].join("\n")
+      });
+    });
+  </script>
+</body>
+</html>

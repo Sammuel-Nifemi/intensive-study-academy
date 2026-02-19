@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CBT Exam | Intensive Study Academy</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/theme.css" />
+  <style>
+    .cbt-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px 20px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+      margin-bottom: 18px;
+    }
+    .cbt-timer {
+      font-weight: 700;
+      color: #b91c1c;
+    }
+    .cbt-question {
+      background: #fff;
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+      margin-bottom: 16px;
+    }
+    .cbt-options label {
+      display: block;
+      margin: 8px 0;
+    }
+    .cbt-controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+
+<header class="dashboard-header">
+  <div class="header-container">
+    <div class="logo">
+      <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+    </div>
+    <div class="user-text">
+      <strong>CBT</strong>
+    </div>
+  </div>
+</header>
+
+<main class="dashboard-main" style="max-width:900px;margin:0 auto;">
+  <a class="back-link" href="/frontend/pages/student-dashboard.html"><- Back to Dashboard</a>
+
+  <div class="cbt-header">
+    <div>
+      <div id="cbtCategory">Category: —</div>
+      <div id="cbtCounter">0 / 0</div>
+    </div>
+    <div class="cbt-timer" id="cbtTimer">Hurry up, the time is ticking! 00:00</div>
+  </div>
+
+  <div id="cbtStatus" class="status-text"></div>
+
+  <div class="cbt-question" id="cbtQuestionBox">
+    <div id="cbtQuestionText">Loading question...</div>
+    <div class="cbt-options" id="cbtOptions"></div>
+  </div>
+
+  <div class="cbt-controls">
+    <button id="clearBtn" class="secondary-btn" type="button">Clear</button>
+    <button id="prevBtn" class="secondary-btn" type="button">Prev</button>
+    <button id="nextBtn" class="primary-btn" type="button">Next</button>
+    <button id="submitBtn" class="primary-btn" type="button">Submit</button>
+  </div>
+
+  <div id="cbtResult" class="dashboard-section" style="display:none;margin-top:16px;">
+    <h2>Result</h2>
+    <p id="cbtScoreText"></p>
+    <p id="cbtPercentText"></p>
+    <a class="action-btn" href="/frontend/pages/cbt-history.html">My CBT History</a>
+  </div>
+</main>
+
+<script src="../js/cbt.js"></script>
+  <script src="../js/theme.js"></script>
+</body>
+</html>
+
+

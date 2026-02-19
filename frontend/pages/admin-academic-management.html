@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Academic Management | Intensive Study Academy</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/admin-academic.css" />
+  <link rel="stylesheet" href="../css/admin-theme.css" />
+</head>
+<body>
+<header class="dashboard-header">
+  <div class="header-container">
+    <div class="logo">
+      <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+    </div>
+    <div class="user-text">
+      <strong>Admin</strong>
+      <a class="action-btn" href="/frontend/pages/admin-settings.html">Settings</a>
+    </div>
+  </div>
+</header>
+
+<div class="dashboard-layout">
+  <nav class="dashboard-sidebar">
+    <ul class="sidebar-top">
+      <li><a href="/frontend/pages/admin-dashboard.html">Dashboard</a></li>
+      <li><a href="/frontend/pages/admin-academic-management.html" class="active">Academic Management</a></li>
+      <li><a href="/frontend/pages/admin-staff.html">Staff</a></li>
+      <li><a href="/frontend/pages/admin-courses.html">Courses</a></li>
+      <li><a href='/frontend/pages/admin-curriculum.html'>Curriculum</a></li>
+      <li><a href="/frontend/pages/admin-course-materials.html">Course Materials</a></li>
+      <li><a href="/frontend/pages/admin-mocks.html">Mock Exams</a></li>
+      <li><a href="/frontend/pages/admin-exam-timetables.html">Exam Timetables</a></li>
+      <li><a href="/frontend/pages/admin-fee-structures.html">Fee Structures</a></li>
+      <li><a href="/frontend/pages/admin-cbt.html">CBT Exams</a></li>
+      <li class="divider"></li>
+      <li><a href="/frontend/pages/admin-announcements.html">Announcements</a></li>
+      <li><a href="/frontend/pages/admin-blog.html">Blog</a></li>
+      <li><a href="/frontend/pages/admin-gallery.html">Gallery</a></li>
+    </ul>
+    <div class="sidebar-bottom">
+      <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+    </div>
+  </nav>
+
+  <main class="dashboard-main">
+    <section class="page-header">
+      <h1>Academic Management</h1>
+      <p>Manage study centers, faculties, and programs in one place.</p>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Study Centers</h2>
+      <form id="studyCenterForm" class="admin-form">
+        <div>
+          <label>Center Name</label>
+          <input type="text" id="centerName" placeholder="Study center name" required />
+        </div>
+        <div>
+          <label>City</label>
+          <input type="text" id="centerCity" placeholder="City" required />
+        </div>
+      </form>
+      <div class="admin-actions">
+        <button id="addCenterBtn" class="primary-btn" type="button">Add Study Center</button>
+        <span id="centerStatus" class="status-text"></span>
+      </div>
+
+      <div class="search-row">
+        <input type="text" id="centerSearch" placeholder="Search study centers..." />
+      </div>
+
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>City</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="centersTableBody"></tbody>
+      </table>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Faculties</h2>
+      <form id="facultyForm" class="admin-form">
+        <div>
+          <label>Faculty Name</label>
+          <input type="text" id="facultyName" placeholder="Faculty name" required />
+        </div>
+      </form>
+      <div class="admin-actions">
+        <button id="addFacultyBtn" class="primary-btn" type="button">Add Faculty</button>
+        <span id="facultyStatus" class="status-text"></span>
+      </div>
+
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Faculty</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="facultiesTableBody"></tbody>
+      </table>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Programs</h2>
+      <form id="programForm" class="admin-form">
+        <div>
+          <label>Faculty</label>
+          <select id="programFacultySelect" required></select>
+        </div>
+        <div>
+          <label>Program Name</label>
+          <input type="text" id="programName" placeholder="Program name" required />
+        </div>
+      </form>
+      <div class="admin-actions">
+        <button id="addProgramBtn" class="primary-btn" type="button">Add Program</button>
+        <span id="programStatus" class="status-text"></span>
+      </div>
+
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Program</th>
+            <th>Faculty</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="programsTableBody"></tbody>
+      </table>
+    </section>
+
+  </main>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="../js/admin-guard.js"></script>
+<script src="../js/admin-logout.js"></script>
+<script src="../js/admin-theme.js"></script>
+<script src="../js/admin-academic-utils.js"></script>
+<script src="../js/admin-academic-management.js"></script>
+</body>
+</html>
+

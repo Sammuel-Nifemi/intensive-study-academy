@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Staff | Course Materials</title>
+  <link rel="stylesheet" href="../css/dashboard.css" />
+</head>
+<body>
+
+<header class="dashboard-header">
+  <h1>Course Materials</h1>
+  <p>Upload learning materials</p>
+</header>
+
+<div class="dashboard-layout">
+
+  <!-- SIDEBAR -->
+
+  <main class="dashboard-main">
+    <section class="dashboard-section">
+      <h3>Upload Material</h3>
+
+      <form id="materialsForm" enctype="multipart/form-data">
+        <input type="text" placeholder="Material title" required />
+        <input type="file" required />
+        <button type="submit">Upload Material</button>
+      </form>
+    </section>
+  </main>
+
+</div>
+
+<script src="../js/staff-materials.js"></script>
+</body>
+</html>

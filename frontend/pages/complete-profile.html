@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Complete Profile</title>
+  <link rel="stylesheet" href="../css/profile.css" />
+</head>
+
+<body>
+
+  <script src="../js/authOnlyGuard.js"></script>
+
+  <div class="profile-container">
+    <h1>Complete Your Profile</h1>
+    <p>Please complete your profile to access your dashboard</p>
+    <div class="profile-tip-card">
+      Completing Your Profile allows the system to serve you without stress.
+    </div>
+
+    <form id="completeProfileForm">
+      <label>Title</label>
+      <select id="title" required>
+        <option value="">Select title</option>
+        <option value="Mr">Mr</option>
+        <option value="Miss">Miss</option>
+        <option value="Mrs">Mrs</option>
+      </select>
+
+      <label>Full Name</label>
+      <input type="text" id="fullName" required placeholder="Your full name" />
+
+      <label>Birthday <span class="hint">(Day & Month only)</span></label>
+      <div class="split-row">
+        <select id="dobDay" required>
+          <option value="">Day</option>
+        </select>
+        <select id="dobMonth" required>
+          <option value="">Month</option>
+          <option value="1">January</option>
+          <option value="2">February</option>
+          <option value="3">March</option>
+          <option value="4">April</option>
+          <option value="5">May</option>
+          <option value="6">June</option>
+          <option value="7">July</option>
+          <option value="8">August</option>
+          <option value="9">September</option>
+          <option value="10">October</option>
+          <option value="11">November</option>
+          <option value="12">December</option>
+        </select>
+      </div>
+
+      <label>Gender</label>
+      <select id="gender" required>
+        <option value="">Select gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label>Phone</label>
+      <input type="tel" id="phone" placeholder="Phone number" />
+
+      <label>Study Center</label>
+      <select id="studyCenter" required>
+        <option value="">Select study center</option>
+      </select>
+
+      <label>Program</label>
+      <select id="program" required>
+        <option value="">Select program</option>
+      </select>
+
+      <label>Faculty</label>
+      <input type="text" id="faculty" readonly placeholder="Auto-filled" />
+
+      <label>Level</label>
+      <select id="level" required>
+        <option value="">Select level</option>
+        <option value="100">100</option>
+        <option value="200">200</option>
+        <option value="300">300</option>
+        <option value="400">400</option>
+      </select>
+
+      <label>Semester</label>
+      <select id="semester" required>
+        <option value="">Select semester</option>
+        <option value="1st">1st Semester</option>
+        <option value="2nd">2nd Semester</option>
+      </select>
+
+      <button type="submit">Save & Continue</button>
+    </form>
+
+    <div id="dashboardPrep" class="prep-banner" hidden>
+      <div class="prep-spinner" aria-hidden="true"></div>
+      <p>Preparing your dashboardâ€¦</p>
+    </div>
+  </div>
+
+<script src="../js/complete-profile.js"></script>
+</body>
+</html>

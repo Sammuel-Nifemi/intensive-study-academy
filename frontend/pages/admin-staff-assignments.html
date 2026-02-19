@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Assign Courses to Staff | Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/admin-theme.css" />
+</head>
+
+<body class="page-admin-dashboard">
+
+<header class="dashboard-header">
+  <h1>Staff Course Assignment</h1>
+  <p>Assign courses staff members can manage</p>
+</header>
+
+<main class="dashboard-main">
+
+  <section class="admin-section">
+    <h3>Assign Courses</h3>
+
+    <div class="form-row">
+      <input
+        id="staffEmailInput"
+        placeholder="Staff Email"
+        type="email"
+      />
+    </div>
+
+    <div class="form-row">
+      <label>Select Courses</label>
+      <select id="courseSelect" multiple size="6"></select>
+    </div>
+
+    <button id="assignBtn" class="primary-btn">
+      Assign Courses
+    </button>
+  </section>
+
+  <section class="admin-section">
+    <h3>Current Assignments</h3>
+    <ul id="assignmentList" class="data-list"></ul>
+  </section>
+
+</main>
+
+<script src="../js/admin-guard.js"></script>
+<script src="../js/admin-theme.js"></script>
+<script src="../js/admin-staff-assignments.js"></script>
+</body>
+</html>

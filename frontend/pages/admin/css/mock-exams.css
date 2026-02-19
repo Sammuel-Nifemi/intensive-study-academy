@@ -1,0 +1,84 @@
+
+body {
+  font-family: system-ui, sans-serif;
+  padding: 20px;
+  background: #f7f9fc;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.btn.primary {
+  background: #2563eb;
+  color: white;
+  padding: 10px 14px;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: capitalize;
+}
+
+.status.draft {
+  background: #fef3c7;
+}
+
+.status.published {
+  background: #dcfce7;
+}
+
+.actions button {
+  margin-right: 6px;
+}
+
+button {
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+button.danger {
+  background: #dc2626;
+  color: white;
+  border: none;
+}
+.form-card {
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+}

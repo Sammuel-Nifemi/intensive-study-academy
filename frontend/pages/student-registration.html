@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Student Registration | ISA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../css/auth.css" />
+  <style>
+    .auth-success-card {
+      margin-top: 18px;
+      padding: 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: #f8fafc;
+    }
+    .success-alert {
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      background: #ecfdf3;
+      color: #14532d;
+      border: 1px solid #86efac;
+      font-size: 0.9rem;
+    }
+    .resend-btn {
+      background: none;
+      border: none;
+      color: #2563eb;
+      cursor: pointer;
+      padding: 0;
+      margin-top: 10px;
+      text-decoration: underline;
+      font-size: 0.9rem;
+    }
+    .auth-container form {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body class="student-registration-page">
+
+  <div class="auth-container">
+    <h2>Create Student Account</h2>
+    <p class="subtitle">
+      Enter your email to get started.
+    </p>
+
+    <form id="studentRegisterForm">
+
+      <!-- EMAIL -->
+      <label>Email Address</label>
+      <input
+        type="email"
+        name="email"
+        id="email"
+        placeholder="student@example.com"
+        required
+      />
+
+      <!-- OPTIONAL NAME -->
+      <label>Full Name (optional)</label>
+      <input
+        type="text"
+        name="fullName"
+        id="fullName"
+        placeholder="e.g. Samson Adewale"
+      />
+
+      <button type="submit" class="primary-btn">
+        Create Account
+      </button>
+
+      <p class="auth-footer">
+        Already registered?
+        <a href="/frontend/pages/student-login.html">Sign in</a>
+      </p>
+
+    </form>
+
+    <div id="registerSuccess" class="auth-success-card" hidden>
+      <div class="success-alert" role="alert">
+        Account created successfully.
+      </div>
+      <h3>Account created successfully</h3>
+      <p>We’ve sent a login link to your email. This link expires in 15 minutes.</p>
+      <button id="openEmailBtn" class="primary-btn" type="button">Open Email</button>
+      <button id="resendLinkBtn" class="resend-btn" type="button">Resend login link</button>
+    </div>
+  </div>
+  
+<script src="../js/student-registration.js"></script>
+
+</body>
+</html>

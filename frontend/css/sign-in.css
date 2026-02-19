@@ -1,0 +1,196 @@
+/* GENERAL PAGE STYLE */
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    margin: 0;
+    padding: 40px 20px;
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+
+/* MAIN AUTH CARD */
+.auth_card {
+    width: 100%;
+    max-width: 480px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    text-align: left;
+}
+
+
+.auth_card h2 {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+.auth_card p {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #555;
+    font-size: 14px;
+}
+
+
+/* SOCIAL MEDIA ICONS */
+.socials i {
+    font-size: 24px;
+    padding: 7px;
+    margin: 5px;
+    cursor: pointer;
+    color: #007bff;
+}
+
+/* MAIN FORM CONTAINER */
+.form-container {
+    margin-top: 20px;
+    text-align: left;
+}
+
+/* FORM LABELS */
+label {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* INPUT FIELDS */
+input, select {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+/* INPUT HOVER/FOCUS */
+input:focus, select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0,123,255,0.3);
+}
+
+/* SUGGESTION DROPDOWN */
+.suggestions {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    overflow-y: auto;
+    max-height: 150px;
+    display: none;
+    position: relative;
+    z-index: 10;
+}
+
+.suggestions div {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.suggestions div:hover {
+    background: #f0f0f0;
+}
+
+/* HIDDEN STEPS */
+.hidden {
+    display: none;
+}
+
+/* SUBMIT BUTTON */
+#submitBtn {
+    width: 100%;
+    padding: 12px;
+    background: #007bff;
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+#submitBtn:hover {
+    background: #0056b3;
+}
+
+/* LOGIN TEXT */
+.auth-text {
+    margin-top: 20px;
+}
+
+.auth-text a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.auth-text a:hover {
+    text-decoration: underline;
+}
+
+
+#introAnimation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.typing {
+    font-size: 28px;
+    font-weight: bold;
+    font-family: monospace;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 3px solid #007bff;
+    width: 0;
+    animation: typing 3s steps(30) forwards, blink .6s infinite;
+}
+
+@keyframes typing {
+    from { width: 0; }
+    to { width: 270px; }
+}
+
+@keyframes blink {
+    50% { border-color: transparent; }
+}
+
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding: 12px 42px 12px 12px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.password-hint {
+    font-size: 12px;
+    color: #777;
+    margin-top: 4px;
+}

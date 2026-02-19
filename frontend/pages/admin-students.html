@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Students | Intensive Study Academy</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/admin-theme.css" />
+</head>
+<body>
+<header class="dashboard-header">
+  <div class="header-container">
+    <div class="logo">
+      <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+    </div>
+    <div class="user-text"><strong>Admin</strong></div>
+  </div>
+</header>
+
+<div class="dashboard-layout">
+  <nav class="dashboard-sidebar">
+    <ul class="sidebar-top">
+      <li><a href="/frontend/pages/admin-dashboard.html">Dashboard</a></li>
+      <li><a href="/frontend/pages/admin-curriculum.html">Curriculum</a></li>
+      <li><a href="/frontend/pages/admin-staff.html">Staff</a></li>
+      <li><a href="/frontend/pages/admin-students.html" class="active">Students</a></li>
+      <li><a href="/frontend/pages/admin-requests.html">Requests</a></li>
+      <li><a href="/frontend/pages/admin-complaints.html">Complaints</a></li>
+      <li><a href="/frontend/pages/admin-analytics.html">Analytics</a></li>
+      <li><a href="/frontend/pages/admin-settings.html">Settings</a></li>
+    </ul>
+    <div class="sidebar-bottom">
+      <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+    </div>
+  </nav>
+
+  <main class="dashboard-main">
+    <section class="page-header">
+      <h1>Students</h1>
+      <p>Flag or suspend student accounts.</p>
+    </section>
+
+    <section class="dashboard-section">
+      <div id="studentsTable"></div>
+    </section>
+  </main>
+</div>
+
+<script src="../js/admin-guard.js"></script>
+<script src="../js/admin-logout.js"></script>
+<script src="../js/admin-theme.js"></script>
+<script src="../js/admin-students.js"></script>
+</body>
+</html>

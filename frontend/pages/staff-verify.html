@@ -1,0 +1,69 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Confirm Sign In | Intensive Study Academy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+</head>
+
+<body class="login-page">
+
+  <div class="login-card">
+    <h2>Confirm Sign In</h2>
+    <p class="login-subtext">
+      For security reasons, please confirm your password to continue.
+    </p>
+
+    <form id="verifyForm">
+
+      <!-- PASSWORD CONFIRM -->
+      <label class="password-field">
+        Account Password
+
+        <div class="password-wrapper">
+          <input
+            type="password"
+            id="confirmPasswordInput"
+            placeholder="Enter your password"
+            required
+          />
+          <span class="toggle-password" id="toggleConfirmPassword">
+            <i class="fa-solid fa-eye"></i>
+          </span>
+        </div>
+      </label>
+
+      <button type="submit" class="primary-btn">
+        Confirm & Sign In
+      </button>
+    </form>
+
+    <p id="verifyMessage" class="login-message"></p>
+  </div>
+
+  <!-- ================= PASSWORD TOGGLE ================= -->
+  <script>
+    const toggle = document.getElementById("toggleConfirmPassword");
+    const input = document.getElementById("confirmPasswordInput");
+
+    toggle.addEventListener("click", () => {
+      const isPassword = input.type === "password";
+      input.type = isPassword ? "text" : "password";
+
+      toggle.innerHTML = isPassword
+        ? '<i class="fa-solid fa-eye-slash"></i>'
+        : '<i class="fa-solid fa-eye"></i>';
+    });
+  </script>
+
+  <script src="../js/staff-verify.js"></script>
+</body>
+</html>

@@ -1,0 +1,457 @@
+/* ===== RESET ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+body {
+  background: #f4f6f8;
+  color: #1f2937;
+}
+
+/* =================================
+   HEADER (FIXED, COMPACT, RESPONSIVE)
+================================= */
+.dashboard-header {
+  height: 64px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+/* This container FIXES the “far apart” issue */
+.header-container {
+  max-width: 1200px;          /* prevents edge-to-edge stretching */
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo */
+.logo img {
+  height: 40px;
+  display: block;
+}
+
+/* Right side of header */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Notification bell */
+.notification {
+  position: relative;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.notification .badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #dc2626;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 999px;
+}
+
+/* User info */
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.2;
+}
+
+.user-info .welcome {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.user-info .matric {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+/* =================================
+   LAYOUT
+================================= */
+.dashboard-container {
+  display: flex;
+  margin-top: 64px;
+}
+
+/* =================================
+   SIDEBAR
+================================= */
+.dashboard-sidebar {
+  width: 240px;
+  background: #0f172a;
+  min-height: calc(100vh - 64px);
+  padding-top: 20px;
+}
+
+.dashboard-sidebar ul {
+  list-style: none;
+}
+
+.dashboard-sidebar li {
+  margin-bottom: 6px;
+}
+
+.dashboard-sidebar a {
+  display: block;
+  padding: 12px 20px;
+  color: #cbd5f5;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.dashboard-sidebar a:hover,
+.dashboard-sidebar a.active {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+/* =================================
+   MAIN CONTENT
+================================= */
+.dashboard-main {
+  flex: 1;
+  padding: 32px;
+}
+
+.dashboard-main h2 {
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+
+.dashboard-main p {
+  margin-bottom: 24px;
+  color: #6b7280;
+}
+
+/* =================================
+   CARD
+================================= */
+.card,
+.profile-card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+}
+
+/* =================================
+   TABLE
+================================= */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  padding: 14px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+  text-align: left;
+}
+
+.data-table th {
+  background: #f9fafb;
+  font-weight: 600;
+}
+
+.data-table tr:hover {
+  background: #f9fafb;
+}
+
+/* =================================
+   STATUS BADGES
+================================= */
+.status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status.active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status.inactive {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* =================================
+   ACTION LINKS
+================================= */
+.action-link {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.action-link:hover {
+  text-decoration: underline;
+}
+
+/* =================================
+   MOBILE OPTIMIZATION
+================================= */
+@media (max-width: 600px) {
+
+  .dashboard-header {
+    height: 56px;
+  }
+
+  .header-container {
+    padding: 0 14px;
+  }
+
+  .logo img {
+    height: 34px;
+  }
+
+  .user-info .matric {
+    display: none;
+  }
+
+  .user-info .welcome {
+    font-size: 0.85rem;
+  }
+}
+.upload-feedback {
+  font-size: 14px;
+}
+
+.upload-feedback.success {
+  color: #0a7a2f;
+}
+
+.upload-feedback.error {
+  color: #b00020;
+}
+
+.upload-feedback.pending {
+  color: #8a6d00;
+}
+.action-feedback {
+  margin: 15px 0;
+  padding: 12px;
+  border-radius: 6px;
+  display: none;
+}
+
+.action-feedback.success {
+  background: #e6fffa;
+  color: #065f46;
+  border: 1px solid #34d399;
+}
+
+.action-feedback.error {
+  background: #fee2e2;
+  color: #7f1d1d;
+  border: 1px solid #f87171;
+}
+.delete-btn {
+  background: none;
+  border: none;
+  color: #c0392b;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 8px;
+}
+
+.delete-btn:hover {
+  color: #e74c3c;
+}
+.priority-high {
+  border-left: 4px solid #e74c3c;
+  padding-left: 8px;
+}
+
+.priority-medium {
+  border-left: 4px solid #f1c40f;
+  padding-left: 8px;
+}
+
+.priority-healthy {
+  border-left: 4px solid #2ecc71;
+  padding-left: 8px;
+}
+
+.progress-bar {
+  width: 100%;
+  background: #eee;
+  border-radius: 6px;
+  margin-top: 6px;
+  height: 16px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #3498db;
+  font-size: 11px;
+  color: #fff;
+  text-align: center;
+  line-height: 16px;
+  white-space: nowrap;
+}
+.chart-box {
+  max-width: 420px;
+  margin: 0 auto;
+}
+.password-field {
+  position: relative;
+  max-width: 400px;
+}
+
+.password-field input {
+  width: 100%;
+  padding-right: 44px;
+}
+
+.toggle-eye {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* ================================
+   STAFF BLOG PAGE – SAFE LAYOUT FIX
+   (Scoped, Non-destructive)
+================================ */
+
+.staff-blog-page .dashboard-container {
+  display: flex;
+  align-items: stretch;
+}
+
+/* Sidebar */
+.staff-blog-page .dashboard-sidebar {
+  width: 240px;
+  min-height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Push logout to bottom */
+.staff-blog-page .dashboard-sidebar ul {
+  flex: 1;
+}
+
+/* Main content stays beside sidebar */
+.staff-blog-page .dashboard-main {
+  flex: 1;
+  padding: 32px;
+  background: #f6f7f9;
+}
+
+/* Blog form – make it clean & classic */
+.staff-blog-page .dashboard-main form {
+  max-width: 820px;
+}
+
+.staff-blog-page .dashboard-main label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.staff-blog-page .dashboard-main input[type="text"],
+.staff-blog-page .dashboard-main textarea {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+.staff-blog-page .dashboard-main textarea {
+  min-height: 160px;
+  resize: vertical;
+}
+
+.staff-blog-page .dashboard-main input[type="file"] {
+  margin-bottom: 16px;
+}
+
+.staff-blog-page .dashboard-main button {
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: none;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.staff-blog-page .dashboard-main button:hover {
+  background: #1e40af;
+}
+/* ================================
+   SIDEBAR HARDENING (SAFE FIX)
+================================ */
+
+.dashboard-sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+
+.dashboard-sidebar li {
+  margin: 0;
+}
+
+.dashboard-sidebar a {
+  display: block;
+  padding: 12px 20px;
+  color: #cbd5f5;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.dashboard-sidebar a:hover,
+.dashboard-sidebar a.active {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+/* Logout stays at the bottom */
+#logoutBtn {
+  margin: 16px;
+  align-self: flex-start;
+}

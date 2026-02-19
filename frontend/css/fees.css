@@ -1,0 +1,43 @@
+.fees-status {
+  margin-bottom: 16px;
+  color: #6b7280;
+}
+
+.fees-status.error {
+  color: #b91c1c;
+}
+
+.fees-table-wrap {
+  overflow-x: auto;
+  margin-bottom: 18px;
+}
+
+.fees-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+
+.fees-table th,
+.fees-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.fees-table th {
+  background: #f8fafc;
+  font-weight: 600;
+}
+
+.fees-totals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin: 16px 0 20px;
+}
+
+.fees-totals .grand-total {
+  font-size: 1.05rem;
+}

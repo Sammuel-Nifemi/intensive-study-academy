@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mock Exam Review | Intensive Study Academy</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/theme.css" />
+  <style>
+    .review-item {
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+      margin-bottom: 12px;
+    }
+
+    .review-status-ok {
+      color: #16a34a;
+      font-weight: 700;
+    }
+
+    .review-status-bad {
+      color: #dc2626;
+      font-weight: 700;
+    }
+
+    .ai-tip {
+      margin-top: 10px;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 10px;
+      color: #334155;
+      font-size: 0.9rem;
+    }
+
+    .explain-btn {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border: 0;
+      border-radius: 8px;
+      background: #2563eb;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="page-student-dashboard">
+  <header class="dashboard-header">
+    <div class="header-container">
+      <div class="logo">
+        <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+      </div>
+      <div class="user-text">
+        <strong>Mock Exams</strong>
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-layout">
+    <nav id="mockPostSidebar" class="dashboard-sidebar" aria-label="Mock Navigation"></nav>
+
+    <main class="dashboard-main">
+      <section class="page-header">
+        <h1>Review</h1>
+        <p>Question-by-question explanation for your submission.</p>
+      </section>
+
+      <section class="dashboard-section" id="reviewList"></section>
+    </main>
+  </div>
+
+  <script src="/frontend/js/student-auth-guard.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/mock-post-exam.js"></script>
+  <script>
+    const attempt = window.MockPostExam.getCurrentMockAttemptOrRedirect("/frontend/pages/mock-exams.html");
+    if (attempt) {
+      window.MockPostExam.renderMockPostSidebar("review");
+      const list = document.getElementById("reviewList");
+      const rows = Array.isArray(attempt.questions) ? attempt.questions : [];
+      list.innerHTML = rows.map((q, index) => `
+        <article class="review-item">
+          <p><strong>Q${index + 1}.</strong> ${window.MockPostExam.escapeHtml(q.questionText || "")}</p>
+          <p><strong>Student answer:</strong> ${window.MockPostExam.escapeHtml(q.studentAnswer || "(No answer)")}</p>
+          <p><strong>Correct answer:</strong> ${window.MockPostExam.escapeHtml(q.correctAnswer || "-")}</p>
+          <p><strong>Explanation:</strong> ${window.MockPostExam.escapeHtml(q.explanation || "No explanation provided.")}</p>
+          <p class="${q.isCorrect ? "review-status-ok" : "review-status-bad"}">${q.isCorrect ? "Correct" : "Wrong"}</p>
+          ${
+            q.isCorrect
+              ? ""
+              : `<button class="explain-btn" type="button"
+                  data-index="${index}">
+                  Explain with Academic Support
+                </button>`
+          }
+          <div class="ai-tip">${window.MockPostExam.escapeHtml(q.aiTip || "AI Tip placeholder: review this concept in your course material and retry similar questions.")}</div>
+        </article>
+      `).join("");
+
+      list.addEventListener("click", async (event) => {
+        const btn = event.target.closest(".explain-btn");
+        if (!btn) return;
+        const token = localStorage.getItem("studentToken");
+        const aiTip = btn.parentElement.querySelector(".ai-tip");
+        if (!aiTip) return;
+
+        btn.disabled = true;
+        const previousText = btn.textContent;
+        btn.textContent = "Explaining...";
+
+        try {
+          const idx = Number(btn.getAttribute("data-index"));
+          const row = Number.isInteger(idx) ? rows[idx] : null;
+          const res = await fetch("http://localhost:5000/api/academic-support/explain-question", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              question: row?.questionText || "",
+              correctAnswer: row?.correctAnswer || "",
+              studentAnswer: row?.studentAnswer || ""
+            })
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            aiTip.textContent = data.message || "Failed to explain this question.";
+          } else {
+            aiTip.textContent = data.explanation || "No explanation returned.";
+          }
+        } catch (err) {
+          console.error("Explain with Academic Support failed:", err);
+          aiTip.textContent = "Failed to explain this question.";
+        } finally {
+          btn.disabled = false;
+          btn.textContent = previousText;
+        }
+      });
+    }
+  </script>
+</body>
+</html>

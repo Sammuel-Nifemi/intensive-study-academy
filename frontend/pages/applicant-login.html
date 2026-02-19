@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Applicant Login | Intensive Study Academy</title>
+
+  <link rel="stylesheet" href="../css/sign-in.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+  <div class="auth_card">
+
+    <h2>Applicant Login</h2>
+    <p>Log in to continue your application.</p>
+
+    <!-- LOGIN FORM -->
+    <form id="applicantLogin" novalidate>
+
+      <label for="loginEmail">Email Address</label>
+      <input type="email" id="loginEmail" required>
+
+      <label for="password">Password</label>
+      <div class="password-wrapper">
+        <input
+          type="password"
+          id="password"
+          placeholder="Enter your password"
+          required
+        >
+        <span id="togglePassword" class="toggle-password">👁️</span>
+      </div>
+
+      <button id="submitBtn" type="submit">Log in</button>
+
+    </form>
+
+    <p class="auth-text">
+      Forgot your password?
+      <a href="forgot-password.html">Reset here</a>
+    </p>
+
+    <p class="auth-text">
+      New applicant?
+      <a href="applicant-auth.html">Create an account</a>
+    </p>
+
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+</html>

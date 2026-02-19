@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Curriculum Management | Intensive Study Academy</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/admin-academic.css" />
+  <link rel="stylesheet" href="../css/admin-theme.css" />
+</head>
+<body>
+<header class="dashboard-header">
+  <div class="header-container">
+    <div class="logo">
+      <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+    </div>
+    <div class="user-text">
+      <strong>Admin</strong>
+      <a class="action-btn" href="/frontend/pages/admin-settings.html">Settings</a>
+    </div>
+  </div>
+</header>
+
+<div class="dashboard-layout">
+  <nav class="dashboard-sidebar">
+    <ul class="sidebar-top">
+      <li><a href="/frontend/pages/admin-dashboard.html">Dashboard</a></li>
+      <li><a href="/frontend/pages/admin-staff.html">Staff</a></li>
+      <li><a href="/frontend/pages/admin-courses.html">Courses</a></li>
+      <li><a href="/frontend/pages/admin-curriculum.html" class="active">Curriculum</a></li>
+      <li><a href="/frontend/pages/admin-course-materials.html">Course Materials</a></li>
+      <li><a href="/frontend/pages/admin-mocks.html">Mock Exams</a></li>
+      <li><a href="/frontend/pages/admin-exam-timetables.html">Exam Timetables</a></li>
+      <li><a href="/frontend/pages/admin-fee-structures.html">Fee Structures</a></li>
+      <li><a href="/frontend/pages/admin-cbt.html">CBT Exams</a></li>
+      <li class="divider"></li>
+      <li><a href="/frontend/pages/admin-announcements.html">Announcements</a></li>
+      <li><a href="/frontend/pages/admin-blog.html">Blog</a></li>
+      <li><a href="/frontend/pages/admin-gallery.html">Gallery</a></li>
+    </ul>
+    <div class="sidebar-bottom">
+      <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+    </div>
+  </nav>
+
+  <main class="dashboard-main">
+    <section class="page-header">
+      <h1>Curriculum Management</h1>
+      <p>Assign courses to programs by level, semester, and category.</p>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Assign Course to Program</h2>
+      <form id="curriculumForm" class="admin-form">
+        <div>
+          <label>Course</label>
+          <select id="courseSelect" required></select>
+        </div>
+        <div>
+          <label>Program</label>
+          <select id="programSelect" required></select>
+        </div>
+        <div>
+          <label>Level</label>
+          <input type="text" id="levelInput" placeholder="e.g. 100" required />
+        </div>
+        <div>
+          <label>Semester</label>
+          <select id="semesterSelect" required>
+            <option value="">Select semester</option>
+            <option value="First">First</option>
+            <option value="Second">Second</option>
+          </select>
+        </div>
+        <div>
+          <label>Category</label>
+          <select id="categorySelect" required>
+            <option value="">Select category</option>
+            <option value="compulsory">Compulsory</option>
+            <option value="elective">Elective</option>
+          </select>
+        </div>
+      </form>
+      <div class="admin-actions">
+        <button id="assignBtn" class="primary-btn" type="button">Assign Course</button>
+        <span id="formStatus" class="status-text"></span>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Program Courses</h2>
+      <div class="admin-actions">
+        <span id="listStatus" class="status-text"></span>
+      </div>
+      <div id="programCoursesAccordion" class="program-accordion"></div>
+    </section>
+  </main>
+</div>
+
+<script src="../js/admin-guard.js"></script>
+<script src="../js/admin-logout.js"></script>
+<script src="../js/admin-theme.js"></script>
+<script src="../js/admin-academic-utils.js"></script>
+<script src="../js/admin-curriculum.js"></script>
+</body>
+</html>

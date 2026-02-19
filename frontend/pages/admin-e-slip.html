@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin | E-Slip Records</title>
+
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/admin-theme.css" />
+</head>
+<body>
+
+  <!-- ===== ADMIN LAYOUT ===== -->
+  <div class="admin-container">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>Admin Panel</h2>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul>
+          <li><a href="admin-dashboard.html">Dashboard</a></li>
+          <li><a href="admin-dashboard.html">Material Approval</a></li>
+          <li><a href="admin-staff.html">Staff</a></li>
+          <li><a href="admin-students.html">Students</a></li>
+          <li><a href="admin-e-slip.html">E-Slip</a></li>
+         <li><a href="admin-settings.html">System Settings</a></li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="#" class="logout">Logout</a>
+      </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="admin-main">
+
+      <section class="page">
+
+        <header class="page-header">
+          <h1>E-Slip Records</h1>
+          <p>Review and manage submitted payment slips from students.</p>
+        </header>
+
+        <section class="card">
+          <div class="card-header">
+            <h2>Submitted E-Slips</h2>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Student Name</th>
+                  <th>Matric Number</th>
+                  <th>Purpose</th>
+                  <th>Amount (₦)</th>
+                   <th>Slip Type</th>
+                   <th>DES 303 Type</th>
+                  <th>Date Submitted</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+
+                </tr>
+              </thead>
+
+              <tbody>
+  <tr>
+    <td>1</td>
+    <td>—</td>
+    <td>—</td>
+    <td>Exam Clearance Slip</td>
+    <td>—</td>
+    <td>—</td>
+    <td>Pending</td>
+    <td>View</td>
+  </tr>
+
+  <tr>
+    <td>2</td>
+    <td>—</td>
+    <td>—</td>
+    <td>DES 303 Slip</td>
+    <td>Project Proposal</td>
+    <td>—</td>
+    <td>Pending</td>
+    <td>View</td>
+  </tr>
+
+  <tr>
+    <td>3</td>
+    <td>—</td>
+    <td>—</td>
+    <td>DES 303 Slip</td>
+    <td>Logbook</td>
+    <td>—</td>
+    <td>Approved</td>
+    <td>View</td>
+  </tr>
+
+  <tr>
+    <td>4</td>
+    <td>—</td>
+    <td>—</td>
+    <td>DES 303 Slip</td>
+    <td>Final Report</td>
+    <td>—</td>
+    <td>Approved</td>
+    <td>View</td>
+  </tr>
+</tbody>
+    </table>
+          </div>
+        </section>
+
+      </section>
+
+    </main>
+
+  </div>
+  <!-- ===== END ADMIN LAYOUT ===== -->
+<script src="../js/admin-guard.js"></script>
+<script src="../js/admin-theme.js"></script>
+
+</body>
+</html>

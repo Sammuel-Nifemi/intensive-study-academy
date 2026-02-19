@@ -1,0 +1,213 @@
+/* GENERAL */
+body {
+  margin: 0;
+  background-color: #ffffff;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.header {
+  background-color: #1e3a8a; /* deep academic blue */
+  color: #ffffff;
+  text-align: center;
+  padding: 4rem 1.5rem;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.8rem;
+}
+
+
+
+.header p {
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  color: #ffffff;
+}
+
+
+
+.header a {
+    display: inline-block;
+    padding: 10px 24px;
+    background: #0b5ed7;
+    color: #fff;
+    border: 2px solid beige;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.25s ease-in-out;
+}
+
+.header a:hover {
+    background: transparent;
+    color: beige;
+}
+
+
+
+.apply-btn {
+  background-color: #ffffff;
+  color: #1e3a8a;
+  padding: 0.8rem 2.2rem;
+  border-radius: 999px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.apply-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.page-nav {
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.page-nav a {
+  color: #1e3a8a;
+  text-decoration: none;
+  font-weight: 500;
+}
+.page-nav a:hover {
+  text-decoration: underline;
+}
+
+
+/* MAIN WRAPPER */
+.main-wrapper {
+  max-width: 1100px;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+}
+
+
+/* GRID OF FACULTY CARDS */
+.grid-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+/* FACULTY CARD */
+.faculty-card {
+  background-color: #f5f1e6; /* beige */
+  border-radius: 14px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+/* TOGGLE BUTTON */
+.faculty-toggle,
+.program-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 1.4rem 1.6rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between; /* THIS is the key */
+  align-items: center;
+  cursor: pointer;
+  color: #1e3a8a; /* blue text */
+}
+
+.faculty-toggle:hover,
+.program-toggle:hover {
+  background: #eef2ff;
+}
+
+.faculty-toggle .chevron {
+    transition: transform 0.25s ease;
+}
+
+/* CONTENT AREA (SLIDE DOWN) */
+
+/* CONTENT AREA (CLOSED BY DEFAULT) */
+.faculty-content {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 1.6rem;
+  background-color: #ffffff;
+  transition: max-height 0.35s ease, padding 0.35s ease;
+}
+
+/* WHEN ACTIVE (OPEN) */
+.faculty-card.active .faculty-content {
+  max-height: 1000px; /* safe large value */
+  padding: 1.5rem 1.6rem;
+}
+
+
+.faculty-content h3 {
+  margin-top: 0;
+  color: #1e3a8a;
+}
+
+.faculty-content ul {
+  padding-left: 1.2rem;
+}
+
+.faculty-content li,
+.program-content li {
+  margin-bottom: 0.4rem;
+}
+
+
+/* When card is active */
+.faculty-card.active .faculty-content {
+    padding-bottom: 16px;
+}
+
+.faculty-card.active .faculty-toggle .chevron {
+    transform: rotate(180deg);
+}
+
+/* REQUIREMENTS LIST */
+.requirements li {
+  list-style: "✔ ";
+  padding-left: 0.4rem;
+  color: #374151;
+}
+
+/* WHATSAPP ICON */
+.whatsapp-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: #25D366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    z-index: 1000;
+    transition: 0.25s ease-in-out;
+}
+
+.whatsapp-icon img {
+  width: 26px;
+  height: 26px;
+}
+
+.whatsapp-icon:hover {
+    transform: scale(1.12);
+}
+
+/* MOBILE TWEAKS */
+@media (max-width: 600px) {
+    .header {
+        text-align: left;
+        padding: 30px 16px;
+    }
+
+    .header h1 {
+        font-size: 26px;
+    }
+}

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Settings | Intensive Study Academy</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/theme.css" />
+</head>
+
+<body>
+<header class="dashboard-header">
+  <div class="logo">
+    <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+  </div>
+
+  <div class="user-info">
+    <span>Welcome, <strong id="studentName">Loading...</strong></span>
+  </div>
+</header>
+
+<div class="dashboard-layout">
+
+  <!-- SIDEBAR -->
+  <nav class="dashboard-sidebar">
+    <ul>
+      <li><a href="/frontend/pages/student-dashboard.html">Dashboard</a></li>
+      <li><a href="/frontend/pages/ai-assistant.html">AI Assistant</a></li>
+      <li><a href="/frontend/pages/student-profile.html">Profile</a></li>
+      <li><a href="/frontend/pages/student-settings.html">Settings</a></li>
+      <li><a href="/frontend/pages/fees.html">Fee Analyzer</a></li>
+      <li><a href="#" id="logoutBtn">Logout</a></li>
+    </ul>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="dashboard-main">
+    <a class="back-link" href="/frontend/pages/student-dashboard.html"><- Back to Dashboard</a>
+
+    <section class="dashboard-section">
+      <h2>Academic Change Request</h2>
+      <p>Request a program or study center change. An admin will review it.</p>
+      <form id="academicChangeForm">
+        <div class="form-row">
+          <label for="requestedProgram">Requested Program</label>
+          <input type="text" id="requestedProgram" name="requestedProgram" />
+        </div>
+        <div class="form-row">
+          <label for="requestedStudyCenter">Requested Study Center</label>
+          <input type="text" id="requestedStudyCenter" name="requestedStudyCenter" />
+        </div>
+        <div class="form-row">
+          <label for="changeReason">Reason (optional)</label>
+          <textarea id="changeReason" name="changeReason" rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="primary-btn">Submit Request</button>
+      </form>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Theme</h2>
+      <div class="form-row">
+        <label for="themeSelect">Choose a theme</label>
+        <select id="themeSelect">
+          <option value="classic">Classic</option>
+          <option value="academy">Academy</option>
+          <option value="ocean">Ocean</option>
+          <option value="sunset">Sunset</option>
+          <option value="forest">Forest</option>
+          <option value="slate">Slate</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Complaint</h2>
+      <form id="complaintForm">
+        <div class="form-row">
+          <label for="complaintSubject">Subject</label>
+          <input type="text" id="complaintSubject" name="complaintSubject" />
+        </div>
+        <div class="form-row">
+          <label for="complaintMessage">Message</label>
+          <textarea id="complaintMessage" name="complaintMessage" rows="4"></textarea>
+        </div>
+
+        <button type="submit" class="primary-btn">Submit Complaint</button>
+      </form>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Account</h2>
+      <div class="form-row">
+        <button id="logoutBtnInline" class="secondary-btn" type="button">Logout</button>
+      </div>
+      <div class="form-row">
+        <button id="deleteAccountBtn" class="primary-btn" type="button">Delete Account</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="../js/student-auth-guard.js"></script>
+<script src="../js/student-settings.js"></script>
+<script src="../js/activityTracker.js"></script>
+<script src="/frontend/js/logout.js"></script>
+  <script src="../js/theme.js"></script>
+</body>
+</html>
+
+

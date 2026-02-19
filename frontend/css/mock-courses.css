@@ -1,0 +1,58 @@
+
+
+body {
+  background: #f6f8fb;
+  font-family: "Poppins", sans-serif;
+}
+
+.mock-container {
+  max-width: 800px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.mock-card {
+  padding: 20px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  margin-bottom: 20px;
+}
+
+.mock-card a {
+  text-decoration: none;
+  color: #1a73e8;
+  font-weight: 500;
+}
+
+.instructions li {
+  margin-bottom: 10px;
+}
+
+.start-btn,
+.submit-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 18px;
+  background: #1a73e8;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+.exam-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  background: #020617;
+  color: #fff;
+}
+
+.question {
+  margin-bottom: 25px;
+}
+

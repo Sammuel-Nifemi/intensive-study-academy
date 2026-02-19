@@ -1,0 +1,215 @@
+{
+  "courseCode": "GST105",
+  "questions": [
+    {
+      "number": 1,
+      "question": "The word “science” is derived from the Latin word scientia, meaning:",
+      "options": [
+        { "label": "A", "text": "Experiment" },
+        { "label": "B", "text": "Nature" },
+        { "label": "C", "text": "Knowledge" },
+        { "label": "D", "text": "Discovery" }
+      ],
+      "correctAnswer": "C",
+      "type": "mcq",
+      "explanation": "Knowledge"
+    },
+    {
+      "number": 2,
+      "question": "Science is generally regarded in how many main ways?",
+      "options": [
+        { "label": "A", "text": "One" },
+        { "label": "B", "text": "Two" },
+        { "label": "C", "text": "Three" },
+        { "label": "D", "text": "Four" }
+      ],
+      "correctAnswer": "C",
+      "type": "mcq",
+      "explanation": "Three"
+    },
+    {
+      "number": 3,
+      "question": "Which of the following is an example of a formal science?",
+      "options": [
+        { "label": "A", "text": "Biology" },
+        { "label": "B", "text": "Medicine" },
+        { "label": "C", "text": "Economics" },
+        { "label": "D", "text": "Mathematics" }
+      ],
+      "correctAnswer": "D",
+      "type": "mcq",
+      "explanation": "Mathematics"
+    },
+    {
+      "number": 4,
+      "question": "Which of the following belongs to empirical sciences?",
+      "options": [
+        { "label": "A", "text": "Geometry" },
+        { "label": "B", "text": "Logic" },
+        { "label": "C", "text": "Physics" },
+        { "label": "D", "text": "Statistics" }
+      ],
+      "correctAnswer": "C",
+      "type": "mcq",
+      "explanation": "Physics"
+    },
+    {
+      "number": 5,
+      "question": "Objects that can be perceived by the senses include:",
+      "options": [
+        { "label": "A", "text": "Human body" },
+        { "label": "B", "text": "Weather" },
+        { "label": "C", "text": "Animals" },
+        { "label": "D", "text": "All of the above" }
+      ],
+      "correctAnswer": "D",
+      "type": "mcq",
+      "explanation": "All of the above"
+    },
+    {
+      "number": 6,
+      "question": "Which mnemonic device helps remember the order of mathematical operations?",
+      "options": [
+        { "label": "A", "text": "PEMDAS" },
+        { "label": "B", "text": "BODMAS" },
+        { "label": "C", "text": "BIDMAS" },
+        { "label": "D", "text": "MODBAS" }
+      ],
+      "correctAnswer": "B",
+      "type": "mcq",
+      "explanation": "BODMAS"
+    },
+    {
+      "number": 7,
+      "question": "Which of the following is NOT a characteristic of non-science disciplines?",
+      "options": [
+        { "label": "A", "text": "Subjective" },
+        { "label": "B", "text": "Verifiable" },
+        { "label": "C", "text": "Non-factual" },
+        { "label": "D", "text": "Not systematic" }
+      ],
+      "correctAnswer": "B",
+      "type": "mcq",
+      "explanation": "Verifiable"
+    },
+    {
+      "number": 8,
+      "question": "The first step of the scientific method is:",
+      "options": [
+        { "label": "A", "text": "Hypothesis" },
+        { "label": "B", "text": "Conclusion" },
+        { "label": "C", "text": "Observation" },
+        { "label": "D", "text": "Experimentation" }
+      ],
+      "correctAnswer": "C",
+      "type": "mcq",
+      "explanation": "Observation"
+    },
+    {
+      "number": 9,
+      "question": "A scientific theory is best described as:",
+      "options": [
+        { "label": "A", "text": "A personal belief" },
+        { "label": "B", "text": "A random guess" },
+        { "label": "C", "text": "An explanation of related phenomena" },
+        { "label": "D", "text": "A spiritual idea" }
+      ],
+      "correctAnswer": "C",
+      "type": "mcq",
+      "explanation": "An explanation of related phenomena"
+    },
+    {
+      "number": 10,
+      "question": "Which scientist discovered the structure of benzene?",
+      "options": [
+        { "label": "A", "text": "Newton" },
+        { "label": "B", "text": "Darwin" },
+        { "label": "C", "text": "Kekulé" },
+        { "label": "D", "text": "Bennetts" }
+      ],
+      "correctAnswer": "C",
+      "type": "mcq",
+      "explanation": "Kekulé"
+    },
+    {
+      "number": 11,
+      "question": "Science is viewed as a body of knowledge, a method of acquiring knowledge, and an __________.",
+      "options": [],
+      "correctAnswer": "institution",
+      "type": "fill",
+      "explanation": "institution"
+    },
+    {
+      "number": 12,
+      "question": "Formal sciences include mathematics, logic, theoretical physics, and __________.",
+      "options": [],
+      "correctAnswer": "statistics",
+      "type": "fill",
+      "explanation": "statistics"
+    },
+    {
+      "number": 13,
+      "question": "Empirical sciences study objects that can be observed using the __________.",
+      "options": [],
+      "correctAnswer": "senses",
+      "type": "fill",
+      "explanation": "senses"
+    },
+    {
+      "number": 14,
+      "question": "The scientific method begins with __________.",
+      "options": [],
+      "correctAnswer": "observation",
+      "type": "fill",
+      "explanation": "observation"
+    },
+    {
+      "number": 15,
+      "question": "A proposed explanation to a scientific problem is called a __________.",
+      "options": [],
+      "correctAnswer": "hypothesis",
+      "type": "fill",
+      "explanation": "hypothesis"
+    },
+    {
+      "number": 16,
+      "question": "The step that provides evidence for accepting or rejecting a hypothesis is __________.",
+      "options": [],
+      "correctAnswer": "experimentation",
+      "type": "fill",
+      "explanation": "experimentation"
+    },
+    {
+      "number": 17,
+      "question": "A scientific theory explains a __________ range of related phenomena.",
+      "options": [],
+      "correctAnswer": "broad",
+      "type": "fill",
+      "explanation": "broad"
+    },
+    {
+      "number": 18,
+      "question": "The purpose of science is to explain, predict, and __________ nature.",
+      "options": [],
+      "correctAnswer": "control",
+      "type": "fill",
+      "explanation": "control"
+    },
+    {
+      "number": 19,
+      "question": "Religion, art, and metaphysics are examples of __________ disciplines.",
+      "options": [],
+      "correctAnswer": "non-science",
+      "type": "fill",
+      "explanation": "non-science"
+    },
+    {
+      "number": 20,
+      "question": "Creative thinking proposes solutions while __________ thinking evaluates them.",
+      "options": [],
+      "correctAnswer": "critical",
+      "type": "fill",
+      "explanation": "critical"
+    }
+  ]
+}

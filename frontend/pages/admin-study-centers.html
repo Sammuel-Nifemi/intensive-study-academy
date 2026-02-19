@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin-Study-Centers</title>
+    <link rel="stylesheet" href="../css/student-dashboard.css" />
+    <link rel="stylesheet" href="../css/admin-theme.css" />
+
+</head>
+<body>
+    <h2>Study Centers</h2>
+
+<form id="centerForm">
+  <input type="text" id="centerName" placeholder="Center name" required />
+  <input type="text" id="centerCode" placeholder="Code (e.g. LAG)" required />
+  <button type="submit">Add Center</button>
+</form>
+
+<ul id="centerList"></ul>
+
+<script src="../js/admin-study-centers.js"></script>
+<script src="../js/admin-guard.js"></script>
+<script src="../js/admin-theme.js"></script>
+
+</body>
+</html>

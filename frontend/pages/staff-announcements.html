@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Staff • Announcements | ISA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+</head>
+
+<body class="page-staff-dashboard">
+
+<header class="dashboard-header">
+  <h1>Announcements</h1>
+  <p>Create announcements for students</p>
+</header>
+
+<div class="dashboard-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="dashboard-sidebar">
+    <ul>
+      <li><a href="staff-dashboard.html">Dashboard</a></li>
+      <li><a href="staff-materials.html">Course Materials</a></li>
+      <li><a href="staff-mock-exams.html">Mock Exams</a></li>
+      <li><a href="staff-gallery.html">Resources / Gallery</a></li>
+      <li><a href="staff-announcements.html" class="active">Announcements</a></li>
+      <li><a href="staff-live-classes.html">Live Classes</a></li>
+      <li><a href="staff-e-tag.html">E-Tag</a></li>
+      <li class="divider"></li>
+      <li><button id="logoutBtn">Logout</button></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="dashboard-main">
+
+   <form
+  id="announcementForm"
+  class="dashboard-section"
+  enctype="multipart/form-data"
+>
+  <h3>New Announcement</h3>
+
+  <label>Title</label>
+  <input type="text" id="title" name="title" required />
+
+  <label>Message</label>
+  <textarea id="message" name="body" rows="5" required></textarea>
+
+  <label>Attach Files (optional)</label>
+  <input type="file" name="files" accept=".pdf,.jpg,.jpeg" multiple />
+
+  <button type="submit">Publish</button>
+</form>
+
+
+  </main>
+</div>
+
+<script src="../js/staff-announcements.js"></script>
+</body>
+</html>

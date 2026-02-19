@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select My Courses | Intensive Study Academy</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+</head>
+<body class="page-student-dashboard page-select-courses">
+
+<header class="dashboard-header">
+  <div class="header-container">
+    <div class="logo">
+      <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+    </div>
+    <div class="user-text">
+      <span class="welcome-text">Select My Courses</span>
+    </div>
+    <div class="notification-wrapper" hidden></div>
+  </div>
+</header>
+
+<div class="dashboard-layout">
+  <nav class="dashboard-sidebar" aria-label="Student Navigation">
+    <ul class="sidebar-top">
+      <li><a href="/frontend/pages/student-dashboard.html">Dashboard</a></li>
+      <li><a href="/frontend/pages/course-materials.html">Course Materials</a></li>
+      <li><a href="/frontend/pages/mock-exams.html">Mock Exams</a></li>
+      <li><a href="/frontend/pages/fees.html">Fee Analyzer</a></li>
+      <li class="divider"></li>
+      <li><a href="/frontend/pages/ai-assistant.html">AI Assistant</a></li>
+      <li><a href="/frontend/pages/student-profile.html">Profile</a></li>
+      <li><a href="/frontend/pages/student-settings.html">Settings</a></li>
+    </ul>
+    <div class="sidebar-bottom">
+      <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+    </div>
+  </nav>
+
+  <main class="dashboard-main">
+    <section class="page-header">
+      <h1>Select My Courses</h1>
+      <p>Pick the courses you have registered for this semester.</p>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Academic Details</h2>
+      <ul class="activity-list academic-details-grid">
+        <li><strong>Student:</strong> <span id="studentNameValue">—</span></li>
+        <li><strong>Title:</strong> <span id="studentTitleValue">—</span></li>
+        <li><strong>Faculty:</strong> <span id="facultyValue">—</span></li>
+        <li><strong>Program:</strong> <span id="programValue">—</span></li>
+        <li><strong>Level:</strong> <span id="levelValue">—</span></li>
+        <li><strong>Semester:</strong> <span id="semesterValue">—</span></li>
+      </ul>
+      <div class="admin-actions">
+        <span id="courseStatus" class="status-text">Loading courses...</span>
+        <span id="selectedCount" class="status-text"></span>
+      </div>
+    </section>
+
+    <section id="courseSelectionSummary" class="dashboard-section" hidden>
+      <h2>Your Course Selection</h2>
+      <p class="status-text">
+        <strong>Compulsory</strong> - Required for your program |
+        <strong>Elective</strong> - Optional, you choose
+      </p>
+      <ul class="activity-list">
+        <li><strong>Total Courses Selected:</strong> <span id="totalSelectedValue">0</span></li>
+        <li><strong>Compulsory Courses:</strong> <span id="compulsorySelectedValue">0</span></li>
+        <li><strong>Elective Courses:</strong> <span id="electiveSelectedValue">0</span></li>
+      </ul>
+      <h3>Selected Courses</h3>
+      <ul id="selectedCoursesList" class="activity-list"></ul>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Search Courses</h2>
+      <input
+        type="text"
+        id="globalCourseSearch"
+        placeholder="Search course code or title (e.g. MHC113)"
+      />
+      <div class="admin-actions">
+        <span id="searchStatus" class="status-text"></span>
+      </div>
+      <h3>Other Courses (manual add)</h3>
+      <div id="manualCoursesList" class="course-checkbox-list select-course-list">
+        <p class="status-text">Search to find additional courses.</p>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Available Courses</h2>
+      <div id="coursesList" class="course-checkbox-list select-course-list">
+        <p class="status-text">No courses loaded yet.</p>
+      </div>
+      <div class="admin-actions">
+        <button id="saveCoursesBtn" class="primary-btn" type="button">Save My Courses</button>
+        <span id="saveStatus" class="status-text"></span>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="/frontend/js/student-auth-guard.js"></script>
+<script src="/frontend/js/select-courses.js?v=5"></script>
+  <script src="../js/theme.js"></script>
+</body>
+</html>
+
+

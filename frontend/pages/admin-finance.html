@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Finance | Intensive Study Academy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="../css/student-dashboard.css">
+  <link rel="stylesheet" href="../css/admin-theme.css">
+</head>
+
+<body>
+
+<header class="header">
+  <a href="../index.html">
+    <img src="../image/isa.png" class="logo" alt="ISA logo">
+  </a>
+
+  <nav class="header-nav">
+    <a href="admin-dashboard.html">Dashboard</a>
+    <a href="admin-upload.html">Upload Hub</a>
+  </nav>
+</header>
+
+<main class="dashboard">
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <h1>Finance & Payments</h1>
+    <p>Admin-only control of fees, prices, and payment status.</p>
+  </section>
+
+  <!-- FEE CONFIGURATION -->
+  <section class="dashboard-section">
+    <h2>Fee Configuration</h2>
+
+    <table class="hub-table">
+      <thead>
+        <tr>
+          <th>Fee Type</th>
+          <th>Amount (₦)</th>
+          <th>Required</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>Acceptance Fee</td>
+          <td>
+            <input type="number" value="20000" />
+          </td>
+          <td>Yes</td>
+          <td><button>Save</button></td>
+        </tr>
+
+        <tr>
+          <td>Semester Course Fee</td>
+          <td>
+            <input type="number" value="35000" />
+          </td>
+          <td>Yes</td>
+          <td><button>Save</button></td>
+        </tr>
+
+        <tr>
+          <td>Examination Fee</td>
+          <td>
+            <input type="number" value="15000" />
+          </td>
+          <td>Yes</td>
+          <td><button>Save</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="note">
+      <strong>Note:</strong> Price changes affect new transactions only.
+      Existing payment records remain unchanged.
+    </p>
+  </section>
+
+  <!-- PAYMENT RECORDS -->
+  <section class="dashboard-section">
+    <h2>Student Payment Records</h2>
+
+    <table class="hub-table">
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Fee Type</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>Omogbemi Samuel</td>
+          <td>Semester Course Fee</td>
+          <td>₦35,000</td>
+          <td><span class="status paid">Paid</span></td>
+        </tr>
+
+        <tr>
+          <td>Omogbemi Samuel</td>
+          <td>Examination Fee</td>
+          <td>₦15,000</td>
+          <td><span class="status unpaid">Unpaid</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-bottom">
+    <p>© <span id="year"></span> Intensive Study Academy</p>
+  </div>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+<script src="../js/admin-guard.js"></script>
+<script src="../js/admin-theme.js"></script>
+
+</body>
+</html>

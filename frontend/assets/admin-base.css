@@ -1,0 +1,226 @@
+/* =====================================================
+   ADMIN / STAFF BASE STYLES
+   Shared layout, header, sidebar, buttons
+===================================================== */
+
+/* -------- RESET -------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f4f6f9;
+  color: #1f2937;
+  line-height: 1.5;
+}
+
+/* -------- HEADER -------- */
+.admin-header {
+  height: 64px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.admin-header .logo img {
+  height: 38px;
+}
+
+.admin-info {
+  text-align: right;
+  font-size: 14px;
+}
+
+.admin-info span {
+  display: block;
+  color: #6b7280;
+}
+
+.admin-info strong {
+  color: #1e3a8a;
+  font-weight: 600;
+}
+
+/* -------- LAYOUT -------- */
+.admin-layout {
+  display: flex;
+  min-height: calc(100vh - 64px);
+}
+
+/* -------- SIDEBAR -------- */
+.admin-sidebar {
+  width: 260px;
+  background: #f5f1e6; /* soft beige */
+  color: #1e3a8a;
+  padding: 20px 0;
+  border-right: 1px solid #e5e7eb;
+}
+
+.admin-sidebar nav ul {
+  list-style: none;
+}
+
+.admin-sidebar nav ul li a {
+  color: #1e3a8a;
+  text-decoration: none;
+  display: block;
+  font-weight: 500;
+}
+
+.admin-sidebar nav ul li a {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+/* Hover */
+.admin-sidebar nav ul li:hover {
+  background: #ebe5d6;
+}
+
+/* Active item */
+.admin-sidebar nav ul li.active {
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  font-weight: 600;
+}
+
+
+
+/* Logout / destructive action */
+.admin-sidebar nav ul li.logout {
+  margin-top: 30px;
+  color: #b91c1c;
+} 
+ 
+
+.admin-sidebar nav ul li.logout a {
+  color: #b91c1c;
+}
+
+
+/* -------- MAIN CONTENT -------- */
+.admin-main {
+  flex: 1;
+  padding: 28px;
+}
+
+/* -------- STATS GRID -------- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: #ffffff;
+  padding: 22px;
+  border-radius: 12px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+}
+
+.stat-card h4 {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.stat-card p {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.status-ok {
+  color: #16a34a;
+}
+
+/* -------- SECTIONS -------- */
+.dashboard-section {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 28px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-section h3 {
+  margin-bottom: 16px;
+  font-size: 18px;
+  color: #1e3a8a;
+}
+
+.dashboard-section.notice {
+  background: #eef2ff;
+  color: #1e3a8a;
+}
+
+.dashboard-section.notice.admin {
+  border-left: 4px solid #1e3a8a;
+}
+
+/* -------- BUTTONS -------- */
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: 0.25s ease;
+}
+
+.btn.primary {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.btn.primary:hover {
+  background: #1d4ed8;
+}
+
+.btn.secondary {
+  background: #e5e7eb;
+  color: #1f2937;
+}
+
+.btn.secondary:hover {
+  background: #d1d5db;
+}
+
+/* -------- RESPONSIVE -------- */
+@media (max-width: 900px) {
+  .admin-sidebar {
+    width: 220px;
+  }
+}
+
+@media (max-width: 720px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+  }
+}

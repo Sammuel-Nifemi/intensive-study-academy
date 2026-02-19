@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Staff • Course & Fee Submission | ISA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Use STAFF dashboard styles, not admin -->
+  <link rel="stylesheet" href="../css/dashboard.css" />
+</head>
+
+<body class="page-staff-dashboard">
+
+<header class="dashboard-header">
+  <h1>Course & Fee Submission</h1>
+  <p>Submit structured data for admin approval</p>
+</header>
+
+<div class="dashboard-layout">
+
+  <!-- STAFF SIDEBAR -->
+  <aside class="dashboard-sidebar">
+    <ul>
+      <li><a href="staff-dashboard.html">Dashboard</a></li>
+      <li><a href="staff-materials.html">Course Materials</a></li>
+      <li><a href="staff-mock-exams.html">Mock Exams</a></li>
+      <li><a href="staff-gallery.html">Resources / Gallery</a></li>
+      <li><a href="staff-announcements.html">Announcements</a></li>
+      <li><a href="staff-course-upload.html" class="active">Course & Fee Upload</a></li>
+      <li><a href="staff-live-classes.html">Live Classes</a></li>
+      <li><a href="staff-e-tag.html">E-Tag</a></li>
+      <li class="divider"></li>
+      <li><button id="logoutBtn">Logout</button></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="dashboard-main">
+
+    <section class="dashboard-section">
+      <h3>Submit Course & Fee Data</h3>
+      <p class="muted">
+        Upload a JSON file containing course and fee information.
+        All submissions are reviewed and approved by an administrator
+        before becoming active.
+      </p>
+
+      <form id="courseUploadForm" class="summary-box">
+        <label>
+          <strong>Select JSON File</strong><br />
+          <input
+            type="file"
+            id="courseJsonFile"
+            accept=".json"
+            required
+          />
+        </label>
+
+        <button type="submit">Submit for Approval</button>
+      </form>
+    </section>
+
+  </main>
+</div>
+
+<script src="../js/staff-course-upload.js"></script>
+</body>
+</html>

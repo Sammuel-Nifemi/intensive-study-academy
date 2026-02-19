@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Academic Hub | Intensive Study Academy</title>
+<link rel="stylesheet" href="../assets/academic-hub.css">
+</head>
+<body>
+
+<div class="dashboard">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <nav>
+      <ul>
+        <section class="hub-tree">
+        <li>Hub Overview</li>
+
+        <li>
+          Slip Services
+          <ul>
+<li>
+  Exam Clearance Slip
+  <span class="status config">CONFIG</span>
+</li>            
+
+<li>Seminar Slip <span class="tag config">CONFIG</span></li>
+          </ul>
+        </li>
+
+        <li>
+          Project Templates
+          <ul>
+            <li>DES 303 <span class="tag active">ACTIVE</span></li>
+          </ul>
+        </li>
+
+        <li>
+          Academic Resources
+          <ul>
+            <li>Course Materials <span class="status active">ACTIVE</span></li>
+            <li>Past Questions <span class="tag active">ACTIVE</span></li>
+          </ul>
+        </li>
+
+        <li>
+          Content Management
+          <ul>
+            <li>Blog <span class="tag active">ACTIVE</span></li>
+            <li>Gallery <span class="tag active">ACTIVE</span></li>
+          </ul>
+        </li>
+
+        <li>
+          Other Services
+          <ul>
+            <li>Mock Exams <span class="tag reference">LINKED</span></li>
+            <li>Live Classes <span class="tag reference">LINKED</span></li>
+          </ul>
+        </li>
+      </section>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="academic-hub">
+
+    <!-- HEADER -->
+    <header>
+      <h1>Academic Content & Services Hub</h1>
+      <p>Admin / Staff Control Center</p>
+    </header>
+
+    <!-- OVERVIEW -->
+    <section id="hub-overview">
+      <h2>Hub Overview</h2>
+      <p>
+        Manage academic services, official documents, resources,
+        and institutional content from one central location.
+      </p>
+    </section>
+
+    <!-- UPLOAD ACADEMIC RESOURCE -->
+    <section id="upload-resource">
+      <h2>Upload Academic Resource</h2>
+      <p class="sub">
+        Upload course materials, past questions, project templates,
+        or official DES 303 documents.
+      </p>
+      <!-- UPLOAD FEEDBACK -->
+      <div id="uploadFeedback" class="upload-feedback" style="margin-top:16px;"></div>
+
+
+      <form id="resourceUploadForm" class="hub-form">
+
+
+        <label for="resourceType">Resource Type</label>
+        <select id="resourceType" name="resourceType" required>
+          <option value="">-- Select Resource Type --</option>
+          <option value="course-material">Course Material</option>
+          <option value="past-question">Past Question</option>
+          <option value="project-template">Project Template</option>
+          <option value="des-303">DES 303 Document</option>
+        </select>
+
+        <label for="courseCode">Course Code</label>
+        <input type="text" id="courseCode" name="courseCode" placeholder="e.g. GST101">
+
+        <label for="session">Academic Session</label>
+        <input type="text" id="session" name="session" placeholder="e.g. 2021/2022">
+
+        <label for="semester">Semester</label>
+        <select id="semester" name="semester">
+          <option value="">-- Select Semester --</option>
+          <option value="first">First</option>
+          <option value="second">Second</option>
+        </select>
+
+        <label for="resourceFile">Upload File</label>
+        <input type="file" id="resourceFile" name="resourceFile" accept=".pdf,.doc,.docx" required>
+
+        <label for="visibility">Visibility</label>
+        <select id="visibility" name="visibility">
+          <option value="students">Students</option>
+          <option value="staff">Staff Only</option>
+          <option value="admin">Admin Only</option>
+        </select>
+
+        <button type="submit">Upload Resource</button>
+
+      </form>
+    </section>
+
+    
+
+    <!-- ACADEMIC RESOURCES -->
+    <section id="academic-resources">
+      <h2>Academic Resources</h2>
+
+      <div class="hub-card">
+        <h3>Course Materials</h3>
+        <p>Upload and manage lecture materials.</p>
+      </div>
+
+      <div class="hub-card">
+        <h3>Past Questions</h3>
+        <p>Manage historical exam questions.</p>
+      </div>
+    </section>
+
+    <!-- CONTENT MANAGEMENT -->
+    <section id="content-management">
+      <h2>Content Management</h2>
+
+      <div class="hub-card blog-manager">
+  <h3>Blog</h3>
+  <p>Create and publish academic announcements and articles.</p>
+
+  <form class="hub-form">
+
+    <!-- BLOG TITLE -->
+    <label for="blogTitle">Post Title</label>
+    <input
+      type="text"
+      id="blogTitle"
+      name="blogTitle"
+      placeholder="Enter blog title"
+      required
+    />
+
+    <!-- BLOG CATEGORY -->
+    <label for="blogCategory">Category</label>
+    <select id="blogCategory" name="blogCategory">
+      <option value="academic">Academic</option>
+      <option value="announcement">Announcement</option>
+      <option value="notice">Notice</option>
+    </select>
+
+    <!-- BLOG CONTENT -->
+    <label for="blogContent">Post Content</label>
+    <textarea
+      id="blogContent"
+      name="blogContent"
+      rows="6"
+      placeholder="Write the blog content here..."
+      required
+    ></textarea>
+
+    <!-- FEATURED IMAGE (OPTIONAL) -->
+    <label for="blogImage">Featured Image (optional)</label>
+    <input
+      type="file"
+      id="blogImage"
+      name="blogImage"
+      accept="image/*"
+    />
+
+    <!-- VISIBILITY -->
+    <label for="blogVisibility">Visibility</label>
+    <select id="blogVisibility" name="blogVisibility">
+      <option value="students">Students</option>
+      <option value="staff">Staff Only</option>
+    </select>
+
+    <button type="submit">Publish Post</button>
+
+  </form>
+</div>
+
+
+      <div class="hub-card">
+        <h3>Gallery</h3>
+        <p>Upload and manage images and media.</p>
+      </div>
+    </section>
+
+    <!-- CONTROLS -->
+    <section id="controls">
+      <h2>Controls</h2>
+      <p>
+        Set visibility, activation status, and academic session
+        configuration.
+      </p>
+    </section>
+
+  </main>
+
+</div>
+<script src="../js/auth-guard.js"></script>
+<script src="../js/upload.js"></script>
+
+</body>
+</html>

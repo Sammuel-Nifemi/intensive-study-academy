@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payments | Intensive Study Academy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+
+<body>
+
+<header class="header">
+  <a href="../index.html">
+    <img src="../image/isa.png" class="logo" alt="ISA logo">
+  </a>
+
+  <nav class="header-nav">
+    <a href="student-dashboard.html">Dashboard</a>
+    <a href="academic-blog.html">Blog</a>
+  </nav>
+</header>
+
+<main class="dashboard">
+
+  <section class="page-header">
+    <h1>Student Payments</h1>
+    <p>View required fees and payment status.</p>
+  </section>
+
+  <section class="dashboard-section">
+
+    <table class="hub-table">
+      <thead>
+        <tr>
+          <th>Fee Type</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>Acceptance Fee</td>
+          <td>₦20,000</td>
+          <td><span class="status unpaid">Unpaid</span></td>
+          <td><button disabled>Pay Now</button></td>
+        </tr>
+
+        <tr>
+          <td>Semester Course Fee</td>
+          <td>₦35,000</td>
+          <td><span class="status paid">Paid</span></td>
+          <td>—</td>
+        </tr>
+
+        <tr>
+          <td>Examination Fee</td>
+          <td>₦15,000</td>
+          <td><span class="status unpaid">Unpaid</span></td>
+          <td><button disabled>Pay Now</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="note">
+      <strong>Note:</strong> Payments are verified by the institution.
+      Clearance and slips depend on payment confirmation.
+    </p>
+
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-bottom">
+    <p>© <span id="year"></span> Intensive Study Academy</p>
+  </div>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+<script src="../js/activityTracker.js"></script>
+
+</body>
+</html>

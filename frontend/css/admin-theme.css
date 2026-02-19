@@ -1,0 +1,259 @@
+:root {
+  --admin-bg: #f3f0ea;
+  --admin-surface: #ffffff;
+  --admin-ink: #1f2937;
+  --admin-muted: #6b7280;
+  --admin-accent: #0f766e;
+  --admin-accent-2: #c2410c;
+  --admin-border: #e7e2d9;
+  --admin-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+  --admin-header: linear-gradient(120deg, #0f766e, #115e59);
+  --admin-sidebar: #1f2937;
+  --admin-sidebar-hover: rgba(15, 118, 110, 0.25);
+}
+
+body {
+  background: radial-gradient(circle at top left, #fef6e8, #f3f0ea 50%, #efe7dc);
+  color: var(--admin-ink);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body[data-admin-theme="emerald"] {
+  --admin-bg: #f3f0ea;
+  --admin-surface: #ffffff;
+  --admin-ink: #1f2937;
+  --admin-muted: #6b7280;
+  --admin-accent: #0f766e;
+  --admin-accent-2: #c2410c;
+  --admin-border: #e7e2d9;
+  --admin-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+  --admin-header: linear-gradient(120deg, #0f766e, #115e59);
+  --admin-sidebar: #1f2937;
+  --admin-sidebar-hover: rgba(15, 118, 110, 0.25);
+  background: radial-gradient(circle at top left, #fef6e8, #f3f0ea 50%, #efe7dc);
+}
+
+body[data-admin-theme="slate"] {
+  --admin-bg: #eff2f7;
+  --admin-surface: #ffffff;
+  --admin-ink: #111827;
+  --admin-muted: #6b7280;
+  --admin-accent: #334155;
+  --admin-accent-2: #0f172a;
+  --admin-border: #e5e7eb;
+  --admin-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+  --admin-header: linear-gradient(120deg, #334155, #0f172a);
+  --admin-sidebar: #0f172a;
+  --admin-sidebar-hover: rgba(51, 65, 85, 0.4);
+  background: radial-gradient(circle at top left, #f8fafc, #eff2f7 50%, #e5e7eb);
+}
+
+body[data-admin-theme="royal"] {
+  --admin-bg: #f5f3ff;
+  --admin-surface: #ffffff;
+  --admin-ink: #1f2937;
+  --admin-muted: #6b7280;
+  --admin-accent: #4f46e5;
+  --admin-accent-2: #7c3aed;
+  --admin-border: #e7e5ff;
+  --admin-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+  --admin-header: linear-gradient(120deg, #4f46e5, #7c3aed);
+  --admin-sidebar: #312e81;
+  --admin-sidebar-hover: rgba(79, 70, 229, 0.35);
+  background: radial-gradient(circle at top left, #ede9fe, #f5f3ff 50%, #e0e7ff);
+}
+
+body[data-admin-theme="sunset"] {
+  --admin-bg: #fff4ed;
+  --admin-surface: #ffffff;
+  --admin-ink: #1f2937;
+  --admin-muted: #6b7280;
+  --admin-accent: #ea580c;
+  --admin-accent-2: #f97316;
+  --admin-border: #fee2d5;
+  --admin-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+  --admin-header: linear-gradient(120deg, #ea580c, #f97316);
+  --admin-sidebar: #7c2d12;
+  --admin-sidebar-hover: rgba(234, 88, 12, 0.3);
+  background: radial-gradient(circle at top left, #ffedd5, #fff4ed 50%, #ffe4d5);
+}
+
+body[data-admin-theme="mono"] {
+  --admin-bg: #f5f5f5;
+  --admin-surface: #ffffff;
+  --admin-ink: #111827;
+  --admin-muted: #6b7280;
+  --admin-accent: #111827;
+  --admin-accent-2: #4b5563;
+  --admin-border: #e5e7eb;
+  --admin-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+  --admin-header: linear-gradient(120deg, #111827, #374151);
+  --admin-sidebar: #111827;
+  --admin-sidebar-hover: rgba(17, 24, 39, 0.35);
+  background: radial-gradient(circle at top left, #ffffff, #f5f5f5 50%, #eeeeee);
+}
+
+.dashboard-header {
+  background: var(--admin-header);
+  color: #fff;
+  border-bottom: 0;
+  box-shadow: var(--admin-shadow);
+}
+
+.dashboard-header .logo img {
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.15));
+}
+
+.dashboard-layout {
+  background: transparent;
+}
+
+.dashboard-sidebar {
+  background: var(--admin-sidebar);
+  color: #e5e7eb;
+  border-right: 0;
+  box-shadow: var(--admin-shadow);
+}
+
+.dashboard-sidebar a {
+  color: #e5e7eb;
+}
+
+.dashboard-sidebar a.active,
+.dashboard-sidebar a:hover {
+  background: var(--admin-sidebar-hover);
+  color: #fff;
+}
+
+.dashboard-main {
+  background: transparent;
+}
+
+.page-header {
+  background: var(--admin-surface);
+  border-radius: 16px;
+  padding: 18px 22px;
+  border: 1px solid var(--admin-border);
+  box-shadow: var(--admin-shadow);
+}
+
+.dashboard-section {
+  background: var(--admin-surface);
+  border-radius: 16px;
+  border: 1px solid var(--admin-border);
+  box-shadow: var(--admin-shadow);
+  padding: 18px 22px;
+}
+
+.admin-table {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--admin-border);
+}
+
+.admin-table th {
+  background: #f8f4ee;
+  color: var(--admin-ink);
+}
+
+.primary-btn {
+  background: var(--admin-accent);
+  color: #fff;
+  border: 0;
+  box-shadow: 0 8px 18px rgba(15, 118, 110, 0.25);
+}
+
+.primary-btn:hover {
+  background: var(--admin-accent-2);
+}
+
+.action-btn {
+  border-color: var(--admin-border);
+}
+
+.action-btn.danger {
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.status-text {
+  color: var(--admin-muted);
+}
+
+/* Legacy admin page fallback so older pages match dashboard theme */
+body:not(.page-admin-dashboard) {
+  min-height: 100vh;
+}
+
+body:not(.page-admin-dashboard) > h1,
+body:not(.page-admin-dashboard) > h2 {
+  max-width: 1100px;
+  margin: 24px auto 10px;
+  padding: 0 20px;
+  color: var(--admin-ink);
+}
+
+body:not(.page-admin-dashboard) > p,
+body:not(.page-admin-dashboard) > .note,
+body:not(.page-admin-dashboard) > .admin-links {
+  max-width: 1100px;
+  margin: 0 auto 16px;
+  padding: 0 20px;
+  color: var(--admin-muted);
+}
+
+body:not(.page-admin-dashboard) > form,
+body:not(.page-admin-dashboard) > #pendingList,
+body:not(.page-admin-dashboard) > #adminActionFeedback,
+body:not(.page-admin-dashboard) > #deptForm,
+body:not(.page-admin-dashboard) > #centerForm,
+body:not(.page-admin-dashboard) > #facultyList,
+body:not(.page-admin-dashboard) > #programList,
+body:not(.page-admin-dashboard) > #deptList {
+  max-width: 1100px;
+  margin: 0 auto 16px;
+  padding: 18px 20px;
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: 14px;
+  box-shadow: var(--admin-shadow);
+}
+
+body:not(.page-admin-dashboard) input,
+body:not(.page-admin-dashboard) select,
+body:not(.page-admin-dashboard) textarea,
+body:not(.page-admin-dashboard) button {
+  font: inherit;
+}
+
+body:not(.page-admin-dashboard) input,
+body:not(.page-admin-dashboard) select,
+body:not(.page-admin-dashboard) textarea {
+  width: 100%;
+  max-width: 420px;
+  padding: 10px 12px;
+  border: 1px solid var(--admin-border);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--admin-ink);
+}
+
+body:not(.page-admin-dashboard) button {
+  margin-top: 10px;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--admin-accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+body:not(.page-admin-dashboard) ul {
+  list-style: none;
+  padding: 0;
+}
+
+body:not(.page-admin-dashboard) li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--admin-border);
+}

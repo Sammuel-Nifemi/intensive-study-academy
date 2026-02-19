@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Academic Blog | Intensive Study Academy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../css/blog.css">
+</head>
+
+<body>
+
+<header class="header">
+  <a href="../index.html">
+    <img src="../image/isa.png" class="logo" alt="ISA logo">
+  </a>
+
+  <nav class="header-nav">
+    <a href="/frontend/pages/student-dashboard.html">Dashboard</a>
+  </nav>
+</header>
+
+<main class="blog-container">
+
+  <h1>Academic Blog</h1>
+  <p>Latest announcements, notices, and academic articles.</p>
+
+  <div class="blog-list" id="blogList"></div>
+
+  <!-- SINGLE POST VIEW -->
+  <div class="blog-post" id="blogPost" style="display:none;">
+    <button onclick="backToList()">← Back to Blog</button>
+    <h2 id="postTitle"></h2>
+    <p class="meta" id="postMeta"></p>
+    <div id="postContent"></div>
+  </div>
+
+</main>
+
+<script type="module">
+  import { blogPosts } from "../js/blog-posts.js";
+
+  const blogList = document.getElementById("blogList");
+  const blogPost = document.getElementById("blogPost");
+
+  const postTitle = document.getElementById("postTitle");
+  const postMeta = document.getElementById("postMeta");
+  const postContent = document.getElementById("postContent");
+
+  function renderList() {
+    blogList.innerHTML = "";
+    blogPost.style.display = "none";
+    blogList.style.display = "block";
+
+    blogPosts
+      .filter(post => post.visibility === "students")
+      .forEach(post => {
+        blogList.innerHTML += `
+          <div class="blog-card">
+            <h3>${post.title}</h3>
+            <p class="category">${post.category.toUpperCase()}</p>
+            <p>${post.excerpt}</p>
+            <button onclick="openPost(${post.id})">Read More →</button>
+          </div>
+        `;
+      });
+  }
+
+  window.openPost = function (id) {
+    const post = blogPosts.find(p => p.id === id);
+    if (!post) return;
+
+    blogList.style.display = "none";
+    blogPost.style.display = "block";
+
+    postTitle.innerText = post.title;
+    postMeta.innerText = `${post.category.toUpperCase()} • ${post.date}`;
+    postContent.innerHTML = post.content;
+  };
+
+  window.backToList = function () {
+    renderList();
+  };
+
+  renderList();
+</script>
+<script src="../js/admin-guard.js"></script>
+
+</body>
+</html>

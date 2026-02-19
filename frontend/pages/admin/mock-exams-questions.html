@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mock Exam Questions</title>
+
+  <!-- paths based on your structure -->
+  <link rel="stylesheet" href="./css/mock-exams.css" />
+</head>
+<body>
+
+  <header class="page-header">
+    <h1 id="examTitle">Exam Questions</h1>
+    <a href="admin-mock-exams.html" class="btn">← Back to Exams</a>
+  </header>
+
+  <!-- ADD QUESTION -->
+  <section class="form-card">
+    <h3>Add Question</h3>
+
+    <div class="form-group">
+      <label>Question</label>
+      <textarea id="questionText" rows="3"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Option A</label>
+      <input type="text" id="optA">
+    </div>
+
+    <div class="form-group">
+      <label>Option B</label>
+      <input type="text" id="optB">
+    </div>
+
+    <div class="form-group">
+      <label>Option C</label>
+      <input type="text" id="optC">
+    </div>
+
+    <div class="form-group">
+      <label>Option D</label>
+      <input type="text" id="optD">
+    </div>
+
+    <div class="form-group">
+      <label>Correct Answer</label>
+      <select id="correct">
+        <option value="">-- select --</option>
+        <option value="A">Option A</option>
+        <option value="B">Option B</option>
+        <option value="C">Option C</option>
+        <option value="D">Option D</option>
+      </select>
+    </div>
+
+    <button onclick="addQuestion()" class="btn primary">Add Question</button>
+  </section>
+
+  <!-- QUESTIONS LIST -->
+  <section class="table-container">
+    <h3>Existing Questions</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Question</th>
+          <th>Correct</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="questionsTable"></tbody>
+    </table>
+  </section>
+
+  <script src="./js/exam-questions.js"></script>
+</body>
+</html>

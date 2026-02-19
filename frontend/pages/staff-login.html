@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Staff Login</title>
+  <link rel="stylesheet" href="../css/auth.css">
+  <link rel="stylesheet" href="../assets/global.css">
+  <link rel="stylesheet" href="../assets/admin-base.css">
+</head>
+<body>
+  <div class="auth-box">
+    <h2>Staff Login</h2>
+
+    <form id="staffLoginForm">
+      <input
+        type="email"
+        id="email"
+        placeholder="Email"
+        required
+      />
+
+      <div class="password-wrapper">
+        <input
+          type="password"
+          id="password"
+          placeholder="Password"
+          required
+        />
+        <span class="toggle-password" id="togglePassword">👁️</span>
+      </div>
+
+      <button type="submit">Login</button>
+      <button type="button" id="forgotBtn" class="action-btn">Forgot Password?</button>
+      <p id="msg"></p>
+    </form>
+
+    <form id="staffOtpForm" style="display:none;">
+      <h3>Verify OTP</h3>
+      <input type="text" id="otpCode" placeholder="Enter OTP code" required />
+      <button type="submit">Verify OTP</button>
+      <p id="otpMsg"></p>
+    </form>
+
+    <form id="staffResetForm" style="display:none;">
+      <h3>Set New Password</h3>
+      <div class="password-wrapper">
+        <input type="password" id="newPassword" placeholder="New password" required />
+        <span class="toggle-password" id="toggleNewPassword">👁️</span>
+      </div>
+      <button type="submit">Update Password</button>
+      <p id="resetMsg"></p>
+    </form>
+  </div>
+  <script src="../js/staff-login.js"></script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Past Questions & Summaries | Intensive Study Academy</title>
+
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="/frontend/css/watermark.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+
+  <style>
+    .page-past-questions .dashboard-main {
+      padding: 36px 40px 48px;
+    }
+
+    .page-past-questions .page-header {
+      padding: 20px 28px;
+      margin-bottom: 28px;
+    }
+
+    .page-past-questions .page-header h1 {
+      margin-bottom: 8px;
+      font-size: 2rem;
+      line-height: 1.16;
+    }
+
+    .page-past-questions .page-header p {
+      font-size: 1.02rem;
+      line-height: 1.45;
+    }
+
+    .page-past-questions .dashboard-section.pq-container {
+      padding: 30px;
+    }
+
+    .page-past-questions .pq-container h2 {
+      margin-bottom: 10px;
+      font-size: 1.8rem;
+      line-height: 1.2;
+    }
+
+    .page-past-questions .pq-container > p {
+      font-size: 1.02rem;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 900px) {
+      .page-past-questions .dashboard-main {
+        padding: 26px 22px 36px;
+      }
+
+      .page-past-questions .page-header,
+      .page-past-questions .dashboard-section.pq-container {
+        padding: 20px;
+      }
+
+      .page-past-questions .page-header h1 {
+        font-size: 1.65rem;
+      }
+    }
+
+    .pq-container {
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+      text-align: left;
+    }
+
+    .pq-container input {
+      width: 100%;
+      padding: 14px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      margin-top: 12px;
+    }
+
+    .pq-results {
+      margin-top: 24px;
+    }
+
+    .pq-card {
+      background: #fff;
+      padding: 22px;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 18px;
+      box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+      text-align: left;
+    }
+
+    .pq-card h3 {
+      margin-bottom: 6px;
+      color: #0f766e;
+    }
+
+    .pq-card a {
+      display: inline-block;
+      margin-top: 10px;
+      color: #0f766e;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .pq-note {
+      background: #f7f4ef;
+      border-left: 4px solid #0f766e;
+      padding: 16px;
+      margin-top: 24px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    .disclaimer-text {
+      font-size: 12px;
+      color: #666;
+      text-align: center;
+      padding: 15px;
+    }
+  </style>
+</head>
+
+<body class="page-student-dashboard page-past-questions">
+
+<header class="dashboard-header">
+  <div class="header-container">
+    <div class="logo">
+      <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+    </div>
+
+    <div class="user-text">
+      <span class="welcome-text" id="studentName">Loading...</span>
+    </div>
+
+    <div class="notification-wrapper">
+      <button id="notificationBell" class="notification-bell" type="button" aria-label="Notifications">
+        <span class="bell-icon">&#128276;</span>
+        <span id="notificationBadge" class="notification-badge" hidden>0</span>
+      </button>
+      <div id="notificationDropdown" class="notification-dropdown" hidden></div>
+    </div>
+  </div>
+</header>
+
+<div class="dashboard-layout">
+  <nav class="dashboard-sidebar" aria-label="Student Navigation">
+    <ul class="sidebar-top">
+      <li><a href="/frontend/pages/student-dashboard.html">Dashboard</a></li>
+      <li><a href="/frontend/pages/course-materials.html">Course Materials</a></li>
+      <li><a href="/frontend/pages/mock-exams.html">Mock Exams</a></li>
+      <li><a id="feeAnalyzerLink" href="/frontend/pages/fees.html">Fee Analyzer</a></li>
+      <li><a href="/frontend/pages/exam-timetable.html">Exam Timetable</a></li>
+      <li><a href="/frontend/pages/past-questions.html" class="active">Past Questions</a></li>
+      <li><a href="live-classes.html">Live Classes</a></li>
+      <li class="divider"></li>
+      <li><a href="/frontend/pages/ai-assistant.html">AI Assistant</a></li>
+      <li><a href="/frontend/pages/student-profile.html">Profile</a></li>
+      <li><a href="/frontend/pages/student-settings.html">Settings</a></li>
+    </ul>
+
+    <div class="sidebar-bottom">
+      <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+    </div>
+  </nav>
+
+  <main class="dashboard-main">
+    <section class="page-header">
+      <h1>Past Questions & Summaries</h1>
+      <p>Search by course code to find approved past questions and summaries.</p>
+    </section>
+
+    <section class="dashboard-section pq-container">
+      <h2>Search Past Questions</h2>
+      <p>Search by course code (example: <strong>GST 101</strong>)</p>
+
+      <input
+        type="text"
+        id="courseInput"
+        placeholder="Enter course code..."
+        onkeyup="searchCourse()"
+      />
+
+      <div class="pq-results" id="pqResults"></div>
+
+      <div class="pq-note">
+        <strong>Important:</strong><br>
+        This system only displays approved courses.
+        Summaries are generated strictly from verified materials.
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="paymentModal" class="payment-modal" style="display:none;">
+  <div class="payment-box">
+    <h3>Payment Required</h3>
+    <p id="paymentReason"></p>
+    <p><strong id="paymentAmount"></strong></p>
+
+    <button onclick="proceedToPayment()">Proceed</button>
+    <button onclick="closePaymentModal()">Cancel</button>
+  </div>
+</div>
+
+<footer class="dashboard-footer">
+  <p class="disclaimer-text">
+    This platform provides academic guidance only and is not affiliated with
+    the National Open University of Nigeria (NOUN).
+    Fees and course structures may change without notice.
+  </p>
+</footer>
+
+<div class="system-watermark">
+  UNOFFICIAL · ACADEMIC GUIDANCE ONLY
+</div>
+
+<script src="/frontend/js/student-auth-guard.js"></script>
+<script src="../js/notifications.js"></script>
+<script src="/frontend/js/pdf-export.js"></script>
+<script src="/frontend/js/learning-content.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="../js/learning-protection.js"></script>
+<script src="../js/past-questions.js"></script>
+  <script src="../js/theme.js"></script>
+</body>
+</html>
+
+
+
+

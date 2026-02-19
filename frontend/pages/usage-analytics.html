@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Usage Analytics | Admin</title>
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="page-admin-dashboard">
+
+<header class="dashboard-header">
+  <h1>Usage Analytics</h1>
+  <p>Student distribution and platform usage</p>
+</header>
+
+<main class="dashboard-main">
+
+  <section class="admin-section">
+    <h3>Overview</h3>
+    <ul class="data-list">
+      <li>Total Students: <strong id="totalStudents">0</strong></li>
+      <li>Largest Study Center: <strong id="largestCenter">—</strong></li>
+    </ul>
+  </section>
+
+  <section class="admin-section">
+    <h3>Students by State</h3>
+    <canvas id="stateChart"></canvas>
+  </section>
+
+  <section class="admin-section">
+    <h3>Students by Study Center</h3>
+    <canvas id="centerChart"></canvas>
+  </section>
+
+</main>
+
+<script src="../js/usage-analytics.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Course Summary | Intensive Study Academy</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="/frontend/css/watermark.css" />
+</head>
+<body class="page-student-dashboard">
+  <main class="dashboard-main">
+    <section class="page-header">
+      <h1 id="summaryTitle">Course Summary</h1>
+      <p>Read approved summary content for your selected course.</p>
+    </section>
+
+    <section class="dashboard-section">
+      <div class="admin-actions">
+        <input id="summaryCourseInput" type="text" placeholder="Course code (e.g. GST101)" />
+        <button id="loadSummaryBtn" class="primary-btn" type="button">Load Summary</button>
+      </div>
+      <p id="summaryStatus" class="status-text"></p>
+      <article id="summaryContent" class="activity-list"></article>
+    </section>
+  </main>
+
+  <script src="/frontend/js/student-auth-guard.js"></script>
+  <script src="/frontend/js/pdf-export.js"></script>
+  <script src="/frontend/js/learning-content.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="../js/learning-protection.js"></script>
+  <script src="../js/course-summary.js"></script>
+  <script src="../js/theme.js"></script>
+</body>
+</html>
+
+

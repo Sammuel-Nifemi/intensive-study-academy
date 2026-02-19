@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mock Exam</title>
+    <link rel="stylesheet" href="./css/mock-exams.css" />
+
+</head>
+<body>
+
+  <header class="page-header">
+  <h1 id="examTitle">Mock Exam</h1>
+  <div id="timer" style="font-weight:600;"></div>
+</header>
+
+
+  <section class="form-card">
+    <h3 id="questionText"></h3>
+
+    <div id="options"></div>
+
+    <button id="nextBtn" class="btn primary">
+      Next
+    </button>
+  </section>
+
+  <section id="reviewSection" class="form-card" style="display:none;">
+  <h2>Exam Review</h2>
+  <p id="scoreText"></p>
+
+  <div id="reviewContainer"></div>
+</section>
+
+  <script src="./mock-exam.js"></script>
+</body>
+</html>

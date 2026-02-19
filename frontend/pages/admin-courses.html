@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Courses | Intensive Study Academy</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/admin-academic.css" />
+  <link rel="stylesheet" href="../css/admin-theme.css" />
+</head>
+<body>
+<header class="dashboard-header">
+  <div class="header-container">
+    <div class="logo">
+      <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+    </div>
+    <div class="user-text">
+      <strong>Admin</strong>
+      <a class="action-btn" href="/frontend/pages/admin-settings.html">Settings</a>
+    </div>
+  </div>
+</header>
+
+<div class="dashboard-layout">
+  <nav class="dashboard-sidebar">
+    <ul class="sidebar-top">
+      <li><a href="/frontend/pages/admin-dashboard.html">Dashboard</a></li>
+      <li><a href="/frontend/pages/admin-staff.html">Staff</a></li>
+      <li><a href="/frontend/pages/admin-courses.html" class="active">Courses</a></li>
+      <li><a href='/frontend/pages/admin-curriculum.html'>Curriculum</a></li>
+      <li><a href="/frontend/pages/admin-course-materials.html">Course Materials</a></li>
+      <li><a href="/frontend/pages/admin-mocks.html">Mock Exams</a></li>
+      <li><a href="/frontend/pages/admin-exam-timetables.html">Exam Timetables</a></li>
+      <li><a href="/frontend/pages/admin-fee-structures.html">Fee Structures</a></li>
+      <li><a href="/frontend/pages/admin-cbt.html">CBT Exams</a></li>
+      <li class="divider"></li>
+      <li><a href="/frontend/pages/admin-announcements.html">Announcements</a></li>
+      <li><a href="/frontend/pages/admin-blog.html">Blog</a></li>
+      <li><a href="/frontend/pages/admin-gallery.html">Gallery</a></li>
+    </ul>
+    <div class="sidebar-bottom">
+      <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+    </div>
+  </nav>
+
+  <main class="dashboard-main">
+    <section class="page-header">
+      <h1>Courses</h1>
+      <p>Manage master academic course data.</p>
+      <p class="helper-text">
+        This page defines official courses offered by the institution. It does not upload materials or exams.
+      </p>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Add Course</h2>
+      <form id="courseForm" class="admin-form">
+        <div>
+          <label>Course Code</label>
+          <input type="text" id="courseCode" placeholder="e.g. GST101" required />
+        </div>
+        <div>
+          <label>Course Title</label>
+          <input type="text" id="courseTitle" placeholder="Course title" required />
+        </div>
+        <div>
+          <label>Level</label>
+          <input type="text" id="level" placeholder="e.g. 100" required />
+        </div>
+        <div>
+          <label>Semester</label>
+          <input type="text" id="semester" placeholder="e.g. First" required />
+        </div>
+        <div>
+          <label>Units</label>
+          <select id="courseUnits" required>
+            <option value="">Select Units</option>
+            <option value="2">2 Units</option>
+            <option value="3">3 Units</option>
+          </select>
+        </div>
+      </form>
+      <div class="admin-actions">
+        <button id="submitBtn" class="primary-btn" type="button">Add Course</button>
+        <span id="formStatus" class="status-text"></span>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>All Courses</h2>
+      <div class="admin-actions">
+        <span id="listStatus" class="status-text"></span>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Title</th>
+            <th>Level</th>
+            <th>Units</th>
+            <th>Semester</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="coursesTableBody"></tbody>
+      </table>
+    </section>
+  </main>
+</div>
+
+<script src="../js/admin-guard.js"></script>
+<script src="../js/admin-logout.js"></script>
+<script src="../js/admin-theme.js"></script>
+<script src="../js/admin-academic-utils.js"></script>
+<script src="../js/admin-courses.js"></script>
+</body>
+</html>
+
+

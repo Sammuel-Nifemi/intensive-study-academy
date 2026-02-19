@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Settings | Intensive Study Academy</title>
+  <!-- Settings = preferences only (no identity fields). -->
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/admin-theme.css" />
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-container">
+      <div class="logo">
+        <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+      </div>
+      <div class="user-text">
+        <strong>Staff Settings</strong>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-main" style="max-width:900px;margin:0 auto;">
+    <a class="back-link" href="/frontend/pages/staff-dashboard.html"><- Back to Dashboard</a>
+
+    <section class="page-header">
+      <h1>Settings</h1>
+      <p>Preferences, notifications, and account actions.</p>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Preferences</h2>
+      <form id="settingsForm" class="admin-form">
+        <div>
+          <label><input type="checkbox" id="emailNotifications" /> Email Notifications</label>
+        </div>
+        <div>
+          <label><input type="checkbox" id="inAppNotifications" /> In-App Notifications</label>
+        </div>
+        <div>
+          <label><input type="checkbox" id="darkMode" /> Dark Mode</label>
+        </div>
+      </form>
+      <div class="admin-actions">
+        <button type="submit" form="settingsForm" class="primary-btn">Save Settings</button>
+        <span id="settingsStatus" class="status-text"></span>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Change Password</h2>
+      <form id="passwordForm" class="admin-form">
+        <div>
+          <label>Current Password</label>
+          <input type="password" id="currentPassword" required />
+        </div>
+        <div>
+          <label>New Password</label>
+          <input type="password" id="newPassword" required />
+        </div>
+      </form>
+      <div class="admin-actions">
+        <button type="submit" form="passwordForm" class="primary-btn">Update Password</button>
+        <span id="passwordStatus" class="status-text"></span>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Account</h2>
+      <p>Request account deactivation if you no longer need access.</p>
+      <div class="admin-actions">
+        <button id="deactivateBtn" class="action-btn danger" type="button">Request Deactivation</button>
+        <span id="deactivateStatus" class="status-text"></span>
+      </div>
+    </section>
+  </main>
+
+  <script src="../js/staff-settings.js"></script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fee Analyzer | Intensive Study Academy</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/admin-academic.css" />
+  <link rel="stylesheet" href="../css/fees.css" />
+</head>
+<body>
+
+<header class="dashboard-header">
+  <div class="header-container">
+    <div class="logo">
+      <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+    </div>
+    <div class="user-text">
+      <strong>Fee Analyzer</strong>
+    </div>
+  </div>
+</header>
+
+<div class="dashboard-layout">
+  <nav class="dashboard-sidebar">
+    <ul class="sidebar-top">
+      <li><a href="/frontend/pages/student-dashboard.html">Dashboard</a></li>
+      <li><a href="/frontend/pages/course-materials.html">Course Materials</a></li>
+      <li><a href="/frontend/pages/mock-exams.html">Mock Exams</a></li>
+      <li><a href="/frontend/pages/fees.html" class="active">Fee Analyzer</a></li>
+      <li class="divider"></li>
+    </ul>
+    <div class="sidebar-bottom">
+      <button class="logout-btn" type="button">Logout</button>
+    </div>
+  </nav>
+
+  <main class="dashboard-main">
+    <section class="page-header">
+      <h1>Fee Analyzer</h1>
+      <p>Academic Breakdown of Semester Fees</p>
+    </section>
+
+    <section class="dashboard-section">
+      <h2 id="feeHeader">Fee Analysis</h2>
+      <form class="admin-form">
+        <div>
+          <label>Faculty</label>
+          <select id="feeFacultySelect">
+            <option value="">Select faculty</option>
+          </select>
+        </div>
+        <div>
+          <label>Program</label>
+          <select id="feeProgramSelect">
+            <option value="">Select program</option>
+          </select>
+        </div>
+        <div>
+          <label>Level</label>
+          <select id="feeLevelSelect">
+            <option value="">Select level</option>
+            <option value="100">100</option>
+            <option value="200">200</option>
+            <option value="300">300</option>
+            <option value="400">400</option>
+            <option value="500">500</option>
+          </select>
+        </div>
+        <div>
+          <label>Semester</label>
+          <select id="feeSemesterSelect">
+            <option value="">Select semester</option>
+            <option value="First">First</option>
+            <option value="Second">Second</option>
+          </select>
+        </div>
+      </form>
+      <div class="admin-actions">
+        <button id="feeAnalyzeBtn" class="primary-btn" type="button">Analyze Fees</button>
+        <span id="feesStatus" class="status-text">Select your academic details to view the breakdown.</span>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Results</h2>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>S/N</th>
+            <th>Code</th>
+            <th>Title</th>
+            <th>Units</th>
+            <th>Course Fee</th>
+            <th>Exam Fee</th>
+            <th>Material</th>
+          </tr>
+        </thead>
+        <tbody id="feeTableBody"></tbody>
+      </table>
+
+      <div class="fees-totals">
+        <div><strong>Total Units:</strong> <span id="totalUnits">0</span></div>
+        <div><strong>Total Course Fee:</strong> <span id="totalCourseFee">0</span></div>
+        <div><strong>Total Exam Fee:</strong> <span id="totalExamFee">0</span></div>
+        <div class="grand-total"><strong>GRAND TOTAL:</strong> <span id="grandTotal">0</span></div>
+      </div>
+
+      <button id="downloadFeeSlipBtn" class="primary-btn" type="button">
+        Download Fee Slip (PDF)
+      </button>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="/frontend/js/fees.js"></script>
+  <script src="../js/theme.js"></script>
+</body>
+</html>
+
+

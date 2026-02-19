@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Fee Structures | Intensive Study Academy</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/admin-academic.css" />
+  <link rel="stylesheet" href="../css/admin-theme.css" />
+</head>
+<body>
+<header class="dashboard-header">
+  <div class="header-container">
+    <div class="logo">
+      <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+    </div>
+    <div class="user-text">
+      <strong>Admin</strong>
+      <a class="action-btn" href="/frontend/pages/admin-settings.html">Settings</a>
+    </div>
+  </div>
+</header>
+
+<div class="dashboard-layout">
+  <nav class="dashboard-sidebar">
+      <ul class="sidebar-top">
+        <li><a href="/frontend/pages/admin-dashboard.html">Dashboard</a></li>
+      <li><a href="/frontend/pages/admin-staff.html">Staff</a></li>
+        <li><a href="/frontend/pages/admin-courses.html">Courses</a></li>
+      <li><a href='/frontend/pages/admin-curriculum.html'>Curriculum</a></li>
+        <li><a href="/frontend/pages/admin-course-materials.html">Course Materials</a></li>
+        <li><a href="/frontend/pages/admin-mocks.html">Mock Exams</a></li>
+        <li><a href="/frontend/pages/admin-exam-timetables.html">Exam Timetables</a></li>
+        <li><a href="/frontend/pages/admin-fee-structures.html" class="active">Fee Structures</a></li>
+        <li><a href="/frontend/pages/admin-cbt.html">CBT Exams</a></li>
+      <li class="divider"></li>
+      <li><a href="/frontend/pages/admin-announcements.html">Announcements</a></li>
+      <li><a href="/frontend/pages/admin-blog.html">Blog</a></li>
+      <li><a href="/frontend/pages/admin-gallery.html">Gallery</a></li>
+    </ul>
+    <div class="sidebar-bottom">
+      <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+    </div>
+  </nav>
+
+  <main class="dashboard-main">
+    <section class="page-header">
+      <h1>Fee Structures</h1>
+      <p>Define fees by faculty, program, level, and semester.</p>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Create Fee Structure</h2>
+      <form id="feeForm" class="admin-form">
+        <div>
+          <label>Faculty</label>
+          <select id="facultySelect" required></select>
+        </div>
+        <div>
+          <label>Program</label>
+          <select id="programSelect" required></select>
+        </div>
+        <div>
+          <label>Level</label>
+          <input type="text" id="level" placeholder="e.g. 100" required />
+        </div>
+        <div>
+          <label>Semester</label>
+          <input type="text" id="semester" placeholder="e.g. First" required />
+        </div>
+        <div>
+          <label>Course Fee (per course)</label>
+          <input type="number" id="perCourseFee" placeholder="0" min="0" required />
+        </div>
+        <div>
+          <label>Exam Fee (per course)</label>
+          <input type="number" id="perExamFee" placeholder="0" min="0" required />
+        </div>
+        <div>
+          <label>Other Fees (JSON)</label>
+          <textarea id="otherFees" placeholder='{"semesterFee": 5000, "portal": 2000}'></textarea>
+        </div>
+      </form>
+      <div class="admin-actions">
+        <button id="createBtn" class="primary-btn" type="button">Save</button>
+        <span id="createStatus" class="status-text"></span>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Fee Structures</h2>
+      <form id="filterForm" class="admin-form">
+        <div>
+          <label>Faculty</label>
+          <select id="filterFaculty"></select>
+        </div>
+        <div>
+          <label>Program</label>
+          <select id="filterProgram"></select>
+        </div>
+        <div>
+          <label>Level</label>
+          <input type="text" id="filterLevel" placeholder="e.g. 100" />
+        </div>
+        <div>
+          <label>Semester</label>
+          <input type="text" id="filterSemester" placeholder="e.g. First" />
+        </div>
+      </form>
+      <div class="admin-actions">
+        <button id="filterBtn" class="action-btn" type="button">Apply Filters</button>
+        <button id="resetBtn" class="action-btn" type="button">Reset</button>
+        <span id="listStatus" class="status-text"></span>
+      </div>
+
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Faculty</th>
+            <th>Program</th>
+            <th>Level</th>
+            <th>Semester</th>
+            <th>Course Fee</th>
+            <th>Exam Fee</th>
+            <th>Other Fees</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="feesTableBody"></tbody>
+      </table>
+    </section>
+  </main>
+</div>
+
+<script src="../js/admin-guard.js"></script>
+<script src="../js/admin-logout.js"></script>
+<script src="../js/admin-theme.js"></script>
+<script src="../js/admin-academic-utils.js"></script>
+<script src="../js/admin-fee-structures.js"></script>
+</body>
+</html>
+
+

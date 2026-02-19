@@ -1,0 +1,405 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Dashboard | Intensive Study Academy</title>
+
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+</head>
+
+<body class="page-student-dashboard">
+
+<!-- ================= AUTH / PAGE GUARD PLACEHOLDER ================= -->
+<div id="pageGuard" hidden></div>
+
+<!-- ================= LOADER ================= -->
+<div id="dashboardLoader" class="dashboard-loader" role="status" aria-live="polite" style="display:none;">
+  <div class="loader-spinner" aria-hidden="true"></div>
+  <p>Loading your dashboardâ€¦</p>
+</div>
+
+<div id="dashboardApp">
+<!-- ================= HEADER ================= -->
+<header class="dashboard-header">
+  <div class="header-container">
+    <div class="logo">
+      <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+    </div>
+
+    <div class="user-text">
+      <span class="welcome-text" id="studentName">Loading...</span>
+      
+    </div>
+    <div class="notification-wrapper">
+      <button id="notificationBell" class="notification-bell" type="button" aria-label="Notifications">
+        <span class="bell-icon">🔔</span>
+        <span id="notificationBadge" class="notification-badge" hidden>0</span>
+      </button>
+      <div id="notificationDropdown" class="notification-dropdown" hidden></div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= LAYOUT ================= -->
+<div class="dashboard-layout">
+
+  <!-- ===== SIDEBAR ===== -->
+  <nav class="dashboard-sidebar" aria-label="Student Navigation">
+    <ul class="sidebar-top">
+      <li><a href="/frontend/pages/student-dashboard.html" class="active">Dashboard</a></li>
+      <li><a href="/frontend/pages/course-materials.html">Course Materials</a></li>
+      <li><a href="/frontend/pages/mock-exams.html">Mock Exams</a></li>
+      <li><a id="feeAnalyzerLink" href="/frontend/pages/fees.html">Fee Analyzer</a></li>
+      <li><a href="/frontend/pages/exam-timetable.html">Exam Timetable</a></li>
+      <li><a href="/frontend/pages/past-questions.html">Past Questions</a></li>
+      <li><a href="live-classes.html">Live Classes</a></li>
+      <li class="divider"></li>
+      <li><a href="/frontend/pages/ai-assistant.html">AI Assistant</a></li>
+      <li><a href="/frontend/pages/student-profile.html">Profile</a></li>
+      <li><a href="/frontend/pages/student-settings.html">Settings</a></li>
+    </ul>
+
+    <div class="sidebar-bottom">
+      <button id="logoutBtn" class="logout-btn" type="button">
+        Logout
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="dashboard-main">
+
+    <!-- PAGE INTRO -->
+    <section class="page-header">
+      <h1>Dashboard</h1>
+      <p>Your academic overview</p>
+    </section>
+    <section class="dashboard-section directive-card">
+      <h2>Course Registration Status</h2>
+      <p>Have you registered your courses on the NOUN portal yet?</p>
+      <div class="directive-actions">
+        <a class="primary-btn" href="/frontend/pages/select-courses.html">Select My Courses</a>
+        <a class="secondary-btn" href="/frontend/pages/fees.html">Use Fee Analyzer (Guide)</a>
+      </div>
+      <div class="directive-hints">
+        <p><strong>Select My Courses:</strong> Choose your registered courses to unlock materials and mocks.</p>
+        <p><strong>Use Fee Analyzer:</strong> Preview expected courses and fees for your semester.</p>
+      </div>
+    </section>
+<section class="dashboard-section" id="profileSummary">
+  <h2>Profile Summary</h2>
+
+  <ul class="activity-list">
+    <li><strong>Title:</strong> <span id="profileTitle">—</span></li>
+    <li><strong>Full Name:</strong> <span id="profileName">—</span></li>
+    <li><strong>Gender:</strong> <span id="profileGender">—</span></li>
+    <li><strong>Email:</strong> <span id="profileEmail">—</span></li>
+    <li><strong>Phone:</strong> <span id="profilePhone">—</span></li>
+ </ul>
+
+  
+</section><section class="dashboard-section" id="academicTabs">
+      <h2>Academic Resources</h2>
+      <div class="tab-row">
+        <button class="tab-btn active" data-tab="materials">Materials</button>
+        <button class="tab-btn" data-tab="mocks">Mock Exams</button>
+        <button class="tab-btn" data-tab="past-questions">Past Questions</button>
+        <button class="tab-btn" data-tab="summaries">Summaries</button>
+        <button class="tab-btn" data-tab="fees">Fees</button>
+      </div>
+
+      <div class="tab-panel active" data-panel="materials">
+        <p class="status-text">Use the sidebar to open Course Materials.</p>
+      </div>
+
+      <div class="tab-panel" data-panel="mocks">
+        <p class="status-text">Use the sidebar to open Mock Exams.</p>
+      </div>
+
+      <div class="tab-panel" data-panel="past-questions">
+        <p class="status-text">Use the sidebar to open Past Questions.</p>
+      </div>
+
+      <div class="tab-panel" data-panel="summaries">
+        <p class="status-text">Use the sidebar to open Summaries.</p>
+      </div>
+
+      <div class="tab-panel" data-panel="fees">
+        <p id="feeStatus">Loading fee breakdown...</p>
+        <ul class="activity-list">
+          <li><strong>Faculty:</strong> <span id="feeFaculty">—</span></li>
+          <li><strong>Program:</strong> <span id="feeProgram">—</span></li>
+          <li><strong>Level:</strong> <span id="feeLevel">—</span></li>
+          <li><strong>Amount:</strong> <span id="feeAmount">—</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dashboard-section" id="availableMocksSection" hidden>
+      <h2>My Available Mocks</h2>
+      <div id="availableMocks" class="dashboard-cards"></div>
+    </section>
+
+    <section class="dashboard-section" id="mockExamArea" style="display:none;">
+      <h2>Mock Exam</h2>
+      <div class="mock-meta">
+        <strong id="mockTitle">—</strong>
+        <span id="mockTimer">00:00</span>
+      </div>
+      <div class="mock-layout">
+        <div id="mockNav" class="mock-nav"></div>
+        <div id="mockQuestions" class="mock-questions"></div>
+      </div>
+      <div class="admin-actions">
+        <button id="mockSubmitBtn" class="primary-btn" type="button">Submit Mock</button>
+        <span id="mockSubmitStatus" class="status-text"></span>
+      </div>
+      <div id="mockResult" class="dashboard-section" style="display:none;"></div>
+    </section>
+
+    <div id="assignmentModal" class="modal-overlay" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="assignmentModalTitle">
+        <h3 id="assignmentModalTitle">Assignment Recommendation</h3>
+        <p>
+          Based on your performance, we’ve prepared a short assignment to help strengthen your understanding.
+        </p>
+        <div id="assignmentModalStatus" class="modal-status" role="status" aria-live="polite"></div>
+        <div class="modal-actions">
+          <button id="assignmentAcceptBtn" class="primary-btn" type="button">Accept Assignment</button>
+          <button id="assignmentDeclineBtn" class="secondary-btn" type="button">Decline Assignment</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= PROGRAM DISCOVERY ================= -->
+    <section class="dashboard-section" id="programDiscovery" hidden>
+      <h2>Program Setup</h2>
+      <p>
+        Tell us what you are studying.
+        We’ll automatically determine your faculty.
+      </p>
+    </section>
+
+    <!-- ================= PROGRAM SELECTION ================= -->
+    <section class="dashboard-section" id="programSelection" hidden>
+      <h2>Select Your Program</h2>
+      <p>
+        Choose your program as defined by the academy.
+        Your faculty will be assigned automatically.
+      </p>
+
+      <div class="form-row">
+        <label for="programSelect">Program</label>
+        <select id="programSelect">
+          <option value="" disabled selected>Select program</option>
+        </select>
+      </div>
+
+      <button id="saveProgramBtn" class="primary-btn" type="button">
+        Confirm Program
+      </button>
+
+      <p class="helper-text">
+        You don’t need to know your faculty, the system is designed to handle that.
+      </p>
+    </section>
+
+    <!-- ================= ACADEMIC INFORMATION ================= -->
+    <section class="dashboard-section" id="academicInfo" hidden>
+      <h2>Academic Information</h2>
+
+      <ul class="activity-list">
+
+        <li><strong>Program:</strong> <span id="program">—</span></li>
+        <li><strong>Faculty:</strong> <span id="faculty">—</span></li>
+        <li><strong>Level:</strong> <span id="level">—</span></li>
+        <li><strong>Semester:</strong> <span id="semester">—</span></li>
+        <li hidden><strong>State:</strong> <span id="state">—</span></li>
+        <li hidden><strong>Study Center:</strong> <span id="studyCenter">—</span></li>
+      </ul>
+    </section>
+
+    <!-- ================= LEVEL & SEMESTER ================= -->
+    <section class="dashboard-section" id="levelSemesterSection" hidden>
+      <h2>Level & Semester</h2>
+      <p>Select your current level and semester.</p>
+
+      <div class="form-row">
+        <label for="levelSelect">Level</label>
+        <select id="levelSelect">
+          <option value="" disabled selected>Select level</option>
+          <option value="100">100 Level</option>
+          <option value="200">200 Level</option>
+          <option value="300">300 Level</option>
+          <option value="400">400 Level</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label for="semesterSelect">Semester</label>
+        <select id="semesterSelect">
+          <option value="" disabled selected>Select semester</option>
+          <option value="First">First Semester</option>
+          <option value="Second">Second Semester</option>
+        </select>
+      </div>
+
+      <button id="saveLevelSemesterBtn" class="primary-btn" type="button">
+        Save Level & Semester
+      </button>
+    </section>
+
+   <!-- ================= COURSE ACTIONS ================= -->
+<section class="dashboard-section" id="courseActions" hidden>
+  <h2>Your Courses & Actions</h2>
+  <p>
+    Select a course to access its materials, practice questions, or take a mock exam.
+  </p>
+
+  <!-- STATUS MESSAGE -->
+  <div id="courseStatus" class="status-message">
+    Courses will appear once setup is complete.
+  </div>
+
+  <table class="data-table" aria-describedby="courseStatus">
+    <thead>
+      <tr>
+        <th>Course</th>
+        <th>Summary</th>
+        <th>Practice (P/Q)</th>
+        <th>Mock Exam</th>
+      </tr>
+    </thead>
+
+    <tbody id="studentCoursesBody">
+      <!-- Placeholder row (safe fallback) -->
+      <tr data-course="placeholder">
+        <td>BED 113</td>
+
+        <td>
+          <button class="action-btn get-materials" disabled>
+            Get Materials
+          </button>
+        </td>
+
+        <td>
+          <button class="action-btn practice" disabled>
+            Practice
+          </button>
+        </td>
+
+        <td>
+          <button class="action-btn take-mock" disabled>
+            Take Mock
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="helper-text">
+    Complete your program, level, and semester setup to unlock course actions.
+  </p>
+</section>
+<section class="blog-dynamic">
+  <h2>Latest Updates</h2>
+  <div id="dynamicBlogPosts">
+    <p>Loading posts…</p>
+  </div>
+</section>
+    <section class="dashboard-section">
+      <h3>Announcements</h3>
+      <ul id="announcementList" class="data-list">
+        <li>Loading announcements…</li>
+      </ul>
+    </section>
+
+    <section class="dashboard-section" id="adminReviewSection">
+      <h3>Request Admin Review</h3>
+      <p>Share feedback or request support from the admin team.</p>
+      <button id="openReviewModalBtn" class="primary-btn" type="button">Request Admin Review</button>
+    </section>
+  </main>
+</div>
+
+<div id="reviewModal" class="modal-overlay" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="reviewModalTitle">
+    <h3 id="reviewModalTitle">Request Admin Review</h3>
+    <textarea
+      id="reviewMessageInput"
+      rows="5"
+      style="width:100%;padding:10px;border-radius:8px;border:1px solid #d0d7de;"
+      placeholder="Write your feedback or request..."
+    ></textarea>
+    <div id="reviewStatus" class="modal-status" role="status" aria-live="polite"></div>
+    <div class="modal-actions">
+      <button id="submitReviewBtn" class="primary-btn" type="button">Submit</button>
+      <button id="closeReviewModalBtn" class="secondary-btn" type="button">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="birthdayPrompt" class="birthday-card hidden">
+  <div class="birthday-card-content">
+    <h3>🎉 We’d love to celebrate with you!</h3>
+    <p>
+      Would you like to tell us your birthday so we can celebrate you when the day comes?
+    </p>
+
+    <div class="birthday-actions">
+      <button id="birthdayYesBtn" class="btn primary">Yes</button>
+      <button id="birthdayNoBtn" class="btn secondary">No</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= FOOTER ================= -->
+<footer class="dashboard-footer">
+  <p>© Intensive Study Academy — Academic Guidance Platform</p>
+  <p class="disclaimer">
+    This platform provides academic guidance only and is not affiliated with
+    the National Open University of Nigeria (NOUN).
+  </p>
+</footer>
+
+<!-- ================= WHATSAPP SUPPORT ================= -->
+<a
+  href="https://wa.me/2347073859837"
+  class="whatsapp-float"
+  target="_blank"
+  aria-label="Contact Support on WhatsApp"
+>
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+<!-- ================= FEEDBACK / TOAST ================= -->
+<div id="toast" class="toast" hidden></div>
+
+</div>
+
+<!-- ================= SCRIPTS ================= -->
+ <script src="/frontend/js/student-auth-guard.js"></script>
+<script src="../js/notifications.js"></script>
+<script src="../js/student-dashboard.js"></script>
+<script src="../js/public-blog.js"></script>
+  <script src="../js/theme.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

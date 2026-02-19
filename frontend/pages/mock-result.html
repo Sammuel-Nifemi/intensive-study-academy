@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mock Exam Result | Intensive Study Academy</title>
+
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/theme.css" />
+</head>
+<body>
+
+<header class="dashboard-header">
+  <div class="header-container">
+    <h1>Mock Exam Result</h1>
+  </div>
+</header>
+
+<main class="dashboard-main">
+
+  <section class="dashboard-section">
+    <h2 id="examTitle">Exam Result</h2>
+
+    <div class="result-summary">
+      <p><strong>Total Questions:</strong> <span id="totalQuestions">0</span></p>
+      <p><strong>Correct Answers:</strong> <span id="correctCount">0</span></p>
+      <p><strong>Wrong Answers:</strong> <span id="wrongCount">0</span></p>
+      <p><strong>Score:</strong> <span id="scorePercent">0%</span></p>
+    </div>
+  </section>
+
+  <section class="dashboard-section">
+    <h3>Question Breakdown</h3>
+
+    <ul class="result-list" id="resultList">
+      <!-- JS will render results -->
+    </ul>
+  </section>
+
+  <section class="dashboard-section">
+    <button onclick="window.location.href='mock-exams.html'" class="primary-btn">
+      Back to Mock Exams
+    </button>
+
+    <button onclick="window.location.href='student-dashboard.html'" class="secondary-btn">
+      Dashboard
+    </button>
+  </section>
+<section class="dashboard-section">
+  <button
+    onclick="window.location.href='practice.html'"
+    class="primary-btn"
+  >
+    Practice This Exam
+  </button>
+
+  <button
+    onclick="window.location.href='mock-exams.html'"
+    class="secondary-btn"
+  >
+    Back to Mock Exams
+  </button>
+
+  <button
+    onclick="window.location.href='student-dashboard.html'"
+    class="secondary-btn"
+  >
+    Dashboard
+  </button>
+</section>
+
+</main>
+
+<script src="../js/mock-result.js"></script>
+  <script src="../js/theme.js"></script>
+</body>
+</html>
+
+

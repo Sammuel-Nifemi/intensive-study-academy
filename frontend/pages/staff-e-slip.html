@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>E-Slip Management | Staff Panel</title>
+  <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+
+<header class="dashboard-header">
+  <h1>Intensive Study Academy</h1>
+  <div>Logged in as <strong>Staff</strong></div>
+</header>
+
+<div class="dashboard-container">
+
+  <aside class="dashboard-sidebar">
+    <ul>
+      <li><a href="staff-dashboard.html">Dashboard</a></li>
+      <li><a href="staff-e-slip.html" class="active">E-Slip</a></li>
+      <li><a href="staff-ai-assistant.html">AI-Assistant</a></li>
+      <li><a href="logout.html">Logout</a></li>
+    </ul>
+  </aside>
+
+  <main class="dashboard-main">
+    <h2>E-Slip Requests</h2>
+    <p>Review and approve academic clearance slips requested by students.</p>
+
+    <div class="card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Student Name</th>
+            <th>Matric Number</th>
+            <th>Slip Type</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Cynthia</td>
+            <td>NOU/2023/123456</td>
+            <td>Exam Clearance</td>
+            <td><span class="status inactive">Pending</span></td>
+            <td>
+              <a href="#" class="action-link">View</a> |
+              <a href="#" class="action-link">Approve</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+</div>
+<script src="../js/staff-e-slip.js"></script>
+
+</body>
+</html>

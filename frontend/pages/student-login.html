@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Login | Intensive Study Academy</title>
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+  <link rel="stylesheet" href="../css/auth.css" />
+
+</head>
+
+<body class="auth-page">
+
+  <div class="auth-container">
+    <h1>Student Login</h1>
+    <p>Login to access your student dashboard</p>
+
+    <form id="studentLoginForm">
+      <div class="form-group">
+        <label>Email</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="Enter your email address"
+          required
+        />
+      </div>
+       
+      <p class="auth-note">
+     New student?
+      <a href="/frontend/pages/student-registration.html">Create an account</a>
+        </p>
+
+      <button type="submit" class="primary-btn">
+        Login
+      </button>
+    </form>
+
+    <p class="auth-note">
+      Having trouble logging in? Contact support.
+      <a href="https://wa.me/2347073859837" target="_blank" rel="noopener">
+        <i class="fab fa-whatsapp"></i>
+      </a>
+    </p>
+  </div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("studentLoginForm");
+    if (!form) return;
+
+    const message = document.createElement("p");
+    message.className = "auth-note";
+    form.appendChild(message);
+
+    async function recovery(email) {
+      if (!email) {
+        alert("Please enter your email first");
+        return;
+      }
+      try {
+        const res = await fetch("http://localhost:5000/auth/recovery", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          alert(data.message || "Recovery failed");
+          return;
+        }
+        alert("Check your email for login link");
+      } catch (err) {
+        console.error(err);
+        alert("Server error. Please try again.");
+      }
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      if (!email) {
+        alert("Please enter your email");
+        return;
+      }
+
+      try {
+        const res = await fetch("http://localhost:5000/auth/quick-login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        });
+
+        const data = await res.json();
+
+        if (res.status === 404) {
+          message.textContent = "Email not found. Please create account.";
+          return;
+        }
+
+        if (!res.ok) {
+          alert(data.message || "Login failed");
+          return;
+        }
+
+       // SAVE TOKEN
+       localStorage.setItem("studentToken", data.token);
+
+       // VERIFY SESSION BEFORE REDIRECT
+       const profileRes = await fetch("http://localhost:5000/api/student/me", {
+         headers: { Authorization: `Bearer ${data.token}` }
+       });
+
+       if (profileRes.status === 401) {
+         localStorage.removeItem("studentToken");
+         message.textContent = "Login failed. Please try again.";
+         return;
+       }
+
+       if (profileRes.status === 403) {
+         const payload = await profileRes.json().catch(() => ({}));
+         if (payload?.redirectUrl) {
+           window.location.href = payload.redirectUrl;
+           return;
+         }
+       }
+
+       if (!profileRes.ok) {
+         localStorage.removeItem("studentToken");
+         message.textContent = "Unable to start session. Please try again.";
+         return;
+       }
+
+       const profile = await profileRes.json();
+       if (profile?.profileCompleted === false) {
+         window.location.href = "/frontend/pages/complete-profile.html";
+         return;
+       }
+
+       // THEN GO DASHBOARD (NO TOKEN IN URL)
+       window.location.href = "/frontend/pages/student-dashboard.html";
+      } catch (err) {
+        console.error(err);
+        alert("Server error. Please try again.");
+      }
+    });
+
+    const resetLink = document.createElement("button");
+    resetLink.type = "button";
+    resetLink.className = "resend-btn";
+    resetLink.textContent = "Reset email";
+    resetLink.addEventListener("click", () => {
+      const email = document.getElementById("email").value.trim();
+      recovery(email);
+    });
+
+    const forgotLink = document.createElement("button");
+    forgotLink.type = "button";
+    forgotLink.className = "resend-btn";
+    forgotLink.textContent = "Forgot email";
+    forgotLink.addEventListener("click", () => {
+      const email = document.getElementById("email").value.trim();
+      recovery(email);
+    });
+
+    const linksWrap = document.createElement("div");
+    linksWrap.style.marginTop = "8px";
+    linksWrap.appendChild(resetLink);
+    linksWrap.appendChild(document.createTextNode("  "));
+    linksWrap.appendChild(forgotLink);
+    form.appendChild(linksWrap);
+  });
+</script>
+
+</html>

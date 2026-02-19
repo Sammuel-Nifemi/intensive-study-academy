@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Dashboard | Intensive Study Academy</title>
+  <!-- Dashboard = work overview only (no identity editing). -->
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/admin-theme.css" />
+  <link rel="stylesheet" href="../css/admin-academic.css" />
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-container">
+      <div class="logo">
+        <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+      </div>
+      <div class="user-text">
+        <strong>Staff Console</strong>
+      </div>
+      <div class="notification-wrapper">
+        <button id="notificationBell" class="notification-bell" type="button" aria-label="Notifications">
+          <span class="bell-icon">🔔</span>
+          <span id="notificationBadge" class="notification-badge" hidden>0</span>
+        </button>
+        <div id="notificationDropdown" class="notification-dropdown" hidden></div>
+      </div>
+    </div>
+  </header>
+
+  <div id="staffLoader" class="dashboard-loader">
+    <div class="loader-spinner" aria-hidden="true"></div>
+    <p id="staffLoaderText">Loading your dashboard...</p>
+  </div>
+
+  <div id="staffApp" class="dashboard-layout" style="display:none;">
+    <nav class="dashboard-sidebar">
+      <ul class="sidebar-top">
+        <li><a href="/frontend/pages/staff-dashboard.html" class="active">Dashboard</a></li>
+        <li><a href="/frontend/pages/staff-profile.html">Profile</a></li>
+        <li><a href="/frontend/pages/staff-settings.html">Settings</a></li>
+        <li><a href="#materials">Upload Materials</a></li>
+        <li><a href="#mocks">Upload Mock Exams</a></li>
+        <li><a href="#cbt">Upload CBT PDFs</a></li>
+      </ul>
+      <div class="sidebar-bottom">
+        <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+      </div>
+    </nav>
+
+    <main class="dashboard-main">
+      <section class="page-header">
+        <h1>Staff Dashboard</h1>
+        <p>Work overview and activity stats.</p>
+      </section>
+
+      <section class="dashboard-section">
+        <h2>Staff Overview</h2>
+        <p><strong>Name:</strong> <span id="staffName">—</span></p>
+        <p><strong>Role:</strong> <span id="staffRole">—</span></p>
+      </section>
+
+      <section id="profile" class="dashboard-section">
+        <h2>Profile</h2>
+        <form id="staffProfileForm" class="admin-form">
+          <div>
+            <label>Full Name</label>
+            <input type="text" name="fullName" required>
+          </div>
+          <div>
+            <label>Title</label>
+            <input type="text" name="title" required>
+          </div>
+          <div>
+            <label>Role</label>
+            <input type="text" name="role" required>
+          </div>
+          <div>
+            <label>Birthday</label>
+            <div class="hint-text">Day & Month only</div>
+            <div class="dob-row">
+              <select name="dobDay" required>
+                <option value="">Day</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+                <option>13</option>
+                <option>14</option>
+                <option>15</option>
+                <option>16</option>
+                <option>17</option>
+                <option>18</option>
+                <option>19</option>
+                <option>20</option>
+                <option>21</option>
+                <option>22</option>
+                <option>23</option>
+                <option>24</option>
+                <option>25</option>
+                <option>26</option>
+                <option>27</option>
+                <option>28</option>
+                <option>29</option>
+                <option>30</option>
+                <option>31</option>
+              </select>
+              <select name="dobMonth" required>
+                <option value="">Month</option>
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label>Avatar Upload</label>
+            <input type="file" id="avatarFile" accept="image/*">
+            <input type="hidden" name="avatarUrl" id="avatarUrl">
+          </div>
+          <div class="admin-actions">
+            <button type="submit" class="primary-btn">Save Profile</button>
+            <span class="status-text" id="profileStatus"></span>
+          </div>
+        </form>
+      </section>
+      <section class="dashboard-section">
+        <h2>Activity Stats</h2>
+        <div class="dashboard-cards">
+          <div class="dashboard-card">
+            <h3>Materials Uploaded</h3>
+            <strong id="statMaterials">0</strong>
+          </div>
+          <div class="dashboard-card">
+            <h3>Mock Exams Uploaded</h3>
+            <strong id="statMocks">0</strong>
+          </div>
+          <div class="dashboard-card">
+            <h3>CBT Exams Uploaded</h3>
+            <strong id="statCbt">0</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard-section">
+        <h2>My Uploaded Mocks</h2>
+        <div id="staffMockSummary" class="dashboard-cards"></div>
+      </section>
+
+      <section id="materials" class="dashboard-section">
+        <h2>Upload Materials</h2>
+        <form id="materialsForm" class="admin-form">
+          <div>
+            <label>Title</label>
+            <input type="text" name="title" placeholder="Material title">
+          </div>
+          <div>
+            <label>Faculty</label>
+            <input type="text" name="faculty" required>
+          </div>
+          <div>
+            <label>Program</label>
+            <input type="text" name="program" required>
+          </div>
+          <div>
+            <label>Level</label>
+            <input type="text" name="level" required>
+          </div>
+          <div>
+            <label>Semester</label>
+            <input type="text" name="semester" required>
+          </div>
+          <div>
+            <label>Course Code (optional)</label>
+            <input type="text" name="courseCode">
+          </div>
+          <div>
+            <label>Description</label>
+            <textarea name="description" placeholder="Short description"></textarea>
+          </div>
+          <div>
+            <label>Upload Files (PDF or JPEG)</label>
+            <input type="file" name="files" accept=".pdf,.jpg,.jpeg" multiple required>
+          </div>
+          <div class="admin-actions">
+            <button type="submit" class="primary-btn">Upload Materials</button>
+            <div class="upload-progress" id="materialsProgress">
+              <div class="bar"></div>
+            </div>
+            <span class="status-text" id="materialsStatus"></span>
+          </div>
+        </form>
+      </section>
+
+      <section id="mocks" class="dashboard-section">
+        <h2>Upload Mock Exams</h2>
+        <form id="mocksForm" class="admin-form">
+          <div>
+            <label>Title</label>
+            <input type="text" name="title" placeholder="Mock exam title">
+          </div>
+          <div>
+            <label>Faculty</label>
+            <input type="text" name="faculty" required>
+          </div>
+          <div>
+            <label>Program</label>
+            <input type="text" name="program" required>
+          </div>
+          <div>
+            <label>Level</label>
+            <input type="text" name="level" required>
+          </div>
+          <div>
+            <label>Semester</label>
+            <input type="text" name="semester" required>
+          </div>
+          <div>
+            <label>Course Code (optional)</label>
+            <input type="text" name="courseCode">
+          </div>
+          <div>
+            <label>Upload Files (PDF or JPEG)</label>
+            <input type="file" name="files" accept=".pdf,.jpg,.jpeg" multiple required>
+          </div>
+          <div class="admin-actions">
+            <button type="submit" class="primary-btn">Upload Mocks</button>
+            <div class="upload-progress" id="mocksProgress">
+              <div class="bar"></div>
+            </div>
+            <span class="status-text" id="mocksStatus"></span>
+          </div>
+        </form>
+      </section>
+
+      <section id="cbt" class="dashboard-section">
+        <h2>Upload CBT PDFs</h2>
+        <form id="cbtForm" class="admin-form">
+          <div>
+            <label>Course Code</label>
+            <input type="text" name="courseCode" required>
+          </div>
+          <div>
+            <label>Duration (minutes)</label>
+            <input type="number" name="durationMinutes" min="10" max="240" required>
+          </div>
+          <div>
+            <label>Upload File (PDF or JPEG)</label>
+            <input type="file" name="file" accept=".pdf,.jpg,.jpeg" required>
+          </div>
+          <div class="admin-actions">
+            <button type="submit" class="primary-btn">Convert to CBT</button>
+            <div class="upload-progress" id="cbtProgress">
+              <div class="bar"></div>
+            </div>
+            <span class="status-text" id="cbtStatus"></span>
+          </div>
+        </form>
+      </section>
+
+      <section id="announcements" class="dashboard-section">
+        <h2>Your Announcements</h2>
+        <form id="announcementForm" class="admin-form">
+          <div>
+            <label>Title</label>
+            <input type="text" name="title" required>
+          </div>
+          <div>
+            <label>Body</label>
+            <textarea name="body" rows="4" required></textarea>
+          </div>
+          <div>
+            <label>Attachments (optional)</label>
+            <input type="file" name="files" accept=".pdf,.jpg,.jpeg" multiple>
+          </div>
+          <div class="admin-actions">
+            <button type="submit" class="primary-btn">Create Announcement</button>
+            <span class="status-text" id="announcementStatus"></span>
+          </div>
+        </form>
+        <div id="announcementList" class="dashboard-section" style="margin-top:16px;"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../js/staff-guard.js"></script>
+  <script src="../js/staff-logout.js"></script>
+  <script src="../js/admin-theme.js"></script>
+  <script src="../js/notifications.js"></script>
+  <script src="../js/staff-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="../css/auth.css">
+  <link rel="stylesheet" href="../assets/global.css">
+<link rel="stylesheet" href="../assets/admin-base.css">
+</head>
+<body>
+
+
+<div class="auth-box">
+  <h2>Administrator Login</h2>
+
+  <form id="adminLoginForm">
+
+    <input
+      type="email"
+      id="email"
+      placeholder="Email"
+      required
+    />
+
+    <div class="password-wrapper">
+      <input
+        type="password"
+        id="password"
+        placeholder="Password"
+        required
+      />
+      <span class="toggle-password" id="togglePassword">👁️</span>
+    </div>
+
+    <button type="submit">Login</button>
+    <p id="msg"></p>
+    <p id="tokenWarning" class="status-text" style="display:none;"></p>
+
+  </form>
+</div>
+<script src="../js/admin-login.js"></script>
+</body>
+</html>

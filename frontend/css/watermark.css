@@ -1,0 +1,26 @@
+.learning-watermark {
+  position: fixed;
+  inset: 0;
+  z-index: 9997;
+  pointer-events: none;
+  opacity: 0.2;
+  background-repeat: repeat;
+  background-size: 540px 320px;
+}
+
+body.learning-content-protected main,
+body.learning-content-protected .dashboard-main,
+body.learning-content-protected .dashboard-section,
+body.learning-content-protected .page-header {
+  user-select: none;
+}
+
+body.learning-content-protected input,
+body.learning-content-protected textarea,
+body.learning-content-protected [contenteditable="true"] {
+  user-select: text;
+}
+
+.learning-download-btn {
+  margin-top: 10px;
+}

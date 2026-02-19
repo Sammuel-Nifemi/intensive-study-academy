@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Assignments | Intensive Study Academy</title>
+    <link rel="stylesheet" href="../css/admin-assignments.css" />
+  </head>
+  <body class="page-admin-assignments">
+    <main class="assignments-shell">
+      <header class="page-header">
+        <div>
+          <h1>Assignment Requests</h1>
+          <p>Review weak-topic assignments triggered by mock performance.</p>
+        </div>
+        <div class="header-actions">
+          <button id="refreshBtn" class="primary-btn" type="button">Refresh</button>
+        </div>
+      </header>
+
+      <section class="status-bar" id="statusBar" hidden></section>
+
+      <section id="loadingState" class="loading-state" hidden>
+        <div class="spinner" aria-hidden="true"></div>
+        <p>Loading assignment requests...</p>
+      </section>
+
+      <section id="emptyState" class="empty-state" hidden>
+        <h2>No assignment requests</h2>
+        <p>When students submit mocks and have weak topics, requests will appear here.</p>
+      </section>
+
+      <section class="table-card">
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Score</th>
+                <th>Weak Topics</th>
+                <th>Study Center</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="assignmentsBody">
+              <tr>
+                <td colspan="8">Loading assignment requests...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="table-card">
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Course</th>
+                <th>Score</th>
+                <th>Status</th>
+                <th>Responded At</th>
+              </tr>
+            </thead>
+            <tbody id="responsesBody">
+              <tr>
+                <td colspan="5">Loading assignment responses...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="../js/admin-assignments.js"></script>
+  </body>
+</html>

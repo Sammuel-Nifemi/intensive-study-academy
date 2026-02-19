@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mock Exam Summary | Intensive Study Academy</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/theme.css" />
+  <style>
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .donut-wrap {
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    .donut {
+      --score: 0;
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      background: conic-gradient(#2563eb calc(var(--score) * 1%), #e5e7eb 0);
+      display: grid;
+      place-items: center;
+    }
+
+    .donut-inner {
+      width: 152px;
+      height: 152px;
+      border-radius: 50%;
+      background: #fff;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 8px;
+    }
+
+    .donut-percent {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .donut-meta {
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .stat-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    .stat-card h4 {
+      margin: 0 0 6px;
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+
+    .stat-card p {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .action-btn {
+      display: inline-block;
+      text-align: center;
+      background: #2563eb;
+      color: #fff;
+      padding: 12px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .summary-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .summary-heading {
+      margin: 0;
+      font-size: clamp(1.7rem, 2.5vw, 2.2rem);
+      line-height: 1.15;
+    }
+
+    .summary-subtext {
+      margin: 6px 0 0;
+      font-size: 1.05rem;
+      color: #4b5563;
+    }
+
+    .result-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .result-badge.pass {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #86efac;
+    }
+
+    .result-badge.fail {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+    }
+
+    .action-note {
+      margin-top: 6px;
+      font-size: 0.78rem;
+      color: #6b7280;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="page-student-dashboard">
+  <header class="dashboard-header">
+    <div class="header-container">
+      <div class="logo">
+        <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+      </div>
+      <div class="user-text">
+        <strong>Mock Exams</strong>
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-layout">
+    <nav id="mockPostSidebar" class="dashboard-sidebar" aria-label="Mock Navigation"></nav>
+
+    <main class="dashboard-main">
+      <section class="page-header">
+        <div class="summary-title-row">
+          <h1 id="summarySuccessTitle" class="summary-heading">Mock Exam Summary</h1>
+          <span id="summaryResultBadge" class="result-badge">RESULT</span>
+        </div>
+        <p id="summaryOutcomeText" class="summary-subtext">Your mock submission has been recorded.</p>
+        <p id="summaryBreakdownText" class="status-text"></p>
+      </section>
+
+      <section class="dashboard-section summary-grid">
+        <div class="donut-wrap">
+          <div id="scoreDonut" class="donut">
+            <div class="donut-inner">
+              <div id="donutPercent" class="donut-percent">0%</div>
+              <div id="donutMeta" class="donut-meta">0 / 0 Correct</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="stats-grid">
+            <article class="stat-card">
+              <h4>Time Spent</h4>
+              <p id="statTimeSpent">00:00</p>
+            </article>
+            <article class="stat-card">
+              <h4>Correct</h4>
+              <p id="statCorrect">0</p>
+            </article>
+            <article class="stat-card">
+              <h4>Wrong</h4>
+              <p id="statWrong">0</p>
+            </article>
+            <article class="stat-card">
+              <h4>Total Questions</h4>
+              <p id="statTotalQuestions">0</p>
+            </article>
+            <article class="stat-card">
+              <h4>Score</h4>
+              <p id="statScore">0/0</p>
+            </article>
+          </div>
+
+          <div class="actions-grid">
+            <a class="action-btn" href="/frontend/pages/mock-exams.html">Take Again</a>
+            <a class="action-btn" href="/frontend/pages/mock-exam-review.html">Review</a>
+            <a class="action-btn" href="/frontend/pages/mock-exam-history.html">View History</a>
+            <div>
+              <a id="aiReviewAttemptBtn" class="action-btn" href="/frontend/pages/ai-assistant.html">&#129302; Get Personal Feedback from AI</a>
+              <p class="action-note">Get personalized advice based on this attempt.</p>
+            </div>
+            <a id="checkResultsBtn" class="action-btn" href="/frontend/pages/mock-exam-results.html" hidden>Check Results</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/frontend/js/student-auth-guard.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/mock-post-exam.js"></script>
+  <script>
+    const attempt = window.MockPostExam.getCurrentMockAttemptOrRedirect("/frontend/pages/mock-exams.html");
+    if (attempt) {
+      window.MockPostExam.renderMockPostSidebar("summary");
+      const accuracy = Number(attempt.accuracy || 0);
+      const hasPassed = accuracy >= 50;
+      const studentName = attempt.studentName || "Student";
+      const titleEl = document.getElementById("summarySuccessTitle");
+      const badgeEl = document.getElementById("summaryResultBadge");
+
+      const outcomeEl = document.getElementById("summaryOutcomeText");
+      if (outcomeEl) {
+        outcomeEl.textContent = hasPassed
+          ? `Well done, ${studentName}! You passed the mock exam.`
+          : `Mock exam completed, ${studentName}. Keep practicing.`;
+      }
+
+      if (badgeEl) {
+        badgeEl.textContent = hasPassed ? "PASS" : "FAIL";
+        badgeEl.classList.remove("pass", "fail");
+        badgeEl.classList.add(hasPassed ? "pass" : "fail");
+      }
+
+      window.MockPostExam.renderDonut({
+        selector: "#scoreDonut",
+        percentSelector: "#donutPercent",
+        metaSelector: "#donutMeta",
+        percent: accuracy,
+        correct: attempt.correct,
+        total: attempt.total
+      });
+      document.getElementById("statTimeSpent").textContent =
+        window.MockPostExam.formatDuration(attempt.timeSpentSeconds || 0);
+      document.getElementById("statCorrect").textContent = String(attempt.correct || 0);
+      document.getElementById("statWrong").textContent = String(attempt.wrong || 0);
+      document.getElementById("statTotalQuestions").textContent = String(attempt.total || 0);
+      document.getElementById("statScore").textContent = `${attempt.correct || 0}/${attempt.total || 0}`;
+
+      const answeredCount = (Array.isArray(attempt.questions) ? attempt.questions : []).filter((q) => {
+        const answer = String(q.studentAnswer || "").trim();
+        return answer && answer.toLowerCase() !== "(no answer)";
+      }).length;
+      const breakdown = document.getElementById("summaryBreakdownText");
+      if (breakdown) {
+        breakdown.textContent = `You answered ${answeredCount} question${answeredCount === 1 ? "" : "s"}.`;
+      }
+
+      const aiReviewBtn = document.getElementById("aiReviewAttemptBtn");
+      if (aiReviewBtn) {
+        aiReviewBtn.href = `/frontend/pages/ai-assistant.html?source=mock&attemptId=${encodeURIComponent(String(attempt.attemptId || ""))}`;
+      }
+    }
+  </script>
+</body>
+</html>

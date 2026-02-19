@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Student Setup | Intensive Study Academy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Global styles -->
+  <link rel="stylesheet" href="../assets/global.css" />
+  <link rel="stylesheet" href="../css/setup.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-left">
+      <img src="../image/isa.png" alt="ISA Logo">
+      <span class="site-title">Intensive Study Academy</span>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+
+  <section class="setup-card">
+    <h1>Set Up Your Academic Dashboard</h1>
+    <p>
+      Please confirm your academic details. This helps us personalize
+      your dashboard correctly.
+    </p>
+
+    <form id="studentSetupForm">
+
+      <!-- PROGRAM -->
+      <label for="program">Programme of Study</label>
+      <select id="program" required>
+        <option value="">Select Programme</option>
+        <option value="Computer Science">Computer Science</option>
+        <option value="Biology">Biology</option>
+        <option value="Economics">Economics</option>
+      </select>
+
+      <!-- FACULTY (AUTO) -->
+      <label for="faculty">Faculty</label>
+      <input id="faculty" type="text" readonly placeholder="Auto-filled" />
+
+      <!-- LEVEL -->
+      <label for="level">Level</label>
+      <select id="level" required>
+        <option value="">Select Level</option>
+        <option value="100">100 Level</option>
+        <option value="200">200 Level</option>
+        <option value="300">300 Level</option>
+        <option value="400">400 Level</option>
+      </select>
+
+      <!-- SEMESTER -->
+      <label for="semester">Semester</label>
+      <select id="semester" required>
+        <option value="">Select Semester</option>
+        <option value="First Semester">First Semester</option>
+        <option value="Second Semester">Second Semester</option>
+      </select>
+
+     <!-- STATE -->
+<label for="state">State</label>
+<select id="state" required>
+  <option value="">Select State</option>
+  <option value="Lagos">Lagos</option>
+  <option value="Kogi">Kogi</option>
+  <option value="Cross River">Cross River</option>
+</select>
+
+    <!-- STUDY CENTER -->
+  <label for="studyCenter">Study Center</label>
+   <select id="studyCenter" required>
+  <option value="">Select Study Center</option>
+   </select>
+
+
+      <!-- COURSES -->
+      <label for="courses">Courses</label>
+      <select id="courses" multiple required>
+        <!-- Dynamically populated -->
+      </select>
+
+      <button type="submit" class="btn primary">
+        Proceed to Dashboard
+      </button>
+
+    </form>
+  </section>
+
+</main>
+
+<script src="../js/student-setup.js"></script>
+</body>
+</html>

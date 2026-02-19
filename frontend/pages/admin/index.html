@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mock Exams Manager</title>
+  <link rel="stylesheet" href="./css/mock-exams.css" />
+</head>
+<body>
+
+  <header class="page-header">
+    <h1>Staff Mock Exams Manager</h1>
+    <a href="create.html" class="btn primary">+ Create Mock Exam</a>
+  </header>
+
+  <section class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Duration</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="examsTable">
+        <!-- JS injects rows -->
+      </tbody>
+    </table>
+  </section>
+
+  <script src="./js/mock-exam.js"></script>
+</body>
+</html>

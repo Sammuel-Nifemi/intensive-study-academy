@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Staff • Blog | ISA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+</head>
+
+<body class="page-staff-dashboard">
+
+<header class="dashboard-header">
+  <h1>Blog Posts</h1>
+  <p>Create academic blog posts</p>
+</header>
+
+<div class="dashboard-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="dashboard-sidebar">
+    <ul>
+      <li><a href="staff-dashboard.html">Dashboard</a></li>
+      <li><a href="staff-materials.html">Course Materials</a></li>
+      <li><a href="staff-mock-exams.html">Mock Exams</a></li>
+      <li><a href="staff-gallery.html">Resources / Gallery</a></li>
+      <li><a href="staff-announcements.html">Announcements</a></li>
+      <li><a href="staff-blog.html" class="active">Blog</a></li>
+      <li><a href="staff-live-classes.html">Live Classes</a></li>
+      <li><a href="staff-e-tag.html">E-Tag</a></li>
+      <li class="divider"></li>
+      <li><button id="logoutBtn">Logout</button></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="dashboard-main">
+
+    <form id="blogForm" class="dashboard-section">
+      <h3>New Blog Post</h3>
+
+      <label>Title</label>
+      <input type="text" id="title" required />
+
+      <label>Content</label>
+      <textarea id="content" rows="8" required></textarea>
+
+      <label>
+        <input type="checkbox" id="published" checked />
+        Publish immediately
+      </label>
+
+      <label>Featured Image</label>
+      <input type="file" accept="image/*" />
+
+      <button type="submit">Post</button>
+    </form>
+
+  </main>
+</div>
+
+<script src="../js/staff-blog.js"></script>
+</body>
+</html>

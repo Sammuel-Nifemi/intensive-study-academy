@@ -1,0 +1,834 @@
+const token = localStorage.getItem("studentToken");
+
+if (!token) {
+  window.location.href = "/frontend/pages/student-login.html";
+}
+
+const API_BASE = "http://localhost:5000";
+let studentProfile = null;
+let registeredCourses = new Set();
+let timerInterval = null;
+const EXAM_DURATION_SECONDS = 90 * 60;
+let remainingSeconds = EXAM_DURATION_SECONDS;
+let examQuestions = [];
+let hasLoadedExam = false;
+let currentCourse = "";
+let availableCourses = [];
+let isSubmitting = false;
+let examStartedAtMs = null;
+let currentQuestionIndex = 0;
+let answersMemory = [];
+
+function normalizeCourseCode(value) {
+  return String(value || "").replace(/\s+/g, "").toUpperCase();
+}
+
+async function logStudentActivity(event, courseCode, score) {
+  try {
+    await fetch(`${API_BASE}/api/student/activity`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        courseCode: normalizeCourseCode(courseCode),
+        event,
+        score
+      })
+    });
+  } catch (err) {
+    console.error("Activity log error:", err);
+  }
+}
+
+function getCourseCode() {
+  if (currentCourse) return normalizeCourseCode(currentCourse);
+  const params = new URLSearchParams(window.location.search);
+  const fromQuery = String(params.get("course") || "").trim();
+  return fromQuery ? normalizeCourseCode(fromQuery) : "";
+}
+
+async function loadStudentProfile() {
+  if (studentProfile) return studentProfile;
+  try {
+    const cached = window.readStudentCache ? window.readStudentCache() : null;
+    const data = cached || (window.loadStudent ? await window.loadStudent({ force: !cached }) : null);
+    if (data) {
+      studentProfile = data;
+      const list = Array.isArray(data.registeredCourses) ? data.registeredCourses : [];
+      registeredCourses = new Set(list.map((c) => normalizeCourseCode(c)));
+      return studentProfile;
+    }
+  } catch (err) {
+    console.error("Failed to load student profile:", err);
+  }
+  return null;
+}
+
+function isCourseRegistered(courseCode) {
+  if (!courseCode) return false;
+  const normalized = normalizeCourseCode(courseCode);
+  return registeredCourses.has(normalized);
+}
+
+function updateStartState() {
+  const startBtn = document.getElementById("startExamBtn");
+  const attemptInfo = document.getElementById("attemptInfo");
+
+  if (!startBtn || !attemptInfo) return;
+
+  startBtn.disabled = false;
+  attemptInfo.textContent =
+    "Prepared directly from your course materials to help you practice smarter.";
+}
+
+function startTimer() {
+  const timerEl = document.getElementById("examTimer");
+  examStartedAtMs = Date.now();
+  const tick = () => {
+    const elapsed = Math.max(0, Math.floor((Date.now() - examStartedAtMs) / 1000));
+    remainingSeconds = Math.max(0, EXAM_DURATION_SECONDS - elapsed);
+    const mins = String(Math.floor(remainingSeconds / 60)).padStart(2, "0");
+    const secs = String(remainingSeconds % 60).padStart(2, "0");
+    if (timerEl) timerEl.textContent = `Time left: ${mins}:${secs}`;
+
+    if (remainingSeconds <= 0) {
+      clearInterval(timerInterval);
+      submitExam();
+      return;
+    }
+  };
+
+  tick();
+  timerInterval = setInterval(tick, 1000);
+}
+
+function ensureMockNavStyles() {
+  if (document.getElementById("mockQuestionNavStyles")) return;
+  const style = document.createElement("style");
+  style.id = "mockQuestionNavStyles";
+  style.textContent = `
+    .mock-question-shell { display: grid; gap: 14px; }
+    .mock-question-nav { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 8px; }
+    .mock-nav-btn { border: 1px solid #d1d5db; border-radius: 8px; background: #fff; padding: 8px 0; font-weight: 600; cursor: pointer; }
+    .mock-nav-btn.current { border-color: #2563eb; box-shadow: 0 0 0 2px rgba(37,99,235,.15); }
+    .mock-nav-btn.answered { background: #dcfce7; border-color: #86efac; }
+    .mock-question-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; background: #fff; }
+    .mock-question-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .mock-outline-btn { border: 1px solid #cbd5e1; background: #fff; color: #0f172a; border-radius: 8px; padding: 8px 12px; cursor: pointer; }
+    .mock-outline-btn[disabled] { opacity: .5; cursor: not-allowed; }
+  `;
+  document.head.appendChild(style);
+}
+
+function getStoredAnswer(index) {
+  if (!Array.isArray(answersMemory)) return "";
+  return String(answersMemory[index] || "");
+}
+
+function setStoredAnswer(index, value) {
+  answersMemory[index] = String(value || "");
+}
+
+function renderNavigator() {
+  const nav = document.getElementById("mockQuestionNavigator");
+  if (!nav) return;
+  nav.innerHTML = examQuestions
+    .map((_, idx) => {
+      const classes = ["mock-nav-btn"];
+      if (idx === currentQuestionIndex) classes.push("current");
+      if (getStoredAnswer(idx).trim()) classes.push("answered");
+      return `<button type="button" class="${classes.join(" ")}" data-q-index="${idx}">${idx + 1}</button>`;
+    })
+    .join("");
+}
+
+function ensureQuestionShell() {
+  const form = document.getElementById("examForm");
+  if (!form) return;
+
+  let shell = form.querySelector(".mock-question-shell");
+  if (!shell) {
+    form.innerHTML = `
+      <section class="mock-question-shell">
+        <div id="mockQuestionNavigator" class="mock-question-nav"></div>
+        <article id="mockQuestionCard" class="mock-question-card"></article>
+      </section>
+    `;
+    shell = form.querySelector(".mock-question-shell");
+  }
+
+  const nav = form.querySelector("#mockQuestionNavigator");
+  const card = form.querySelector("#mockQuestionCard");
+  if (!nav || !card) {
+    form.innerHTML = `
+      <section class="mock-question-shell">
+        <div id="mockQuestionNavigator" class="mock-question-nav"></div>
+        <article id="mockQuestionCard" class="mock-question-card"></article>
+      </section>
+    `;
+  }
+}
+
+function renderQuestion() {
+  const wrap = document.getElementById("mockQuestionCard");
+  const form = document.getElementById("examForm");
+  if (!wrap || !form || !examQuestions.length) return;
+
+  const idx = currentQuestionIndex;
+  const q = examQuestions[idx];
+  const stored = getStoredAnswer(idx);
+
+  let answerHtml = "";
+  if (q.type === "mcq") {
+    answerHtml = (Array.isArray(q.options) ? q.options : [])
+      .map((opt) => `
+        <label style="display:block;margin-top:8px;">
+          <input type="radio" name="q_current" value="${escapeHtml(opt.label)}" ${stored === String(opt.label) ? "checked" : ""}>
+          ${escapeHtml(opt.label)}. ${escapeHtml(opt.text)}
+        </label>
+      `)
+      .join("");
+  } else {
+    answerHtml = `
+      <input
+        type="text"
+        name="q_current"
+        placeholder="Type your answer"
+        value="${escapeHtml(stored)}"
+        style="margin-top:8px;width:100%;padding:10px;"
+      />
+    `;
+  }
+
+  wrap.innerHTML = `
+    <div><strong>Q${idx + 1} of ${examQuestions.length}.</strong> ${escapeHtml(q.question)}</div>
+    <div style="margin-top:8px;">${answerHtml}</div>
+    <div class="mock-question-actions">
+      <button type="button" id="prevQuestionBtn" class="mock-outline-btn" ${idx === 0 ? "disabled" : ""}>Previous</button>
+      <button type="button" id="nextQuestionBtn" class="mock-outline-btn" ${idx === examQuestions.length - 1 ? "disabled" : ""}>Next Question</button>
+      <button type="button" id="cancelAnswerBtn" class="mock-outline-btn">Cancel My Answer</button>
+    </div>
+  `;
+
+  const currentInput = wrap.querySelector('[name="q_current"]');
+  if (q.type === "mcq") {
+    wrap.querySelectorAll('input[name="q_current"]').forEach((el) => {
+      el.addEventListener("change", () => {
+        setStoredAnswer(idx, el.value);
+        renderNavigator();
+      });
+    });
+  } else if (currentInput) {
+    currentInput.addEventListener("input", () => {
+      setStoredAnswer(idx, currentInput.value);
+      renderNavigator();
+    });
+  }
+
+  wrap.querySelector("#prevQuestionBtn")?.addEventListener("click", () => {
+    if (currentQuestionIndex <= 0) return;
+    currentQuestionIndex -= 1;
+    renderQuestion();
+    renderNavigator();
+  });
+
+  wrap.querySelector("#nextQuestionBtn")?.addEventListener("click", () => {
+    if (currentQuestionIndex >= examQuestions.length - 1) return;
+    currentQuestionIndex += 1;
+    renderQuestion();
+    renderNavigator();
+  });
+
+  wrap.querySelector("#cancelAnswerBtn")?.addEventListener("click", () => {
+    setStoredAnswer(idx, "");
+    renderQuestion();
+    renderNavigator();
+  });
+
+  form.scrollIntoView({ block: "nearest" });
+}
+
+function renderQuestions(questions) {
+  const form = document.getElementById("examForm");
+  if (!form) return;
+
+  ensureMockNavStyles();
+  ensureQuestionShell();
+  currentQuestionIndex = 0;
+  answersMemory = new Array(questions.length).fill("");
+
+  form.querySelector("#mockQuestionNavigator")?.addEventListener("click", (event) => {
+    const btn = event.target.closest("[data-q-index]");
+    if (!btn) return;
+    const idx = Number(btn.getAttribute("data-q-index"));
+    if (!Number.isInteger(idx) || idx < 0 || idx >= examQuestions.length) return;
+    currentQuestionIndex = idx;
+    renderQuestion();
+    renderNavigator();
+  });
+
+  renderQuestion();
+  renderNavigator();
+}
+
+function collectAnswers() {
+  return examQuestions.map((q, idx) => ({
+    id: q.id,
+    answer: String(answersMemory[idx] || "")
+  }));
+}
+
+function ensureEntitlementModal() {
+  let modal = document.getElementById("entitlementModal");
+  if (modal) return modal;
+
+  if (!document.getElementById("entitlementModalStyles")) {
+    document.head.insertAdjacentHTML(
+      "beforeend",
+      `
+      <style id="entitlementModalStyles">
+        .entitlement-modal {
+          position: fixed;
+          inset: 0;
+          background: rgba(9, 11, 16, 0.55);
+          display: none;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+        }
+        .entitlement-modal .modal-box {
+          width: min(420px, 92vw);
+          background: #fff;
+          border-radius: 14px;
+          padding: 20px 22px;
+          box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+          text-align: center;
+        }
+        .entitlement-modal .modal-box h3 {
+          margin: 0 0 8px;
+          font-size: 1.2rem;
+        }
+        .entitlement-modal .modal-box p {
+          margin: 8px 0;
+          color: #2d2d2d;
+        }
+        .entitlement-modal .entitlement-status {
+          font-weight: 600;
+          color: #0b5ed7;
+          min-height: 20px;
+        }
+        .entitlement-modal .modal-actions {
+          display: flex;
+          gap: 10px;
+          justify-content: center;
+          margin-top: 16px;
+        }
+        .entitlement-modal .modal-actions button {
+          border: 0;
+          border-radius: 8px;
+          padding: 10px 16px;
+          cursor: pointer;
+          font-weight: 600;
+        }
+        .entitlement-modal .btn-primary {
+          background: #0b5ed7;
+          color: #fff;
+        }
+        .entitlement-modal .btn-secondary {
+          background: #f0f2f5;
+          color: #222;
+        }
+      </style>
+      `
+    );
+  }
+
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    `
+    <div id="entitlementModal" class="entitlement-modal" role="dialog" aria-modal="true">
+      <div class="modal-box">
+        <h3>Access Required</h3>
+        <p id="entitlementMessage"></p>
+        <p><strong id="entitlementAmount"></strong></p>
+        <p id="entitlementStatus" class="entitlement-status"></p>
+        <div class="modal-actions">
+          <button id="entitlementPayBtn" class="btn-primary" type="button">Pay</button>
+          <button id="entitlementCancelBtn" class="btn-secondary" type="button">Cancel</button>
+        </div>
+      </div>
+    </div>
+    `
+  );
+
+  modal = document.getElementById("entitlementModal");
+  return modal;
+}
+
+async function requestPayPerUse({ courseCode, platform, resourceId }) {
+  const copy = {
+    message:
+      "This course was not part of your registered semester courses.\nTo continue, please pay ₦500 to unlock this course.",
+    amount: "₦500",
+    payLabel: "Pay ₦500",
+    successText: "Payment successful. You may proceed."
+  };
+
+  const modal = ensureEntitlementModal();
+  const messageEl = modal.querySelector("#entitlementMessage");
+  const amountEl = modal.querySelector("#entitlementAmount");
+  const statusEl = modal.querySelector("#entitlementStatus");
+  const payBtn = modal.querySelector("#entitlementPayBtn");
+  const cancelBtn = modal.querySelector("#entitlementCancelBtn");
+
+  messageEl.textContent = copy.message;
+  amountEl.textContent = copy.amount;
+  statusEl.textContent = "";
+  payBtn.textContent = copy.payLabel;
+  payBtn.disabled = false;
+  cancelBtn.disabled = false;
+
+  modal.style.display = "flex";
+
+  return new Promise((resolve) => {
+    const cleanup = () => {
+      modal.style.display = "none";
+      payBtn.onclick = null;
+      cancelBtn.onclick = null;
+      payBtn.disabled = false;
+      cancelBtn.disabled = false;
+    };
+
+    payBtn.onclick = async () => {
+      payBtn.disabled = true;
+      cancelBtn.disabled = true;
+      payBtn.textContent = "Processing...";
+      statusEl.textContent = "";
+
+      try {
+        const payRes = await fetch(`${API_BASE}/api/payments/mock`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ amount: 500, courseCode, platform })
+        });
+        const payData = await payRes.json().catch(() => ({}));
+        if (!payRes.ok || payData.status !== "success") {
+          statusEl.textContent = "Payment failed. Please try again.";
+          payBtn.disabled = false;
+          cancelBtn.disabled = false;
+          payBtn.textContent = copy.payLabel;
+          return;
+        }
+
+        await fetch(`${API_BASE}/api/access/log`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            student_id: studentProfile?._id || null,
+            resourceId: resourceId || courseCode,
+            amount: payData.amount || 500,
+            reference: payData.reference,
+            course_code: courseCode,
+            platform
+          })
+        });
+
+        statusEl.textContent = copy.successText;
+        setTimeout(() => {
+          cleanup();
+          resolve(true);
+        }, 700);
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = "Payment failed. Please try again.";
+        payBtn.disabled = false;
+        cancelBtn.disabled = false;
+        payBtn.textContent = copy.payLabel;
+      }
+    };
+
+    cancelBtn.onclick = () => {
+      cleanup();
+      resolve(false);
+    };
+  });
+}
+
+async function ensurePaidAccess(courseCode, platform, resourceId) {
+  return true;
+}
+
+async function loadExam(course) {
+  if (hasLoadedExam) return true;
+  const normalizedCourse = normalizeCourseCode(course);
+
+  try {
+    let res = await fetch(`${API_BASE}/api/mock-exams/${normalizedCourse}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      const message = data.message || "Failed to load exam";
+      const status = document.getElementById("examStatus");
+      const pickerStatus = document.getElementById("coursePickerStatus");
+      if (status) status.textContent = message;
+      if (pickerStatus) pickerStatus.textContent = message;
+      return false;
+    }
+
+    examQuestions = data.questions;
+    const status = document.getElementById("examStatus");
+    if (status) status.textContent = "";
+
+    renderQuestions(examQuestions);
+    startTimer();
+    hasLoadedExam = true;
+    await logStudentActivity("mock_started", normalizedCourse);
+    return true;
+  } catch (err) {
+    console.error(err);
+    const status = document.getElementById("examStatus");
+    const pickerStatus = document.getElementById("coursePickerStatus");
+    if (status) status.textContent = "Failed to load exam";
+    if (pickerStatus) pickerStatus.textContent = "Failed to load exam";
+    return false;
+  }
+}
+
+async function submitExam() {
+  if (!examQuestions.length || isSubmitting) return;
+
+  const confirmed = window.confirm("Submit all answers now? You cannot edit after submission.");
+  if (!confirmed) return;
+
+  isSubmitting = true;
+  const answers = collectAnswers();
+  const course = normalizeCourseCode(getCourseCode());
+  const elapsedSeconds = examStartedAtMs
+    ? Math.max(0, Math.floor((Date.now() - examStartedAtMs) / 1000))
+    : Math.max(0, EXAM_DURATION_SECONDS - remainingSeconds);
+  const timeSpentSeconds = Math.min(EXAM_DURATION_SECONDS, elapsedSeconds);
+
+  try {
+    const res = await fetch(`${API_BASE}/api/mock-exams/submit`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ courseCode: course, answers, timeSpentSeconds })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message || "Submission failed");
+      isSubmitting = false;
+      return;
+    }
+
+    clearInterval(timerInterval);
+    updateStartState();
+
+    const submitBtn = document.getElementById("submitExamBtn");
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.remove();
+    }
+
+    const total = Number(data.attempt?.totalQuestions || data.total || examQuestions.length || 0);
+    const correct = Number(data.attempt?.correct || data.score || 0);
+    const wrong = Math.max(0, total - correct);
+    const accuracy = Number(
+      data.attempt?.scorePercent ??
+      (total > 0 ? Number(((correct / total) * 100).toFixed(1)) : 0)
+    );
+    const explanations = Array.isArray(data.explanations) ? data.explanations : [];
+    const questionRows = examQuestions.map((q, idx) => {
+      const exp = explanations[idx] || {};
+      const user = (answers[idx] && answers[idx].answer) || "";
+      const correctAnswer = String(exp.correctText || exp.correctAnswer || "").trim();
+      const isCorrect = typeof exp.isCorrect === "boolean"
+        ? exp.isCorrect
+        : String(user || "").trim().toLowerCase() === correctAnswer.toLowerCase();
+
+      return {
+        questionText: exp.question || q.question || "",
+        studentAnswer: user || "(No answer)",
+        correctAnswer: correctAnswer || "-",
+        explanation: exp.explanation || "No explanation provided.",
+        isCorrect
+      };
+    });
+
+    const studentName =
+      studentProfile?.fullName ||
+      studentProfile?.name ||
+      "Student";
+
+    const attemptId =
+      String(data.attempt?.attemptId || `mock_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`);
+    const attemptPayload = {
+      attemptId,
+      studentId: String(data.attempt?.studentId || studentProfile?._id || ""),
+      examId: String(data.attempt?.examId || ""),
+      studentName,
+      courseCode: course,
+      totalQuestions: total,
+      total,
+      score: correct,
+      correct,
+      wrong,
+      scorePercent: accuracy,
+      accuracy,
+      timeSpentSeconds: Number(data.attempt?.timeSpentSeconds ?? timeSpentSeconds),
+      submittedAt: data.attempt?.submittedAt || new Date().toISOString(),
+      questions: Array.isArray(data.attempt?.questions) && data.attempt.questions.length
+        ? data.attempt.questions.map((q) => ({
+          questionText: q.question || "",
+          studentAnswer: q.studentAnswer || "(No answer)",
+          correctAnswer: q.correctAnswer || "-",
+          explanation: q.explanation || "No explanation provided.",
+          isCorrect: Boolean(q.isCorrect)
+        }))
+        : questionRows
+    };
+
+    const saved = window.MockPostExam?.saveMockAttempt
+      ? window.MockPostExam.saveMockAttempt(attemptPayload)
+      : (() => {
+        const historyKey = "mockExamHistory";
+        const lastKey = "mockExamLastAttempt";
+        let history = [];
+        try {
+          history = JSON.parse(localStorage.getItem(historyKey) || "[]");
+          if (!Array.isArray(history)) history = [];
+        } catch (err) {
+          history = [];
+        }
+        history.unshift(attemptPayload);
+        localStorage.setItem(historyKey, JSON.stringify(history));
+        localStorage.setItem(lastKey, JSON.stringify(attemptPayload));
+        return attemptPayload;
+      })();
+
+    await logStudentActivity("mock_completed", course, data.score);
+    const redirectId = saved?.attemptId || attemptId;
+    window.location.href = `/frontend/pages/mock-exam-summary.html?attemptId=${encodeURIComponent(redirectId)}`;
+  } catch (err) {
+    console.error(err);
+    alert("Submission failed");
+    isSubmitting = false;
+  }
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function renderCourseGrid(filterText) {
+  const grid = document.getElementById("courseGrid");
+  const statusEl = document.getElementById("coursePickerStatus");
+  if (!grid || !statusEl) return;
+
+  const q = String(filterText || "").trim().toLowerCase();
+  const normalizedQuery = normalizeCourseCode(q);
+  const rows = availableCourses.filter((item) => {
+    if (!q) return true;
+    const codeMatch =
+      String(item.code || "").toLowerCase().includes(q) ||
+      normalizeCourseCode(item.code).includes(normalizedQuery);
+    const titleMatch = String(item.title || "").toLowerCase().includes(q);
+    return codeMatch || titleMatch;
+  });
+
+  if (!rows.length) {
+    grid.innerHTML = "";
+    statusEl.textContent = q
+      ? "No courses match your search."
+      : "Courses not loaded. Please refresh.";
+    return;
+  }
+
+  statusEl.textContent = "";
+  grid.innerHTML = rows
+    .map(
+      (item) => `
+      <article class="dashboard-card" data-course-code="${escapeHtml(item.code)}">
+        <h3>${escapeHtml(item.code)}</h3>
+        <p>${escapeHtml(item.title)}</p>
+        <button class="primary-btn start-course-mock-btn" type="button" data-course-code="${escapeHtml(item.code)}">
+          Start Mock
+        </button>
+      </article>
+    `
+    )
+    .join("");
+}
+
+async function loadAvailableCourses() {
+  const statusEl = document.getElementById("coursePickerStatus");
+  if (statusEl) statusEl.textContent = "Loading available courses...";
+
+  try {
+    const res = await fetch(`${API_BASE}/api/courses`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const data = await res.json().catch(() => []);
+    if (!res.ok) {
+      throw new Error(data.message || "Failed to load courses");
+    }
+
+    const rows = Array.isArray(data) ? data : [];
+    availableCourses = rows
+      .map((item) => {
+        const code = normalizeCourseCode(item.courseCode || item.code);
+        const title = String(item.title || item.name || code || "").trim();
+        if (!code) return null;
+        return { code, title: title || `Mock for ${code}` };
+      })
+      .filter(Boolean);
+
+    if (statusEl && !availableCourses.length) {
+      statusEl.textContent = "Courses not loaded. Please refresh.";
+    }
+  } catch (err) {
+    console.error("Failed to load available courses:", err);
+    availableCourses = [];
+    if (statusEl) statusEl.textContent = "Courses not loaded. Please refresh.";
+  }
+
+  renderCourseGrid("");
+}
+
+function resetExamState() {
+  hasLoadedExam = false;
+  examQuestions = [];
+  answersMemory = [];
+  currentQuestionIndex = 0;
+  remainingSeconds = EXAM_DURATION_SECONDS;
+  examStartedAtMs = null;
+  clearInterval(timerInterval);
+  const form = document.getElementById("examForm");
+  const status = document.getElementById("examStatus");
+  const resultSummary = document.getElementById("resultSummary");
+  const explanations = document.getElementById("explanations");
+  const resultSection = document.getElementById("resultSection");
+  if (form) form.innerHTML = "";
+  if (status) status.textContent = "";
+  if (resultSummary) resultSummary.innerHTML = "";
+  if (explanations) explanations.innerHTML = "";
+  if (resultSection) resultSection.hidden = true;
+}
+
+function showCoursePicker() {
+  const startSection = document.getElementById("startSection");
+  const pickerSection = document.getElementById("coursePickerSection");
+  const examSection = document.getElementById("examSection");
+  const resultSection = document.getElementById("resultSection");
+  if (startSection) startSection.hidden = true;
+  if (pickerSection) pickerSection.hidden = false;
+  if (examSection) examSection.hidden = true;
+  if (resultSection) resultSection.hidden = true;
+}
+
+async function startSelectedCourse(courseCode) {
+  const code = normalizeCourseCode(courseCode);
+  if (!code) return;
+  currentCourse = code;
+  resetExamState();
+
+  const examTitle = document.getElementById("examTitle");
+  const pickerSection = document.getElementById("coursePickerSection");
+  const examSection = document.getElementById("examSection");
+  const status = document.getElementById("examStatus");
+  if (examTitle) examTitle.textContent = `Mock Exam - ${code}`;
+  if (status) status.textContent = "Loading questions...";
+
+  const loaded = await loadExam(code);
+  if (!loaded) return;
+
+  if (pickerSection) pickerSection.hidden = true;
+  if (examSection) examSection.hidden = false;
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  await window.ISA_LearningProtection?.activateWatermark();
+  await window.ISA_LearningProtection?.addPdfDownloadButton({
+    hostSelector: ".page-header",
+    buttonText: "Download as PDF",
+    fileName: () => {
+      const code = getCourseCode() || "mock-exam";
+      return `${code.toLowerCase()}-mock.pdf`;
+    },
+    courseCode: () => getCourseCode() || "MOCK",
+    title: () => document.getElementById("examTitle")?.textContent || "Mock Exam",
+    getContentText: () => {
+      const examTitle = document.getElementById("examTitle")?.innerText || "";
+      const result = document.getElementById("resultSummary")?.innerText || "";
+      const explanations = document.getElementById("explanations")?.innerText || "";
+      const timer = document.getElementById("examTimer")?.innerText || "";
+      return [examTitle, timer, result, explanations].filter(Boolean).join("\n\n");
+    }
+  });
+
+  await loadAvailableCourses();
+  const course = getCourseCode();
+  const titleEl = document.getElementById("examTitle");
+  if (titleEl) titleEl.textContent = course ? `Mock Exam - ${course}` : "Mock Exam";
+
+  const startSection = document.getElementById("startSection");
+  const pickerSection = document.getElementById("coursePickerSection");
+  const examSection = document.getElementById("examSection");
+  const startBtn = document.getElementById("startExamBtn");
+  const searchInput = document.getElementById("courseSearchInput");
+  const courseGrid = document.getElementById("courseGrid");
+  const submitBtn = document.getElementById("submitExamBtn");
+
+  updateStartState();
+
+  startBtn?.addEventListener("click", () => {
+    showCoursePicker();
+    renderCourseGrid(searchInput?.value || "");
+  });
+
+  searchInput?.addEventListener("input", () => {
+    renderCourseGrid(searchInput.value || "");
+  });
+
+  courseGrid?.addEventListener("click", async (event) => {
+    const btn = event.target.closest(".start-course-mock-btn");
+    if (!btn) return;
+    const code = btn.getAttribute("data-course-code");
+    if (!code) return;
+    btn.disabled = true;
+    try {
+      await logStudentActivity("mock_course_selected", code);
+      await startSelectedCourse(code);
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  if (course) {
+    if (startSection) startSection.hidden = true;
+    if (pickerSection) pickerSection.hidden = false;
+    await startSelectedCourse(course);
+  }
+
+  submitBtn?.addEventListener("click", submitExam);
+});
+
+
+

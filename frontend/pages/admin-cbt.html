@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin CBT Exams | Intensive Study Academy</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/admin-academic.css" />
+  <link rel="stylesheet" href="../css/admin-theme.css" />
+</head>
+<body>
+<header class="dashboard-header">
+  <div class="header-container">
+    <div class="logo">
+      <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+    </div>
+    <div class="user-text">
+      <strong>Admin</strong>
+      <a class="action-btn" href="/frontend/pages/admin-settings.html">Settings</a>
+    </div>
+  </div>
+</header>
+
+<div class="dashboard-layout">
+  <nav class="dashboard-sidebar">
+    <ul class="sidebar-top">
+      <li><a href="/frontend/pages/admin-dashboard.html">Dashboard</a></li>
+      <li><a href="/frontend/pages/admin-staff.html">Staff</a></li>
+      <li><a href="/frontend/pages/admin-courses.html">Courses</a></li>
+      <li><a href='/frontend/pages/admin-curriculum.html'>Curriculum</a></li>
+      <li><a href="/frontend/pages/admin-course-materials.html">Course Materials</a></li>
+      <li><a href="/frontend/pages/admin-mocks.html">Mock Exams</a></li>
+      <li><a href="/frontend/pages/admin-exam-timetables.html">Exam Timetables</a></li>
+      <li><a href="/frontend/pages/admin-fee-structures.html">Fee Structures</a></li>
+      <li><a href="/frontend/pages/admin-cbt.html" class="active">CBT Exams</a></li>
+      <li class="divider"></li>
+      <li><a href="/frontend/pages/admin-announcements.html">Announcements</a></li>
+      <li><a href="/frontend/pages/admin-blog.html">Blog</a></li>
+      <li><a href="/frontend/pages/admin-gallery.html">Gallery</a></li>
+    </ul>
+    <div class="sidebar-bottom">
+      <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+    </div>
+  </nav>
+
+  <main class="dashboard-main">
+    <section class="page-header">
+      <h1>CBT Exams</h1>
+      <p>Create CBT exams manually by entering questions and answers.</p>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Create CBT Exam</h2>
+      <form id="cbtForm" class="admin-form">
+        <div>
+          <label>Course Code</label>
+          <input type="text" id="courseCode" placeholder="e.g. ACC101" required />
+        </div>
+        <div>
+          <label>Duration</label>
+          <input type="number" id="duration" min="1" placeholder="e.g. 50" required />
+        </div>
+      </form>
+
+      <hr style="margin:16px 0;">
+
+      <h3>Add Question</h3>
+      <div class="admin-form" id="questionForm">
+        <div>
+          <label>Question Type</label>
+          <select id="questionType">
+            <option value="mcq">MCQ</option>
+            <option value="fill">Fill</option>
+          </select>
+        </div>
+        <div>
+          <label>Question Text</label>
+          <textarea id="questionText" rows="3" placeholder="Enter question"></textarea>
+        </div>
+        <div id="mcqFields">
+          <div>
+            <label>Option A</label>
+            <input type="text" id="optionA" placeholder="Option A" />
+          </div>
+          <div>
+            <label>Option B</label>
+            <input type="text" id="optionB" placeholder="Option B" />
+          </div>
+          <div>
+            <label>Option C</label>
+            <input type="text" id="optionC" placeholder="Option C" />
+          </div>
+          <div>
+            <label>Option D</label>
+            <input type="text" id="optionD" placeholder="Option D" />
+          </div>
+          <div>
+            <label>Correct Answer</label>
+            <select id="correctAnswer">
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="D">D</option>
+            </select>
+          </div>
+        </div>
+        <div id="fillFields" style="display:none;">
+          <label>Fill Answer</label>
+          <input type="text" id="fillAnswer" placeholder="Enter correct fill answer" />
+        </div>
+      </div>
+
+      <div class="admin-actions">
+        <button id="addToBankBtn" class="action-btn" type="button">Add To Bank</button>
+        <button id="generateMockBtn" class="primary-btn" type="button">Generate Mock</button>
+        <span id="cbtStatus" class="status-text"></span>
+      </div>
+
+      <ul id="questionList" class="activity-list" style="margin-top:12px;"></ul>
+    </section>
+  </main>
+</div>
+
+<script src="../js/admin-guard.js"></script>
+<script src="../js/admin-logout.js"></script>
+<script src="../js/admin-theme.js"></script>
+<script src="../js/admin-cbt.js"></script>
+</body>
+</html>
+
+

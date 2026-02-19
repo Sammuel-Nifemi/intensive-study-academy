@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Staff Gallery | ISA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+</head>
+
+<body class="page-staff-dashboard">
+
+<header class="dashboard-header">
+  <h1>Gallery Upload</h1>
+  <p>Upload images or documents</p>
+</header>
+
+<!-- ✅ REQUIRED FLEX WRAPPER -->
+<div class="dashboard-container">
+
+  <!-- ✅ SINGLE sidebar -->
+  <aside class="dashboard-sidebar">
+    <ul>
+      <li><a href="staff-dashboard.html">Dashboard</a></li>
+      <li><a href="staff-announcements.html">Announcements</a></li>
+      <li><a href="staff-blog.html">Blog</a></li>
+      <li><a href="staff-gallery.html" class="active">Gallery</a></li>
+    </ul>
+
+    <button id="logoutBtn">Logout</button>
+  </aside>
+
+  <!-- ✅ CLASS MATCHES CSS -->
+  <main class="dashboard-main">
+
+    <form id="galleryForm" class="card" enctype="multipart/form-data">
+      <h3>Upload Item</h3>
+
+      <label>Title</label>
+      <input type="text" name="title" required />
+
+      <label>Description</label>
+      <textarea name="description" rows="4"></textarea>
+
+      <label>File (Image or PDF)</label>
+      <input type="file" name="file" required />
+
+      <button type="submit">Upload</button>
+    </form>
+
+  </main>
+
+</div>
+
+<script src="../js/staff-gallery.js"></script>
+</body>
+</html>
