@@ -168,27 +168,27 @@ app.get("/", (req, res) => {
   res.send("API running...");
 });
 
-
 // ⚠️ TEMP ADMIN CREATOR — REMOVE AFTER USE
 app.get("/__seed_admin", async (req, res) => {
   try {
-    const Admin = require("./models/Admin");
+    const Staff = require("./models/Staff");
     const bcrypt = require("bcryptjs");
 
     const email = "oluwanifemis283@gmail.com";
     const password = "omogbemi123";
 
-    const existing = await Admin.findOne({ email });
+    const existing = await Staff.findOne({ email });
     if (existing) {
       return res.json({ message: "Admin already exists" });
     }
 
     const hashed = await bcrypt.hash(password, 10);
 
-    await Admin.create({
+    await Staff.create({
       email,
       password: hashed,
-      role: "superadmin"
+      role: "admin",
+      name: "Super Admin"
     });
 
     res.json({ success: true, message: "Admin created successfully" });
