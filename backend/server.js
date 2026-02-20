@@ -187,7 +187,7 @@ app.get("/__seed_admin", async (req, res) => {
     await Staff.create({
       email,
       password: hashed,
-      role: "admin",
+      role: "staff",
       name: "Super Admin"
     });
 
