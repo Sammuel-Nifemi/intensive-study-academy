@@ -1,6 +1,6 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const token = localStorage.getItem("adminToken");
+  const token = (localStorage.getItem("adminToken") || localStorage.getItem("token"));
   const list = document.getElementById("pendingList");
 
   const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/materials/pending", {
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function approve(id) {
-  const token = localStorage.getItem("adminToken");
+  const token = (localStorage.getItem("adminToken") || localStorage.getItem("token"));
 
   await fetch((window.ISA_API_ORIGIN || "") + `/api/materials/${id}/approve`, {
     method: "PUT",
@@ -34,3 +34,4 @@ async function approve(id) {
   alert("Approved");
   location.reload();
 }
+

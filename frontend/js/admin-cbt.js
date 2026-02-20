@@ -1,5 +1,5 @@
 const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/admin";
-const token = localStorage.getItem("adminToken");
+const token = (localStorage.getItem("adminToken") || localStorage.getItem("token"));
 const sessionQuestions = [];
 
 function setStatus(message, isError) {
@@ -212,3 +212,4 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("addToBankBtn")?.addEventListener("click", addToBank);
   document.getElementById("generateMockBtn")?.addEventListener("click", generateMock);
 });
+

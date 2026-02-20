@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const statusEl = document.getElementById("staffStatus");
   const tableBody = document.getElementById("staffTableBody");
 
-  const token = localStorage.getItem("adminToken");
+  const token = (localStorage.getItem("adminToken") || localStorage.getItem("token"));
 
   const setStatus = (message, type) => {
     if (!statusEl) return;
@@ -150,3 +150,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   fetchStaff();
 });
+

@@ -1,5 +1,5 @@
 (function () {
-  const storedAdminToken = localStorage.getItem("adminToken") || "";
+  const storedAdminToken = (localStorage.getItem("adminToken") || localStorage.getItem("token")) || "";
 
   const themeSelect = document.getElementById("adminTheme");
   const saveBtn = document.getElementById("saveSettingsBtn");
@@ -26,6 +26,7 @@
       });
       if (res.status === 401) {
         localStorage.removeItem("adminToken");
+        localStorage.removeItem("token");
         setStatus("Session expired. Please log in again.", true);
         setTimeout(() => {
           window.location.href = "./admin-login.html";
@@ -82,6 +83,7 @@
       if (res.status === 401) {
         setStatus("Session expired. Please log in again.", true);
         localStorage.removeItem("adminToken");
+        localStorage.removeItem("token");
         if (saveBtn) {
           saveBtn.disabled = false;
           saveBtn.textContent = "Save Settings";
@@ -124,3 +126,4 @@
     });
   });
 })();
+

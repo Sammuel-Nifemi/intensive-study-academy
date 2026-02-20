@@ -1,7 +1,7 @@
 /* ===============================
    PAGE GUARD
 ================================ */
-const token = localStorage.getItem("adminToken");
+const token = (localStorage.getItem("adminToken") || localStorage.getItem("token"));
 
 if (!token) {
   window.location.href = "../admin-login.html";
@@ -105,3 +105,4 @@ function clearForm() {
   optD.value = "";
   correct.value = "";
 }
+

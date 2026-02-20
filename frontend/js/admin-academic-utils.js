@@ -1,5 +1,5 @@
 function getAdminToken() {
-  return localStorage.getItem("adminToken");
+  return (localStorage.getItem("adminToken") || localStorage.getItem("token"));
 }
 
 async function fetchJson(url, options = {}) {
@@ -59,3 +59,4 @@ function filterProgramsByFaculty(programSelect, facultyValue) {
     opt.hidden = !match;
   });
 }
+

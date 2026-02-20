@@ -8,7 +8,7 @@ const statusBar = document.getElementById("statusBar");
 const refreshBtn = document.getElementById("refreshBtn");
 
 function getAdminToken() {
-  return localStorage.getItem("adminToken");
+  return (localStorage.getItem("adminToken") || localStorage.getItem("token"));
 }
 
 function setStatus(message, isError = false) {
@@ -222,3 +222,4 @@ assignmentsBody?.addEventListener("click", (event) => {
 refreshBtn?.addEventListener("click", fetchAssignments);
 
 document.addEventListener("DOMContentLoaded", fetchAssignments);
+

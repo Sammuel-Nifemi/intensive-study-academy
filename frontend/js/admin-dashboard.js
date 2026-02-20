@@ -1,4 +1,4 @@
-const adminToken = localStorage.getItem("adminToken");
+const adminToken = (localStorage.getItem("adminToken") || localStorage.getItem("token"));
 
 async function loadStats() {
   try {
@@ -80,3 +80,4 @@ document.addEventListener("DOMContentLoaded", () => {
   loadStudyCenters();
   loadMockSummary();
 });
+

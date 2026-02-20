@@ -1,7 +1,7 @@
 /* ===============================
    PAGE GUARD
 ================================ */
-const token = localStorage.getItem("adminToken");
+const token = (localStorage.getItem("adminToken") || localStorage.getItem("token"));
 
 if (!token) {
   window.location.href = "../admin-login.html";
@@ -41,3 +41,4 @@ form.addEventListener("submit", function (e) {
 
   window.location.href = "index.html";
 });
+

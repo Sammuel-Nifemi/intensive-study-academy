@@ -1,5 +1,5 @@
 
-const token = localStorage.getItem("adminToken");
+const token = (localStorage.getItem("adminToken") || localStorage.getItem("token"));
 const list = document.getElementById("facultyList");
 
 async function loadFaculties() {
@@ -28,3 +28,4 @@ document.getElementById("facultyForm").addEventListener("submit", async e => {
 });
 
 loadFaculties();
+

@@ -11,3 +11,4 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "./admin-login.html";
   });
 });
+

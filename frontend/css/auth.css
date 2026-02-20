@@ -20,20 +20,39 @@ body {
 
 .password-wrapper input {
   width: 100%;
-  padding-right: 40px;
+  padding-right: 64px;
+}
+
+.password-wrapper input[type="password"]::-ms-reveal,
+.password-wrapper input[type="password"]::-ms-clear {
+  display: none;
 }
 
 .toggle-password {
   position: absolute;
   top: 50%;
-  right: 12px;
+  right: 10px;
   transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  color: #1f3f9a;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
   cursor: pointer;
-  font-size: 16px;
   user-select: none;
+  padding: 4px 6px;
+  line-height: 1;
+  z-index: 2;
+}
+
+.toggle-password:focus-visible {
+  outline: 2px solid #1f3f9a;
+  outline-offset: 1px;
+  border-radius: 4px;
 }
 /* =====================================
-   STUDENT REGISTRATION – TARGETED STYLES
+   STUDENT REGISTRATION - TARGETED STYLES
    Safe, scoped, non-destructive
 ===================================== */
 

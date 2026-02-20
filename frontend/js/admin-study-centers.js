@@ -1,4 +1,4 @@
-const token = localStorage.getItem("adminToken");
+const token = (localStorage.getItem("adminToken") || localStorage.getItem("token"));
 
 document.getElementById("centerForm").addEventListener("submit", async e => {
   e.preventDefault();
@@ -57,3 +57,4 @@ async function deleteCenter(id) {
 
   loadCenters();
 }
+

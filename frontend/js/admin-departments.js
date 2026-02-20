@@ -1,4 +1,4 @@
-const token = localStorage.getItem("adminToken");
+const token = (localStorage.getItem("adminToken") || localStorage.getItem("token"));
 
 async function loadFaculties() {
   const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/faculties", {
@@ -29,4 +29,5 @@ document.getElementById("deptForm").addEventListener("submit", async e => {
 });
 
 loadFaculties();
+
 

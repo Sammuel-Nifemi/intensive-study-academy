@@ -1,7 +1,7 @@
 
 
 async function fetchJson(url, options = {}) {
-  const token = localStorage.getItem("adminToken");
+  const token = (localStorage.getItem("adminToken") || localStorage.getItem("token"));
 
   options.headers = options.headers || {};
 
@@ -219,3 +219,4 @@ function resetFilters() {
   document.getElementById("filterForm")?.reset();
   loadMaterials();
 }
+
