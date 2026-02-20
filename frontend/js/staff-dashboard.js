@@ -12,7 +12,7 @@ function handleSessionError(error) {
   console.error(error);
   alert("Session expired. Please login again.");
   localStorage.removeItem("staffToken");
-  window.location.href = "/frontend/pages/staff-login.html";
+  window.location.href = "/pages/staff-login.html";
 }
 
 function setLoaderState(message, isError = false) {
@@ -36,7 +36,7 @@ async function fetchStaffMe() {
     throw new Error("Missing staff token");
   }
 
-  const res = await fetch("http://localhost:5000/api/staff/me", {
+  const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/staff/me", {
     headers: { Authorization: `Bearer ${token}` }
   });
   if (res.status === 401 || !res.ok) {
@@ -95,7 +95,7 @@ async function saveProfile(form) {
   setStatus(statusEl, "Saving profile...", "loading");
 
   try {
-    const res = await fetch("http://localhost:5000/api/staff/me", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/staff/me", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -154,7 +154,7 @@ async function loadAnnouncements() {
   if (!token) return;
 
   try {
-    const res = await fetch("http://localhost:5000/api/staff/announcements", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/staff/announcements", {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (res.status === 401) {
@@ -177,7 +177,7 @@ async function loadMockSummary() {
   if (!container) return;
 
   try {
-    const res = await fetch("http://localhost:5000/api/mocks/summary", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/mocks/summary", {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (res.status === 401) {
@@ -226,7 +226,7 @@ async function submitAnnouncement(form) {
   setStatus(statusEl, "Creating announcement...", "loading");
 
   try {
-    const res = await fetch("http://localhost:5000/api/staff/announcements", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/staff/announcements", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`
@@ -261,7 +261,7 @@ async function loadDashboardStats() {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/staff/dashboard", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/staff/dashboard", {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (res.status === 401) {
@@ -333,7 +333,7 @@ async function submitForm({
   toggleProgress(progressEl, true);
 
   try {
-    const res = await fetch(`http://localhost:5000${endpoint}`, {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + `${endpoint}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`
@@ -372,7 +372,7 @@ async function submitForm({
 document.addEventListener("DOMContentLoaded", async () => {
   const token = getStaffToken();
   if (!token) {
-    window.location.href = "/frontend/pages/staff-login.html";
+    window.location.href = "/pages/staff-login.html";
     return;
   }
 

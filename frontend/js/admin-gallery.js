@@ -1,12 +1,12 @@
 const token = localStorage.getItem("adminToken");
 
 if (!token) {
-  window.location.href = "/frontend/pages/admin-login.html";
+  window.location.href = "./admin-login.html";
 }
 
 async function loadGallery() {
   try {
-    const res = await fetch("http://localhost:5000/api/admin/gallery", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/gallery", {
       headers: { Authorization: `Bearer ${token}` }
     });
     const items = await res.json();
@@ -16,13 +16,13 @@ async function loadGallery() {
     if (!list) return;
 
     list.innerHTML = items.map(g => {
-      const createdBy = g.createdBy?.fullName || g.createdBy?.email || "—";
-      const date = g.createdAt ? new Date(g.createdAt).toLocaleString() : "—";
+      const createdBy = g.createdBy?.fullName || g.createdBy?.email || "ï¿½";
+      const date = g.createdAt ? new Date(g.createdAt).toLocaleString() : "ï¿½";
       return `
         <div class="resource-item">
           <div class="resource-main">
             <strong>${g.caption || "(No caption)"}</strong>
-            <div class="meta">${createdBy} · ${date}</div>
+            <div class="meta">${createdBy} ï¿½ ${date}</div>
           </div>
           <div class="resource-action">
             <button class="action-btn" data-delete="${g._id}">Delete</button>
@@ -43,7 +43,7 @@ async function deleteGallery(id) {
   const ok = confirm("Delete this gallery item?");
   if (!ok) return;
 
-  const res = await fetch(`http://localhost:5000/api/admin/gallery/${id}`, {
+  const res = await fetch((window.ISA_API_ORIGIN || "") + `/api/admin/gallery/${id}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` }
   });
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
     formData.append("image", file);
 
     try {
-      const res = await fetch("http://localhost:5000/api/admin/gallery", {
+      const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/gallery", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`

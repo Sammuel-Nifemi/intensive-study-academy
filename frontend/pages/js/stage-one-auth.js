@@ -41,5 +41,5 @@ document
 
     // move to stage 2
     window.location.href =
-      "/frontend/pages/student/complete-profile.html";
+      "/pages/student/complete-profile.html";
   });

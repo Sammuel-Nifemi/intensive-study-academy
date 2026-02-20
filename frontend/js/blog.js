@@ -2,7 +2,7 @@ const blogList = document.getElementById("blogList");
 
 async function loadBlogs() {
   try {
-    const res = await fetch("http://localhost:5000/api/blogs");
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/blogs");
     const posts = await res.json();
 
     blogList.innerHTML = "";

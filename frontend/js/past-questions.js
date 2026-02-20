@@ -1,10 +1,10 @@
-ï»¿const token = localStorage.getItem("studentToken");
+const token = localStorage.getItem("studentToken");
 
 if (!token) {
   window.location.href = "/frontend/pages/student-login.html";
 }
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = (window.ISA_API_ORIGIN || "") + "";
 let studentProfile = null;
 let registeredCourses = new Set();
 let searchTimeout = null;
@@ -129,9 +129,9 @@ function ensureEntitlementModal() {
 async function requestPayPerUse({ courseCode, platform, resourceId }) {
   const copy = {
     message:
-      "This course was not part of your registered semester courses.\nTo continue, please pay â‚¦500 to unlock this course.",
-    amount: "â‚¦500",
-    payLabel: "Pay â‚¦500",
+      "This course was not part of your registered semester courses.\nTo continue, please pay ?500 to unlock this course.",
+    amount: "?500",
+    payLabel: "Pay ?500",
     successText: "Payment successful. You may proceed."
   };
 
@@ -232,7 +232,7 @@ function renderPastQuestions(courseCode, items) {
       const isSummary = item.type === "summary";
       const label = isSummary ? "Summary" : "Past Question";
       const buttonLabel = isSummary ? "Open Summary" : "View Past Question";
-      const yearText = item.year ? ` â€¢ ${item.year}` : "";
+      const yearText = item.year ? ` • ${item.year}` : "";
       const title = item.title || `${courseCode} ${label}`;
 
       return `
@@ -326,9 +326,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!profile) return;
   const line =
     window.ISA_LearningProtection?.buildWatermarkLine(profile) ||
-    "Student â€¢ ISA-00000 â€¢ IntensiveStudyAcademy.com â€¢ 08127796978 â€¢ 07073859837";
+    "Student • ISA-00000 • IntensiveStudyAcademy.com • 08127796978 • 07073859837";
   watermarkEl.textContent = line;
 });
+
 
 
 

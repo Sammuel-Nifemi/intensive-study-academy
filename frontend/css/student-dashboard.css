@@ -1268,3 +1268,71 @@ body[data-theme="slate"] .primary-btn {
     gap: 6px;
   }
 }
+
+.community-dropoff-card {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  width: min(320px, calc(100vw - 24px));
+  background: #ffffff;
+  border: 1px solid #dbe2ea;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.14);
+  z-index: 900;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.community-dropoff-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.community-dropoff-card h3 {
+  margin: 0 0 6px;
+  font-size: 0.98rem;
+}
+
+.community-dropoff-card p {
+  margin: 0 0 8px;
+  font-size: 0.86rem;
+  color: #4b5563;
+}
+
+.community-dropoff-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.community-dropoff-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 0.78rem;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  color: #0f172a;
+  background: #f8fafc;
+}
+
+.community-dropoff-actions a:hover {
+  background: #eef2ff;
+}
+
+.community-dropoff-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  border: 0;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 0.85rem;
+}

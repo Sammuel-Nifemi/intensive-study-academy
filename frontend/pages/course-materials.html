@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -157,6 +157,7 @@
       }
     }
   </style>
+<script src="../js/api-base.js"></script>
 </head>
 
 <body class="page-student-dashboard">
@@ -213,15 +214,23 @@
     </section>
 
     <section class="results-wrap">
-      <div id="materialsResults">
-        <p class="muted">Loading materials...</p>
+      <div class="list-accordion">
+        <button id="materialsListToggle" class="list-accordion-toggle" type="button" aria-expanded="false">
+          <span>Material List</span>
+          <span class="list-accordion-meta" id="materialsListMeta">Open</span>
+        </button>
+        <div id="materialsListPanel" class="list-accordion-panel" hidden>
+          <div id="materialsResults">
+            <p class="muted">Loading materials...</p>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 </div>
 
 <footer class="dashboard-footer">
-  <p>© Intensive Study Academy - Academic Guidance Platform</p>
+  <p>� Intensive Study Academy - Academic Guidance Platform</p>
   <p class="disclaimer">
     This platform provides academic guidance only and is not affiliated with
     the National Open University of Nigeria (NOUN).
@@ -241,6 +250,10 @@
   <script src="../js/theme.js"></script>
 </body>
 </html>
+
+
+
+
 
 
 

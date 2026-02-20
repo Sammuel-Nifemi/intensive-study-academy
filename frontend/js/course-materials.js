@@ -1,10 +1,35 @@
-const API_BASE = "http://localhost:5000";
+const API_BASE = (window.ISA_API_ORIGIN || "") + "";
 const MATERIAL_CONTEXT_KEY = "aiAssistantMaterialContext";
 const searchInput = document.getElementById("materialsSearch");
 const resultsContainer = document.getElementById("materialsResults");
 
 let searchTimer = null;
 let allMaterials = [];
+let renderedMaterialsCount = 0;
+
+function setMaterialsListMeta(text) {
+  const meta = document.getElementById("materialsListMeta");
+  if (meta) meta.textContent = text;
+}
+
+function setMaterialsPanelOpen(isOpen) {
+  const panel = document.getElementById("materialsListPanel");
+  const toggle = document.getElementById("materialsListToggle");
+  if (!panel || !toggle) return;
+  panel.hidden = !isOpen;
+  toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  setMaterialsListMeta(isOpen ? `Hide (${renderedMaterialsCount})` : `Open (${renderedMaterialsCount})`);
+}
+
+function initMaterialsAccordion() {
+  const toggle = document.getElementById("materialsListToggle");
+  if (!toggle || toggle.dataset.wired === "1") return;
+  toggle.dataset.wired = "1";
+  toggle.addEventListener("click", () => {
+    const isOpen = toggle.getAttribute("aria-expanded") === "true";
+    setMaterialsPanelOpen(!isOpen);
+  });
+}
 
 function escapeHtml(value) {
   return String(value || "")
@@ -23,9 +48,13 @@ function normalizeFileUrl(fileUrl) {
 
 function renderItems(items) {
   if (!Array.isArray(items) || items.length === 0) {
+    renderedMaterialsCount = 0;
+    setMaterialsListMeta("Open (0)");
     resultsContainer.innerHTML = '<p class="muted">No materials found.</p>';
     return;
   }
+  renderedMaterialsCount = items.length;
+  setMaterialsListMeta(`Open (${renderedMaterialsCount})`);
 
   resultsContainer.innerHTML = items
     .map((item) => {
@@ -120,3 +149,6 @@ resultsContainer?.addEventListener("click", (event) => {
 });
 
 loadMaterials();
+initMaterialsAccordion();
+setMaterialsPanelOpen(false);
+

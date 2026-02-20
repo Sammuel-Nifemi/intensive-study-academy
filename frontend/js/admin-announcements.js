@@ -1,7 +1,7 @@
 const token = localStorage.getItem("adminToken");
 
 if (!token) {
-  window.location.href = "/frontend/pages/admin-login.html";
+  window.location.href = "./admin-login.html";
 }
 
 let editingAnnouncementId = null;
@@ -9,7 +9,7 @@ let announcementCache = [];
 
 async function loadAnnouncements() {
   try {
-    const res = await fetch("http://localhost:5000/api/admin/announcements", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/announcements", {
       headers: { Authorization: `Bearer ${token}` }
     });
     const items = await res.json();
@@ -21,13 +21,13 @@ async function loadAnnouncements() {
     if (!list) return;
 
     list.innerHTML = items.map(a => {
-      const createdBy = a.createdBy?.fullName || a.createdBy?.email || "—";
-      const date = a.createdAt ? new Date(a.createdAt).toLocaleString() : "—";
+      const createdBy = a.createdBy?.fullName || a.createdBy?.email || "ï¿½";
+      const date = a.createdAt ? new Date(a.createdAt).toLocaleString() : "ï¿½";
       return `
         <div class="resource-item">
           <div class="resource-main">
             <strong>${a.title || "Untitled"}</strong>
-            <div class="meta">${createdBy} · ${date}</div>
+            <div class="meta">${createdBy} ï¿½ ${date}</div>
           </div>
           <div class="resource-action">
             <button class="action-btn" data-edit="${a._id}">Edit</button>
@@ -71,7 +71,7 @@ async function saveAnnouncement() {
   const message = document.getElementById("editAnnouncementMessage").value.trim();
   const target = document.getElementById("editAnnouncementTarget").value;
 
-  const res = await fetch(`http://localhost:5000/api/admin/announcements/${editingAnnouncementId}`, {
+  const res = await fetch((window.ISA_API_ORIGIN || "") + `/api/admin/announcements/${editingAnnouncementId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -93,7 +93,7 @@ async function deleteAnnouncement(id) {
   const ok = confirm("Delete this announcement?");
   if (!ok) return;
 
-  const res = await fetch(`http://localhost:5000/api/admin/announcements/${id}`, {
+  const res = await fetch((window.ISA_API_ORIGIN || "") + `/api/admin/announcements/${id}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` }
   });
@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/admin/announcements", {
+      const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/announcements", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -25,7 +25,7 @@ async function fetchJson(url, options = {}) {
 
 async function loadFaculties(selectEl) {
   if (!selectEl) return;
-  const { res, data } = await fetchJson("http://localhost:5000/api/admin/faculties");
+  const { res, data } = await fetchJson((window.ISA_API_ORIGIN || "") + "/api/admin/faculties");
   if (!res.ok) return;
   selectEl.innerHTML = `<option value="">Select faculty</option>`;
   data.forEach((f) => {
@@ -38,7 +38,7 @@ async function loadFaculties(selectEl) {
 
 async function loadPrograms(selectEl) {
   if (!selectEl) return;
-  const { res, data } = await fetchJson("http://localhost:5000/api/admin/programs");
+  const { res, data } = await fetchJson((window.ISA_API_ORIGIN || "") + "/api/admin/programs");
   if (!res.ok) return;
   selectEl.innerHTML = `<option value="">Select program</option>`;
   data.forEach((p) => {

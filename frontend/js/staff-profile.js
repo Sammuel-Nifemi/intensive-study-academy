@@ -1,7 +1,7 @@
 // Profile = identity only (edit-only, no completion gating).
 const staffToken = localStorage.getItem("staffToken");
 if (!staffToken) {
-  window.location.href = "/frontend/pages/staff-login.html";
+  window.location.href = "/pages/staff-login.html";
 }
 
 function setStatus(message, type) {
@@ -26,12 +26,12 @@ function setSaveState(isSaved) {
 
 async function loadProfile() {
   try {
-    const res = await fetch("http://localhost:5000/api/staff/me", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/staff/me", {
       headers: { Authorization: `Bearer ${staffToken}` }
     });
     const payload = await res.json();
     if (!res.ok || !payload?.success) {
-      window.location.href = "/frontend/pages/staff-login.html";
+      window.location.href = "/pages/staff-login.html";
       return;
     }
     const data = payload.data || {};
@@ -43,7 +43,7 @@ async function loadProfile() {
     document.getElementById("avatarUrl").value = data.avatarUrl || "";
     setSaveState(false);
   } catch (err) {
-    window.location.href = "/frontend/pages/staff-login.html";
+    window.location.href = "/pages/staff-login.html";
   }
 }
 
@@ -67,7 +67,7 @@ async function saveProfile(e) {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/staff/me", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/staff/me", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

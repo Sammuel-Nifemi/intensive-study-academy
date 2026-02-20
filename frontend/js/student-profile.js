@@ -60,3 +60,4 @@ function renderProfile(profile) {
   setText("profileLevel", profile?.level);
   setText("profileSemester", profile?.semester);
 }
+

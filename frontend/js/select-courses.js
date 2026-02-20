@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5000";
+const API_BASE = (window.ISA_API_ORIGIN || "") + "";
 
 let studentProfile = null;
 let searchTimer = null;
@@ -361,3 +361,4 @@ async function saveCourses(token) {
     if (statusEl) statusEl.textContent = "Failed to save courses.";
   }
 }
+

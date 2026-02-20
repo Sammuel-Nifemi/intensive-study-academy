@@ -5,7 +5,7 @@
 const token = localStorage.getItem("adminToken");
 
 if (!token) {
-  window.location.href = "/frontend/pages/admin-login.html";
+  window.location.href = "../admin-login.html";
 }
 
 /* ===============================

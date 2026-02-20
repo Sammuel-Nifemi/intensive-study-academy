@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/admin/public/programs");
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/public/programs");
     const programs = await res.json();
 
     programSelect.innerHTML = `<option value="">Select program</option>`;
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/study-centers");
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/study-centers");
     const centers = await res.json();
 
     studyCenterSelect.innerHTML = `<option value="">Select study center</option>`;
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     try {
-      const res = await fetch("http://localhost:5000/api/student/complete-profile", {
+      const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/student/complete-profile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -129,3 +129,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 });
+

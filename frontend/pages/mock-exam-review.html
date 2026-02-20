@@ -46,6 +46,7 @@
       cursor: pointer;
     }
   </style>
+<script src="../js/api-base.js"></script>
 </head>
 <body class="page-student-dashboard">
   <header class="dashboard-header">
@@ -72,7 +73,7 @@
     </main>
   </div>
 
-  <script src="/frontend/js/student-auth-guard.js"></script>
+  <script src="/js/student-auth-guard.js"></script>
   <script src="../js/theme.js"></script>
   <script src="../js/mock-post-exam.js"></script>
   <script>
@@ -114,7 +115,7 @@
         try {
           const idx = Number(btn.getAttribute("data-index"));
           const row = Number.isInteger(idx) ? rows[idx] : null;
-          const res = await fetch("http://localhost:5000/api/academic-support/explain-question", {
+          const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/academic-support/explain-question", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -144,3 +145,4 @@
   </script>
 </body>
 </html>
+

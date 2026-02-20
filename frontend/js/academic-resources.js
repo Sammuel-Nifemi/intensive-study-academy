@@ -44,3 +44,4 @@ signInForm.addEventListener("submit", function (e) {
     window.location.href = "student-setup.html";
   }
 });
+

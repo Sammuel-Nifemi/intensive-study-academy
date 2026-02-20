@@ -1,5 +1,5 @@
-﻿(() => {
-  const API_BASE = "http://localhost:5000";
+(() => {
+  const API_BASE = (window.ISA_API_ORIGIN || "") + "";
 
   const applyTheme = () => {
     const theme = localStorage.getItem("theme") || "classic";
@@ -170,3 +170,4 @@
     }
   });
 })();
+

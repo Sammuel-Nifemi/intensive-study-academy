@@ -9,7 +9,7 @@ document.getElementById("centerForm").addEventListener("submit", async e => {
     alert("Enter center name");
     return;
   }
-await fetch("http://localhost:5000/api/admin/study-centers", {
+await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/study-centers", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -31,7 +31,7 @@ await fetch("http://localhost:5000/api/admin/study-centers", {
 loadCenters();
 
 async function loadCenters() {
-  const res = await fetch("http://localhost:5000/api/admin/study-centers");
+  const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/study-centers");
   const data = await res.json();
 
   const list = document.getElementById("centerList");
@@ -48,7 +48,7 @@ async function loadCenters() {
 }
 
 async function deleteCenter(id) {
-  await fetch(`http://localhost:5000/api/admin/study-centers/${id}`, {
+  await fetch((window.ISA_API_ORIGIN || "") + `/api/admin/study-centers/${id}`, {
   method: "DELETE",
   headers: {
     "Authorization": `Bearer ${token}`

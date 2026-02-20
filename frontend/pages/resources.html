@@ -18,6 +18,7 @@
     crossorigin="anonymous"
     referrerpolicy="no-referrer"
   />
+<script src="../js/api-base.js"></script>
 </head>
 
 <body>
@@ -59,35 +60,35 @@
 <ul class="resource-list">
 
   <li>
-<a href="/frontend/pages/student-login.html" class="resource-item locked">
+<a href="student-login.html" class="resource-item locked">
       <span>Mock Examinations</span>
       <span class="badge">Locked</span>
     </a>
   </li>
 
   <li>
-<a href="/frontend/pages/student-login.html" class="resource-item locked">
+<a href="student-login.html" class="resource-item locked">
       <span>Course Materials</span>
       <span class="badge">Locked</span>
     </a>
   </li>
 
   <li>
-<a href="/frontend/pages/student-login.html" class="resource-item locked">
+<a href="student-login.html" class="resource-item locked">
       <span>Exam Timetable</span>
       <span class="badge">Locked</span>
     </a>
   </li>
 
   <li>
-<a href="/frontend/pages/student-login.html" class="resource-item locked">
+<a href="student-login.html" class="resource-item locked">
       <span>E-Slip (Academic Clearance)</span>
       <span class="badge">Locked</span>
     </a>
   </li>
 
   <li>
-<a href="/frontend/pages/student-login.html" class="resource-item locked">
+<a href="student-login.html" class="resource-item locked">
       <span>Fee Analyzer</span>
       <span class="badge">Locked</span>
     </a>
@@ -134,20 +135,15 @@
 
 </main>
 
-<!-- ================= SIGN-IN MODAL ================= -->
+<!-- ================= STUDENT PORTAL ACCESS ================= -->
 <div class="resource-card login-card">
   <h3>Student Portal Access</h3>
-  <p>Sign in to unlock mock exams, materials, and your dashboard.</p>
-  <a href="/frontend/pages/student-login.html" class="primary-btn">
-    Sign In
-  </a>
+  <p>
+    Some resources are locked to protect student-only content. Sign in to unlock mock exams,
+    course materials, exam timetable, and the fee analyzer tools.
+  </p>
+  <a href="student-login.html" class="primary-btn">Go to Student Login</a>
 </div>
-
-<div class="modal-actions">
-  <a href="/frontend/pages/resources.html" class="btn primary">Proceed to Sign In</a>
-  <button type="button" class="btn outline" onclick="closeSigninModal()">Cancel</button>
-</div>
-
 
 <!-- ================= FOOTER ================= -->
 <footer class="footer">
@@ -192,3 +188,4 @@
 
 </body>
 </html>
+

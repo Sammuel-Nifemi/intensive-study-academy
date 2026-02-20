@@ -102,7 +102,7 @@ async function loadStudent({ force = false } = {}) {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/student/me", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/student/me", {
       headers: { Authorization: `Bearer ${token}` }
     });
 
@@ -206,6 +206,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   wrapFetchForRedirect();
+  bindStudentLogout();
 
   const profile = await loadStudent({ force: !cachedProfile });
   if (!profile) {
@@ -220,3 +221,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.location.href = "/frontend/pages/complete-profile.html";
   }
 });
+
+function bindStudentLogout() {
+  const logoutButtons = document.querySelectorAll("#logoutBtn, #logoutBtnInline, .logout-btn");
+  if (!logoutButtons.length) return;
+
+  const logout = () => {
+    localStorage.removeItem("studentToken");
+    localStorage.removeItem("token");
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("role");
+    localStorage.removeItem("user");
+    clearStudentCache();
+    window.location.href = "/frontend/pages/student-login.html";
+  };
+
+  logoutButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      logout();
+    });
+  });
+}
+

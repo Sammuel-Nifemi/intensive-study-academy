@@ -2,7 +2,7 @@ const adminToken = localStorage.getItem("adminToken");
 
 async function loadStats() {
   try {
-    const res = await fetch("http://localhost:5000/api/admin/stats", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/stats", {
       headers: { Authorization: `Bearer ${adminToken}` }
     });
     const data = await res.json();
@@ -18,7 +18,7 @@ async function loadStats() {
 
 async function loadStudyCenters() {
   try {
-    const res = await fetch("http://localhost:5000/api/admin/study-centers/analytics", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/study-centers/analytics", {
       headers: { Authorization: `Bearer ${adminToken}` }
     });
     const data = await res.json();
@@ -39,7 +39,7 @@ async function loadStudyCenters() {
 
 async function loadMockSummary() {
   try {
-    const res = await fetch("http://localhost:5000/api/mocks/summary", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/mocks/summary", {
       headers: { Authorization: `Bearer ${adminToken}` }
     });
     const data = await res.json();

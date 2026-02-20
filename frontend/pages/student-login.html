@@ -11,6 +11,7 @@
   />
   <link rel="stylesheet" href="../css/auth.css" />
 
+<script src="../js/api-base.js"></script>
 </head>
 
 <body class="auth-page">
@@ -62,7 +63,7 @@
         return;
       }
       try {
-        const res = await fetch("http://localhost:5000/auth/recovery", {
+        const res = await fetch((window.ISA_API_ORIGIN || "") + "/auth/recovery", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email })
@@ -83,13 +84,20 @@
       e.preventDefault();
 
       const email = document.getElementById("email").value.trim();
+      const submitBtn = form.querySelector('button[type="submit"]');
       if (!email) {
         alert("Please enter your email");
         return;
       }
 
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Logging in...";
+      }
+      message.textContent = "Signing you in. Please wait...";
+
       try {
-        const res = await fetch("http://localhost:5000/auth/quick-login", {
+        const res = await fetch((window.ISA_API_ORIGIN || "") + "/auth/quick-login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email })
@@ -111,7 +119,7 @@
        localStorage.setItem("studentToken", data.token);
 
        // VERIFY SESSION BEFORE REDIRECT
-       const profileRes = await fetch("http://localhost:5000/api/student/me", {
+       const profileRes = await fetch((window.ISA_API_ORIGIN || "") + "/api/student/me", {
          headers: { Authorization: `Bearer ${data.token}` }
        });
 
@@ -137,15 +145,20 @@
 
        const profile = await profileRes.json();
        if (profile?.profileCompleted === false) {
-         window.location.href = "/frontend/pages/complete-profile.html";
+        window.location.href = "/frontend/pages/complete-profile.html";
          return;
        }
 
        // THEN GO DASHBOARD (NO TOKEN IN URL)
-       window.location.href = "/frontend/pages/student-dashboard.html";
+        window.location.href = "/frontend/pages/student-dashboard.html";
       } catch (err) {
         console.error(err);
-        alert("Server error. Please try again.");
+        message.textContent = "Server error. Please try again.";
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Login";
+        }
       }
     });
 
@@ -177,3 +190,4 @@
 </script>
 
 </html>
+

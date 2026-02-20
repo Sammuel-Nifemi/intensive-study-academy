@@ -1,4 +1,4 @@
-﻿const API_BASE = "http://localhost:5000/api/admin";
+const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/admin";
 
 const state = {
   centers: [],
@@ -80,7 +80,7 @@ function renderStudyCenters(searchTerm) {
       (center) => `
       <tr>
         <td>${center.name}</td>
-        <td>${center.city || "â€”"}</td>
+        <td>${center.city || "—"}</td>
         <td>
           <button class="action-btn danger" data-delete="${center._id}">Delete</button>
         </td>
@@ -256,7 +256,7 @@ function renderPrograms() {
       (program) => `
       <tr>
         <td>${program.name}</td>
-        <td>${program.facultyName || "â€”"}</td>
+        <td>${program.facultyName || "—"}</td>
         <td>
           <button class="action-btn danger" data-delete="${program._id}">Delete</button>
         </td>

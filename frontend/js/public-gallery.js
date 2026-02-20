@@ -2,7 +2,7 @@ const grid = document.getElementById("galleryGrid");
 
 async function loadGallery() {
   try {
-    const res = await fetch("http://localhost:5000/api/gallery");
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/gallery");
     const items = await res.json();
 
     grid.innerHTML = "";

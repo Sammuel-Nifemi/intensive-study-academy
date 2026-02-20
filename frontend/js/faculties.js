@@ -2,7 +2,7 @@ const list = document.getElementById("facultyList");
 const btn = document.getElementById("addBtn");
 
 async function loadFaculties() {
-  const res = await fetch("http://localhost:5000/api/admin/faculties");
+  const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/faculties");
   const data = await res.json();
 
   list.innerHTML = "";
@@ -26,7 +26,7 @@ console.log("Sending:", name);
     return;
   }
 
-  await fetch("http://localhost:5000/api/admin/faculties", {
+  await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/faculties", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

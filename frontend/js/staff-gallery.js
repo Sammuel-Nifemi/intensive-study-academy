@@ -8,7 +8,7 @@ form.addEventListener("submit", async e => {
   const formData = new FormData(form);
 
   try {
-    const res = await fetch("http://localhost:5000/api/staff/gallery", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/staff/gallery", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`

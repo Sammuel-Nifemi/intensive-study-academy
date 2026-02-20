@@ -1,14 +1,14 @@
 const token = localStorage.getItem("adminToken");
 
 if (!token) {
-  window.location.href = "/frontend/pages/admin-login.html";
+  window.location.href = "./admin-login.html";
 }
 
 let editingMaterialId = null;
 
 async function loadMaterials() {
   try {
-    const res = await fetch("http://localhost:5000/api/admin/materials", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/materials", {
       headers: { Authorization: `Bearer ${token}` }
     });
     const items = await res.json();
@@ -74,7 +74,7 @@ async function saveMaterial() {
     return;
   }
 
-  const res = await fetch(`http://localhost:5000/api/admin/materials/${editingMaterialId}`, {
+  const res = await fetch((window.ISA_API_ORIGIN || "") + `/api/admin/materials/${editingMaterialId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -96,7 +96,7 @@ async function deleteMaterial(id) {
   const ok = confirm("Delete this material?");
   if (!ok) return;
 
-  const res = await fetch(`http://localhost:5000/api/admin/materials/${id}`, {
+  const res = await fetch((window.ISA_API_ORIGIN || "") + `/api/admin/materials/${id}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` }
   });
@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
     formData.append("file", file);
 
     try {
-      const res = await fetch("http://localhost:5000/api/admin/materials", {
+      const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/materials", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`

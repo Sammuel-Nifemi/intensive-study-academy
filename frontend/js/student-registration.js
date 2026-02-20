@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (fullName) payload.fullName = fullName;
 
     try {
-      const res = await fetch("http://localhost:5000/api/students/register", {
+      const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/students/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     try {
-      const res = await fetch("http://localhost:5000/auth/recovery", {
+      const res = await fetch((window.ISA_API_ORIGIN || "") + "/auth/recovery", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email })

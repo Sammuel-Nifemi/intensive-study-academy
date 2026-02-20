@@ -17,27 +17,27 @@ function showApp() {
 
 async function guardStaff() {
   if (!staffToken) {
-    window.location.href = "/frontend/pages/staff-login.html";
+    window.location.href = "/pages/staff-login.html";
     return;
   }
 
   showLoader();
 
   try {
-    const res = await fetch("http://localhost:5000/api/staff/me", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/staff/me", {
       headers: { Authorization: `Bearer ${staffToken}` }
     });
     const data = await res.json();
 
     if (!res.ok) {
-      window.location.href = "/frontend/pages/staff-login.html";
+      window.location.href = "/pages/staff-login.html";
       return;
     }
 
     // No profile completion gating. Always allow staff pages.
     showApp();
   } catch (err) {
-    window.location.href = "/frontend/pages/staff-login.html";
+    window.location.href = "/pages/staff-login.html";
   }
 }
 

@@ -112,7 +112,7 @@ setupForm.addEventListener("submit", async (e) => {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/student/setup", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/student/setup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -131,4 +131,5 @@ window.location.href = "/frontend/pages/student-dashboard.html";
     alert("Unable to complete setup. Please try again.");
   }
 });
+
 

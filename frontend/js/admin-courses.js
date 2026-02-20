@@ -1,4 +1,4 @@
-﻿const API_BASE = "http://localhost:5000/api/admin/courses";
+const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/admin/courses";
 
 document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("submitBtn")?.addEventListener("click", createCourse);

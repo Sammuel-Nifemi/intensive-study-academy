@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       try {
-        const res = await fetch("http://localhost:5000/api/students/me/academic-change-request", {
+        const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/students/me/academic-change-request", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       try {
-        const res = await fetch("http://localhost:5000/api/students/me/complaints", {
+        const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/students/me/complaints", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch("http://localhost:5000/api/students/me", {
+      const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/students/me", {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`
@@ -179,4 +179,5 @@ function applyTheme() {
   const theme = localStorage.getItem("theme") || "classic";
   document.body.setAttribute("data-theme", theme);
 }
+
 

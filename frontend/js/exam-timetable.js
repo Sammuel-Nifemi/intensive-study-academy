@@ -14,7 +14,7 @@ async function loadTimetables() {
   if (!statusEl || !listEl) return;
 
   try {
-    const res = await fetch("http://localhost:5000/api/students/exam-timetables", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/students/exam-timetables", {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await res.json();
@@ -40,5 +40,6 @@ async function loadTimetables() {
     statusEl.textContent = "Failed to load timetables.";
   }
 }
+
 
 

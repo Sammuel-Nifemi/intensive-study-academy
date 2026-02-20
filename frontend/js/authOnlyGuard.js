@@ -7,3 +7,4 @@
     window.location.href = "/frontend/pages/student-login.html";
   }
 })();
+

@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5000/api/admin/mocks";
+const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/admin/mocks";
 
 const facultySelect = document.getElementById("facultySelect");
 const programSelect = document.getElementById("programSelect");

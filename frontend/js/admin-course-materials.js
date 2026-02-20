@@ -14,8 +14,8 @@ async function fetchJson(url, options = {}) {
   return { res, data };
 }
 
-const API_BASE = "http://localhost:5000/api/admin/course-materials";
-const COURSES_API = "http://localhost:5000/api/admin/public/courses";
+const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/admin/course-materials";
+const COURSES_API = (window.ISA_API_ORIGIN || "") + "/api/admin/public/courses";
 
 const facultySelect = document.getElementById("facultySelect");
 const programSelect = document.getElementById("programSelect");

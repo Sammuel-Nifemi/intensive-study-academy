@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setMessage(msg, "Logging in...");
 
-    const res = await fetch("http://localhost:5000/api/auth/staff/login", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/auth/staff/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setMessage(otpMsg, "Verifying OTP...");
 
-    const res = await fetch("http://localhost:5000/api/auth/staff/verify-otp", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/auth/staff/verify-otp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, otp })
@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setMessage(resetMsg, "Updating password...");
 
-    const res = await fetch("http://localhost:5000/api/auth/staff/reset-password", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/auth/staff/reset-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, otp, newPassword })
@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setMessage(msg, "Sending OTP...");
 
-    const res = await fetch("http://localhost:5000/api/auth/staff/forgot-password", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/auth/staff/forgot-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email })
@@ -159,26 +159,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const redirectAfterProfileCheck = async () => {
     const token = localStorage.getItem("staffToken");
     if (!token) {
-      window.location.href = "/frontend/pages/staff-login.html";
+      window.location.href = "/pages/staff-login.html";
       return;
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/staff/me", {
+      const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/staff/me", {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
       if (!res.ok) {
-        window.location.href = "/frontend/pages/staff-login.html";
+        window.location.href = "/pages/staff-login.html";
         return;
       }
       if (!data.profileCompleted) {
-        window.location.href = "/frontend/pages/staff-profile.html";
+        window.location.href = "/pages/staff-profile.html";
       } else {
-        window.location.href = "/frontend/pages/staff-dashboard.html";
+        window.location.href = "/pages/staff-dashboard.html";
       }
     } catch (err) {
-      window.location.href = "/frontend/pages/staff-login.html";
+      window.location.href = "/pages/staff-login.html";
     }
   };
 

@@ -1,16 +1,16 @@
-function getNotificationToken() {
+﻿function getNotificationToken() {
   return window.NOTIFICATION_TOKEN || null;
 }
 
 function getTypeIcon(type) {
   const map = {
-    announcement: "📢",
-    material: "📚",
-    complaint: "⚠️",
-    "birthday-reminder": "🎂",
-    "birthday-today": "🎉"
+    announcement: "ðŸ“¢",
+    material: "ðŸ“š",
+    complaint: "âš ï¸",
+    "birthday-reminder": "ðŸŽ‚",
+    "birthday-today": "ðŸŽ‰"
   };
-  return map[type] || "🔔";
+  return map[type] || "ðŸ””";
 }
 
 function renderNotifications(dropdown, notifications) {
@@ -45,7 +45,7 @@ async function fetchNotifications() {
   const token = getNotificationToken();
   if (!token) return [];
 
-  const res = await fetch("http://localhost:5000/api/notifications", {
+  const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/notifications", {
     headers: { Authorization: `Bearer ${token}` }
   });
   const payload = await res.json();
@@ -68,7 +68,7 @@ function updateBadge(badge, notifications) {
 async function markRead(id) {
   const token = getNotificationToken();
   if (!token || !id) return null;
-  const res = await fetch(`http://localhost:5000/api/notifications/${id}/read`, {
+  const res = await fetch((window.ISA_API_ORIGIN || "") + `/api/notifications/${id}/read`, {
     method: "PATCH",
     headers: { Authorization: `Bearer ${token}` }
   });

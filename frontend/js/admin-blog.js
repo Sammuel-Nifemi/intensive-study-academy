@@ -1,7 +1,7 @@
 const token = localStorage.getItem("adminToken");
 
 if (!token) {
-  window.location.href = "/frontend/pages/admin-login.html";
+  window.location.href = "./admin-login.html";
 }
 
 let editingBlogId = null;
@@ -9,7 +9,7 @@ let blogCache = [];
 
 async function loadBlogs() {
   try {
-    const res = await fetch("http://localhost:5000/api/admin/blog", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/blog", {
       headers: { Authorization: `Bearer ${token}` }
     });
     const items = await res.json();
@@ -21,13 +21,13 @@ async function loadBlogs() {
     if (!list) return;
 
     list.innerHTML = items.map(b => {
-      const createdBy = b.createdBy?.fullName || b.createdBy?.email || "—";
-      const date = b.createdAt ? new Date(b.createdAt).toLocaleString() : "—";
+      const createdBy = b.createdBy?.fullName || b.createdBy?.email || "ï¿½";
+      const date = b.createdAt ? new Date(b.createdAt).toLocaleString() : "ï¿½";
       return `
         <div class="resource-item">
           <div class="resource-main">
             <strong>${b.title || "Untitled"}</strong>
-            <div class="meta">${createdBy} · ${date}</div>
+            <div class="meta">${createdBy} ï¿½ ${date}</div>
           </div>
           <div class="resource-action">
             <button class="action-btn" data-edit="${b._id}">Edit</button>
@@ -68,7 +68,7 @@ async function saveBlog() {
   const title = document.getElementById("editBlogTitle").value.trim();
   const content = document.getElementById("editBlogContent").value.trim();
 
-  const res = await fetch(`http://localhost:5000/api/admin/blog/${editingBlogId}`, {
+  const res = await fetch((window.ISA_API_ORIGIN || "") + `/api/admin/blog/${editingBlogId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -90,7 +90,7 @@ async function deleteBlog(id) {
   const ok = confirm("Delete this blog post?");
   if (!ok) return;
 
-  const res = await fetch(`http://localhost:5000/api/admin/blog/${id}`, {
+  const res = await fetch((window.ISA_API_ORIGIN || "") + `/api/admin/blog/${id}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` }
   });
@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (file) formData.append("coverImage", file);
 
     try {
-      const res = await fetch("http://localhost:5000/api/admin/blog", {
+      const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/blog", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`

@@ -1,5 +1,5 @@
 (function initLearningProtection() {
-  const API_BASE = "http://localhost:5000";
+  const API_BASE = (window.ISA_API_ORIGIN || "") + "";
   const BRAND_LINE = "IntensiveStudyAcademy.com • 08127796978 • 07073859837";
 
   function normalizeAlias(value) {
@@ -63,6 +63,32 @@
       }
       .isa-download-btn {
         margin-top: 10px;
+      }
+      .isa-download-host {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px 16px;
+        align-items: start;
+      }
+      .isa-download-host .isa-download-btn {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+        margin-top: 0;
+      }
+      .isa-download-host > :not(.isa-download-btn) {
+        grid-column: 1;
+      }
+      @media (max-width: 720px) {
+        .isa-download-host {
+          grid-template-columns: 1fr;
+        }
+        .isa-download-host .isa-download-btn {
+          grid-column: 1;
+          grid-row: auto;
+          justify-self: start;
+          margin-top: 8px;
+        }
       }
     `;
     document.head.appendChild(style);
@@ -198,6 +224,7 @@
     const host = document.querySelector(hostSelector);
     if (!host) return;
     if (host.querySelector(".isa-download-btn")) return;
+    host.classList.add("isa-download-host");
 
     const btn = document.createElement("button");
     btn.type = "button";

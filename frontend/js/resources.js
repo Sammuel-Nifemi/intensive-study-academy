@@ -1,28 +1,44 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const token = localStorage.getItem("studentToken");
+  const loginPath = "student-login.html";
+  const items = document.querySelectorAll(".resource-item");
+  const loginCard = document.querySelector(".login-card");
+  let hideTimerId = null;
 
-  if (token) {
-    // User is logged in → unlock everything
-    document.querySelectorAll(".resource-item.locked").forEach(item => {
-      item.classList.remove("locked");
+  function hideLoginCard() {
+    if (!loginCard) return;
+    loginCard.classList.remove("is-visible");
+  }
 
-      // Optional: change badge text
-      const badge = item.querySelector(".badge");
-      if (badge) badge.textContent = "Open";
+  function showLoginCard() {
+    if (!loginCard) return;
+    loginCard.classList.add("is-visible");
+    if (hideTimerId) {
+      clearTimeout(hideTimerId);
+    }
+    hideTimerId = window.setTimeout(hideLoginCard, 5000);
+  }
 
-      // Optional: point to real pages later
+  if (!items.length) return;
+
+  if (loginCard) {
+    loginCard.classList.add("login-popup");
+    showLoginCard();
+  }
+
+  items.forEach((item) => {
+    item.classList.add("locked");
+
+    const badge = item.querySelector(".badge");
+    if (badge) {
+      badge.textContent = "Locked";
+    }
+
+    item.setAttribute("href", loginPath);
+
+    item.addEventListener("click", (event) => {
+      event.preventDefault();
+      showLoginCard();
+      window.location.href = loginPath;
     });
-  }
+  });
 });
-item.addEventListener("click", (e) => {
-  const token = localStorage.getItem("studentToken");
-
-  if (!token) {
-    // window.location.href = "/frontend/pages/student-login.html";
-  } else {
-    // Later: route to actual resource
-    console.log("Open resource:", item.dataset.target);
-  }
-});
-
-

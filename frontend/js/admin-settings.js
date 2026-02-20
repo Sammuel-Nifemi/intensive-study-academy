@@ -21,14 +21,14 @@
     if (!storedAdminToken) return;
 
     try {
-      const res = await fetch("http://localhost:5000/api/admin/settings", {
+      const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/settings", {
         headers: { Authorization: `Bearer ${storedAdminToken}` }
       });
       if (res.status === 401) {
         localStorage.removeItem("adminToken");
         setStatus("Session expired. Please log in again.", true);
         setTimeout(() => {
-          window.location.href = "/frontend/pages/admin-login.html";
+          window.location.href = "./admin-login.html";
         }, 1200);
         return;
       }
@@ -70,7 +70,7 @@
 
     setStatus("Saving...", false);
     try {
-      const res = await fetch("http://localhost:5000/api/admin/settings", {
+      const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/settings", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -87,7 +87,7 @@
           saveBtn.textContent = "Save Settings";
         }
         setTimeout(() => {
-          window.location.href = "/frontend/pages/admin-login.html";
+          window.location.href = "./admin-login.html";
         }, 1200);
         return;
       }

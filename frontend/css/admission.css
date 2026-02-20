@@ -29,6 +29,22 @@ body {
     opacity: 0.9;
 }
 
+.back-link {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #1e3a8a;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.22);
+}
+
+.back-link:hover {
+    background: #dbeafe;
+}
+
 
 
 /* ADMISSION OPTIONS */

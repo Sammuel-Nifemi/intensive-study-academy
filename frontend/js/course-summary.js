@@ -1,4 +1,4 @@
-const SUMMARY_API_BASE = "http://localhost:5000";
+const SUMMARY_API_BASE = (window.ISA_API_ORIGIN || "") + "";
 
 function normalizeCourse(value) {
   return String(value || "").replace(/\s+/g, "").toUpperCase();

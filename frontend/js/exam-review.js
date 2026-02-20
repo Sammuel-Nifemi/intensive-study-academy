@@ -17,7 +17,7 @@ if (!token || !attempt) {
 
 (async () => {
   const res = await fetch(
-    `http://localhost:5000/api/reviews/${attempt.attemptId}`,
+    (window.ISA_API_ORIGIN || "") + `/api/reviews/${attempt.attemptId}`,
     {
       headers: {
         Authorization: `Bearer ${token}`

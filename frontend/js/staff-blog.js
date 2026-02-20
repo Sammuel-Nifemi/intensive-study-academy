@@ -11,7 +11,7 @@ form.addEventListener("submit", async e => {
   };
 
   try {
-    const res = await fetch("http://localhost:5000/api/staff/blogs", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/staff/blogs", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

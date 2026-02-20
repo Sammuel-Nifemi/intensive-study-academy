@@ -65,8 +65,12 @@ startBirthdayCron();
 const defaultAllowedOrigins = [
   "http://127.0.0.1:5502",
   "http://localhost:5502",
+  "http://127.0.0.1:5000",
+  "http://localhost:5000",
   "https://intensivestudyacademy.com",
-  "https://www.intensivestudyacademy.com"
+  "https://www.intensivestudyacademy.com",
+  "https://intensive-study-backend.onrender.com",
+  "https://www.intensive-study-backend.onrender.com"
 ];
 
 const envAllowedOrigins = String(process.env.CORS_ORIGINS || "")

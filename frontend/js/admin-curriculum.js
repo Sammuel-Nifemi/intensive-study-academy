@@ -1,5 +1,5 @@
-const API_BASE = "http://localhost:5000/api/admin/program-courses";
-const COURSE_API = "http://localhost:5000/api/admin/courses";
+const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/admin/program-courses";
+const COURSE_API = (window.ISA_API_ORIGIN || "") + "/api/admin/courses";
 
 const courseSelect = document.getElementById("courseSelect");
 const programSelect = document.getElementById("programSelect");

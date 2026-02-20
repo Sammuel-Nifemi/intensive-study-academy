@@ -1,5 +1,5 @@
 const token = localStorage.getItem("studentToken");
-const API_BASE = "http://localhost:5000";
+const API_BASE = (window.ISA_API_ORIGIN || "") + "";
 
 if (!token) {
   window.location.href = "/frontend/pages/student-login.html";
@@ -223,3 +223,4 @@ document.addEventListener("DOMContentLoaded", () => {
     submitExam();
   });
 });
+

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Gallery | Intensive Study Academy</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/admin-theme.css" />
+<script src="../js/api-base.js"></script>
+</head>
+<body>
+<header class="dashboard-header">
+  <div class="header-container">
+    <div class="logo">
+      <img src="../image/isa.png" alt="Intensive Study Academy Logo">
+    </div>
+    <div class="user-text">
+      <strong>Admin</strong>
+    </div>
+  </div>
+</header>
+
+<div class="dashboard-layout">
+  <nav class="dashboard-sidebar">
+    <ul class="sidebar-top">
+        <li><a href="./admin-dashboard.html">Dashboard</a></li>
+      <li><a href="./admin-staff.html">Staff</a></li>
+        <li><a href="./admin-courses.html">Courses</a></li>
+      <li><a href='./admin-curriculum.html'>Curriculum</a></li>
+        <li><a href="./admin-materials.html">Materials</a></li>
+      <li><a href="./admin-announcements.html">Announcements</a></li>
+      <li><a href="./admin-blog.html">Blog</a></li>
+      <li><a href="./admin-gallery.html" class="active">Gallery</a></li>
+    </ul>
+    <div class="sidebar-bottom">
+      <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+    </div>
+  </nav>
+
+  <main class="dashboard-main">
+    <section class="page-header">
+      <h1>Upload Gallery Image</h1>
+      <p>Add images to the public gallery.</p>
+    </section>
+
+    <section class="dashboard-section">
+      <form id="galleryForm" enctype="multipart/form-data">
+        <div class="form-row">
+          <label for="galleryCaption">Caption</label>
+          <input type="text" id="galleryCaption" name="galleryCaption" />
+        </div>
+        <div class="form-row">
+          <label for="galleryImage">Image</label>
+          <input type="file" id="galleryImage" name="galleryImage" required />
+        </div>
+
+        <button type="submit" class="primary-btn">Upload Image</button>
+      </form>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Gallery Items</h2>
+      <div id="galleryList"></div>
+    </section>
+  </main>
+</div>
+
+<script src="../js/admin-guard.js"></script>
+<script src="../js/admin-logout.js"></script>
+<script src="../js/admin-theme.js"></script>
+<script src="../js/admin-gallery.js"></script>
+</body>
+</html>
+
+

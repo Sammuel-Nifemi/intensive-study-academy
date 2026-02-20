@@ -7,7 +7,7 @@
 
   <link rel="stylesheet" href="../css/student-dashboard.css" />
   <link rel="stylesheet" href="../css/theme.css" />
-  <link rel="stylesheet" href="/frontend/css/watermark.css" />
+  <link rel="stylesheet" href="/css/watermark.css" />
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -48,6 +48,83 @@
       line-height: 1.5;
       margin-bottom: 14px;
     }
+    .page-mock-exams #courseGrid {
+      display: grid;
+      gap: 10px;
+    }
+    .mock-course-accordion {
+      border: 1px solid #dbe2ea;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .mock-course-toggle {
+      width: 100%;
+      border: 0;
+      background: #fff;
+      text-align: left;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .mock-course-main {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .mock-course-main strong {
+      font-size: 0.95rem;
+      color: #0f172a;
+    }
+    .mock-course-main span {
+      font-size: 0.92rem;
+      color: #334155;
+    }
+    .mock-course-icon {
+      font-weight: 700;
+      color: #475569;
+    }
+    .mock-course-body {
+      display: none;
+      border-top: 1px solid #e5e7eb;
+      padding: 12px 14px;
+      background: #f8fafc;
+    }
+    .mock-course-accordion.open .mock-course-body {
+      display: block;
+    }
+    .list-accordion {
+      margin-top: 10px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .list-accordion-toggle {
+      width: 100%;
+      border: 0;
+      background: #f8fafc;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: left;
+      cursor: pointer;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .list-accordion-meta {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #475569;
+    }
+    .list-accordion-panel {
+      border-top: 1px solid #e5e7eb;
+      padding: 10px;
+      background: #fff;
+    }
 
     @media (max-width: 900px) {
       .page-mock-exams .dashboard-main {
@@ -68,6 +145,7 @@
       }
     }
   </style>
+<script src="../js/api-base.js"></script>
 </head>
 <body class="page-student-dashboard page-mock-exams">
 
@@ -135,7 +213,15 @@
         />
       </div>
       <p id="coursePickerStatus" class="status-text">Loading available courses...</p>
-      <div id="courseGrid" class="dashboard-cards"></div>
+      <div class="list-accordion">
+        <button id="mockCourseListToggle" class="list-accordion-toggle" type="button" aria-expanded="false">
+          <span>Course List</span>
+          <span class="list-accordion-meta" id="mockCourseListMeta">Open</span>
+        </button>
+        <div id="mockCourseListPanel" class="list-accordion-panel" hidden>
+          <div id="courseGrid" class="dashboard-cards"></div>
+        </div>
+      </div>
     </section>
 
     <section class="dashboard-section" id="examSection" hidden>
@@ -163,5 +249,7 @@
   <script src="../js/theme.js"></script>
 </body>
 </html>
+
+
 
 

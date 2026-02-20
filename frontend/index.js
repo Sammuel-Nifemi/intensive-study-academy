@@ -1,17 +1,12 @@
-
-
-
-
-const token = localStorage.getItem("studentToken");
-
-if (token) {
-  // user is logged in → redirect
-  window.location.href = "/frontend/pages/student-dashboard.html";
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   const slides = document.querySelectorAll(".hero-image");
   let current = 0;
+
+  if (!slides.length) return;
+
+  // Ensure there is always one visible slide on initial load.
+  slides.forEach((slide) => slide.classList.remove("active"));
+  slides[current].classList.add("active");
 
   if (slides.length <= 1) return;
 

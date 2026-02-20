@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setStatus("Loading staff...", "loading");
 
     try {
-      const res = await fetch("http://localhost:5000/api/admin/staff", {
+      const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/staff", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setStatus("Deleting staff...", "loading");
 
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/staff/${staffId}`, {
+      const res = await fetch((window.ISA_API_ORIGIN || "") + `/api/admin/staff/${staffId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`
@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ).map((input) => input.value);
 
     try {
-      const res = await fetch("http://localhost:5000/api/admin/staff", {
+      const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/staff", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,5 +1,5 @@
 (function initPdfExportModule() {
-  const API_BASE = "http://localhost:5000";
+  const API_BASE = (window.ISA_API_ORIGIN || "") + "";
   const PDF_FEE = 200;
 
   function getToken() {

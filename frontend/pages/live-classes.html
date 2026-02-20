@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -10,6 +10,7 @@
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
   />
+<script src="../js/api-base.js"></script>
 </head>
 <body class="page-student-dashboard">
 
@@ -93,7 +94,7 @@
 
         <div class="module-card">
           <h4>Group Session (Max 5 students)</h4>
-          <p><strong>Duration:</strong> 1 â€“ 1.5 Hours</p>
+          <p><strong>Duration:</strong> 1 – 1.5 Hours</p>
           <p><strong>Fee:</strong> ?500 per student</p>
           <ul>
             <li>Shared explanation</li>
@@ -144,11 +145,11 @@
             <strong>Preferred Time:</strong><br>
             <select required>
               <option value="">Select time</option>
-              <option>10:00 AM â€“ 11:00 AM</option>
-              <option>12:00 PM â€“ 1:00 PM</option>
-              <option>3:00 PM â€“ 4:00 PM</option>
-              <option>6:00 PM â€“ 7:00 PM</option>
-              <option>8:00 PM â€“ 9:00 PM</option>
+              <option>10:00 AM – 11:00 AM</option>
+              <option>12:00 PM – 1:00 PM</option>
+              <option>3:00 PM – 4:00 PM</option>
+              <option>6:00 PM – 7:00 PM</option>
+              <option>8:00 PM – 9:00 PM</option>
             </select>
           </label>
         </p>
@@ -166,7 +167,7 @@
   </main>
 </div>
 
-<script src="/frontend/js/student-auth-guard.js"></script>
+<script src="/js/student-auth-guard.js"></script>
 <script src="../js/notifications.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", async () => {
@@ -195,7 +196,7 @@
     }
 
     try {
-      const res = await fetch("http://localhost:5000/student/live-classes", {
+      const res = await fetch((window.ISA_API_ORIGIN || "") + "/student/live-classes", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -214,7 +215,7 @@
           <div class="dashboard-card">
             <h3>${c.title || "Live Class"}</h3>
             <p><strong>Date:</strong> ${date}</p>
-            <p><strong>Time:</strong> ${c.start_time} â€“ ${c.end_time}</p>
+            <p><strong>Time:</strong> ${c.start_time} – ${c.end_time}</p>
             <a class="primary-btn" href="${c.meeting_link}" target="_blank" rel="noopener noreferrer">Join Class</a>
           </div>
         `;
@@ -229,6 +230,8 @@
   <script src="../js/theme.js"></script>
 </body>
 </html>
+
+
 
 
 

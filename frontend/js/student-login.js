@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const res = await fetch("http://127.0.0.1:5000/auth/quick-login", {
+      const res = await fetch((window.ISA_API_ORIGIN || "") + "/auth/quick-login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -46,3 +46,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+

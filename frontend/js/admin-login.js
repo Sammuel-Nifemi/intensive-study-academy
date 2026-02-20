@@ -1,19 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const isProductionHost =
-    window.location.hostname === "intensivestudyacademy.com" ||
-    window.location.hostname === "www.intensivestudyacademy.com";
-  const API_BASE = isProductionHost
-    ? "https://intensive-study-backend.onrender.com/api"
-    : "http://localhost:5000/api";
+  const API_BASE = window.ISA_API_BASE || (window.ISA_API_ORIGIN || "") + "/api";
 
   const form = document.getElementById("adminLoginForm");
   const msg = document.getElementById("msg");
   const warning = document.getElementById("tokenWarning");
 
-  const studentToken = localStorage.getItem("studentToken");
+  const hadStudentToken = Boolean(localStorage.getItem("studentToken"));
+  // Admin entry should not carry a student session token.
+  localStorage.removeItem("studentToken");
+
+  const studentToken = hadStudentToken;
   if (studentToken && warning) {
-    warning.textContent =
-      "Student session detected. Please use Student Login or log out first.";
+    warning.textContent = "Student session cleared for admin login.";
     warning.style.display = "block";
   }
 
@@ -42,7 +40,17 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
 
       if (!res.ok) {
-        msg.textContent = data.message || "Login failed";
+        if (res.status === 401 && data?.message === "Admin account not found") {
+          msg.textContent = "Admin email not found.";
+          return;
+        }
+
+        if (res.status === 401 && data?.message === "Incorrect password") {
+          msg.textContent = "Incorrect password.";
+          return;
+        }
+
+        msg.textContent = data.message || "Login failed.";
         return;
       }
 

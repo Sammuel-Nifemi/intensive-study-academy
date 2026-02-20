@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5000/api/admin/fee-structures";
+const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/admin/fee-structures";
 
 const facultySelect = document.getElementById("facultySelect");
 const programSelect = document.getElementById("programSelect");

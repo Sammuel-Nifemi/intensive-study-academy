@@ -56,18 +56,28 @@ exports.login = async (req, res) => {
 // =========================
 exports.adminLogin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const normalizedEmail = String(req.body?.email || "").trim().toLowerCase();
+    const password = String(req.body?.password || "");
 
-    const user = await User.findOne({ email, role: "admin" });
+    if (!normalizedEmail) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    if (!password) {
+      return res.status(400).json({ message: "Password is required" });
+    }
+
+    // Admin auth uses User model only. Staff auth is handled by staffLogin + Staff model.
+    const user = await User.findOne({ email: normalizedEmail, role: "admin" });
 
     if (!user) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Admin account not found" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Incorrect password" });
     }
 
     const token = jwt.sign(

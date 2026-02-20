@@ -8,6 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.removeItem("token");
     localStorage.removeItem("authToken");
     localStorage.removeItem("role");
-    window.location.href = "/frontend/pages/staff-login.html";
+    window.location.href = "/pages/staff-login.html";
   });
 });

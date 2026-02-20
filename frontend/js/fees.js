@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", async () => {
+ï»¿document.addEventListener("DOMContentLoaded", async () => {
   applyTheme();
   await loadPrograms();
   setupAnalyzeHandler();
@@ -24,7 +24,7 @@ function formatCurrency(value) {
 async function fetchFees(params) {
   try {
     const query = new URLSearchParams(params).toString();
-    const res = await fetch(`http://localhost:5000/api/fees/analyze?${query}`);
+    const res = await fetch((window.ISA_API_ORIGIN || "") + `/api/fees/analyze?${query}`);
     const data = await res.json().catch(() => null);
 
     if (!res.ok) {
@@ -49,7 +49,7 @@ function renderFees(payload, params) {
     const program = params?.program || "Program";
     const level = params?.level || "";
     const semester = params?.semester || "";
-    feeHeader.textContent = `Fee Analysis for ${program} – ${level} (${semester})`;
+    feeHeader.textContent = `Fee Analysis for ${program} â€“ ${level} (${semester})`;
   }
 
   const tbody = document.getElementById("feeTableBody");
@@ -64,7 +64,7 @@ function renderFees(payload, params) {
             <td>${course.units ?? ""}</td>
             <td>${formatCurrency(course.courseFee)}</td>
             <td>${formatCurrency(course.examFee)}</td>
-            <td>${course.materialUrl ? `<a href="${course.materialUrl}" target="_blank">Open</a>` : "—"}</td>
+            <td>${course.materialUrl ? `<a href="${course.materialUrl}" target="_blank">Open</a>` : "â€”"}</td>
           </tr>
         `;
       })
@@ -169,7 +169,7 @@ async function loadPrograms() {
   if (!facultySelect || !programSelect) return;
 
   try {
-    const res = await fetch("http://localhost:5000/api/admin/public/programs");
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/public/programs");
     const programs = await res.json().catch(() => []);
     if (!res.ok) {
       setStatus("Unable to load programs. Please refresh.", true);

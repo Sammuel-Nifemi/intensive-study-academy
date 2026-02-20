@@ -25,6 +25,7 @@
       font-weight: 700;
     }
   </style>
+<script src="../js/api-base.js"></script>
 </head>
 <body class="page-student-dashboard">
   <header class="dashboard-header">
@@ -56,10 +57,10 @@
     </main>
   </div>
 
-  <script src="/frontend/js/student-auth-guard.js"></script>
+  <script src="/js/student-auth-guard.js"></script>
   <script src="../js/theme.js"></script>
   <script src="../js/mock-post-exam.js"></script>
-  <script src="/frontend/js/pdf-export.js"></script>
+  <script src="/js/pdf-export.js"></script>
   <script>
     const attempt = window.MockPostExam.getCurrentMockAttemptOrRedirect("/frontend/pages/mock-exams.html");
     if (attempt) {
@@ -101,3 +102,4 @@
   </script>
 </body>
 </html>
+

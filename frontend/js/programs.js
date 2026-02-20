@@ -1,9 +1,9 @@
-const facultySelect = document.getElementById("facultySelect");
+﻿const facultySelect = document.getElementById("facultySelect");
 const programList = document.getElementById("programList");
 const btn = document.getElementById("addBtn");
 
 async function loadFaculties() {
-  const res = await fetch("http://localhost:5000/api/admin/faculties");
+  const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/faculties");
   const data = await res.json();
 
   facultySelect.innerHTML = "";
@@ -17,7 +17,7 @@ async function loadFaculties() {
 }
 
 async function loadPrograms() {
-  const res = await fetch("http://localhost:5000/api/admin/programs");
+  const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/programs");
   const data = await res.json();
 
   programList.innerHTML = "";
@@ -25,7 +25,7 @@ async function loadPrograms() {
   data.forEach(p => {
     const li = document.createElement("li");
     li.innerHTML = `${p.name} (${p.faculty?.name || ""}) 
-      <button onclick="deleteProgram('${p._id}')">❌</button>`;
+      <button onclick="deleteProgram('${p._id}')">âŒ</button>`;
     programList.appendChild(li);
   });
 }
@@ -34,7 +34,7 @@ btn.onclick = async () => {
   const name = document.getElementById("programName").value;
   const faculty = facultySelect.value;
 
-  await fetch("http://localhost:5000/api/admin/programs", {
+  await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/programs", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, faculty })
@@ -45,7 +45,7 @@ btn.onclick = async () => {
 };
 
 async function deleteProgram(id) {
-  await fetch(`http://localhost:5000/api/admin/programs/${id}`, {
+  await fetch((window.ISA_API_ORIGIN || "") + `/api/admin/programs/${id}`, {
     method: "DELETE"
   });
   loadPrograms();

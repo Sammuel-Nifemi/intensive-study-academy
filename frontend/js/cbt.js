@@ -3,7 +3,7 @@ if (!token) {
   window.location.href = "/frontend/pages/student-login.html";
 }
 
-const API_BASE = "http://localhost:5000/api/cbt";
+const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/cbt";
 
 let questions = [];
 let currentIndex = 0;
@@ -212,4 +212,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.getElementById("submitBtn").addEventListener("click", submitExam);
 });
+
 

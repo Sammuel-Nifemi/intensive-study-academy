@@ -1,7 +1,7 @@
 const token = localStorage.getItem("adminToken");
 
 async function loadFaculties() {
-  const res = await fetch("http://localhost:5000/api/admin/faculties", {
+  const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/faculties", {
     headers: { Authorization: `Bearer ${token}` }
   });
   const faculties = await res.json();
@@ -13,7 +13,7 @@ async function loadFaculties() {
 document.getElementById("deptForm").addEventListener("submit", async e => {
   e.preventDefault();
 
-  await fetch("http://localhost:5000/api/admin/departments", {
+  await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/departments", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -4,7 +4,7 @@
 
   const page = window.location.pathname;
 
-  fetch("http://localhost:5000/api/activity/track", {
+  fetch((window.ISA_API_ORIGIN || "") + "/api/activity/track", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

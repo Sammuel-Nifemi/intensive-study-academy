@@ -1,16 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const logoutBtn = document.getElementById("logoutBtn");
+  const logoutButtons = document.querySelectorAll("#logoutBtn, #logoutBtnInline, .logout-btn");
+  if (!logoutButtons.length) return;
 
-  if (!logoutBtn) return;
-
-  logoutBtn.addEventListener("click", () => {
+  const doLogout = () => {
     localStorage.removeItem("studentToken");
     localStorage.removeItem("token");
     localStorage.removeItem("authToken");
     localStorage.removeItem("role");
     localStorage.removeItem("user");
+    window.location.href = "/frontend/pages/student-login.html";
+  };
 
-    // Redirect to Academic Resource Center (main gate)
-    window.location.href = "/frontend/pages/resources.html";
+  logoutButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      doLogout();
+    });
   });
 });
+

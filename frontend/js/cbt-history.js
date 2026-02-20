@@ -3,7 +3,7 @@ if (!token) {
   window.location.href = "/frontend/pages/student-login.html";
 }
 
-const API_BASE = "http://localhost:5000/api/cbt";
+const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/cbt";
 
 function setStatus(message) {
   const el = document.getElementById("historyStatus");
@@ -66,4 +66,5 @@ async function loadHistory() {
 }
 
 document.addEventListener("DOMContentLoaded", loadHistory);
+
 

@@ -1,7 +1,33 @@
-const API_BASE = "http://localhost:5000";
+const API_BASE = (window.ISA_API_ORIGIN || "") + "";
 let allCourses = [];
 let selectedCourseForExplanation = "";
 let selectedCourseIdForExplanation = "";
+let renderedCourseCount = 0;
+
+function setCourseListMeta(text) {
+  const meta = document.getElementById("courseListMeta");
+  if (meta) meta.textContent = text;
+}
+
+function setCourseListPanelOpen(isOpen) {
+  const panel = document.getElementById("courseListPanel");
+  const toggle = document.getElementById("courseListToggle");
+  if (!panel || !toggle) return;
+  panel.hidden = !isOpen;
+  toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  const count = renderedCourseCount;
+  setCourseListMeta(isOpen ? `Hide (${count})` : `Open (${count})`);
+}
+
+function initCourseListAccordion() {
+  const toggle = document.getElementById("courseListToggle");
+  if (!toggle || toggle.dataset.wired === "1") return;
+  toggle.dataset.wired = "1";
+  toggle.addEventListener("click", () => {
+    const isOpen = toggle.getAttribute("aria-expanded") === "true";
+    setCourseListPanelOpen(!isOpen);
+  });
+}
 
 function setText(id, value) {
   const el = document.getElementById(id);
@@ -128,20 +154,33 @@ function renderCourseCards(filterText) {
   });
 
   if (!rows.length) {
+    renderedCourseCount = 0;
     grid.innerHTML = "";
     status.textContent = "No courses match your search.";
+    setCourseListMeta("Open (0)");
     return;
   }
 
   status.textContent = "";
+  renderedCourseCount = rows.length;
   grid.innerHTML = rows
     .map((row) => `
-      <article class="course-card" data-course-id="${row.id}" data-course="${row.courseCode}">
-        <h4>${row.courseCode}</h4>
-        <p>${row.title}</p>
+      <article class="course-accordion" data-course-id="${row.id}" data-course="${row.courseCode}">
+        <button type="button" class="course-accordion-toggle" aria-expanded="false">
+          <span class="course-accordion-main">
+            <strong>${row.courseCode}</strong>
+            <span>${row.title}</span>
+          </span>
+          <span class="course-accordion-icon">+</span>
+        </button>
+        <div class="course-accordion-body">
+          <button type="button" class="primary-btn explain-course-btn">Explain Course</button>
+        </div>
       </article>
     `)
     .join("");
+
+  setCourseListMeta(`Open (${renderedCourseCount})`);
 }
 
 async function loadCourses() {
@@ -200,8 +239,22 @@ function wireCourseExplainFlow() {
   searchInput?.addEventListener("input", () => renderCourseCards(searchInput.value));
 
   grid?.addEventListener("click", async (event) => {
-    const card = event.target.closest(".course-card");
+    const toggle = event.target.closest(".course-accordion-toggle");
+    if (toggle) {
+      const accordion = toggle.closest(".course-accordion");
+      if (!accordion) return;
+      const isOpen = accordion.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      const icon = toggle.querySelector(".course-accordion-icon");
+      if (icon) icon.textContent = isOpen ? "-" : "+";
+      return;
+    }
+
+    const btn = event.target.closest(".explain-course-btn");
+    if (!btn) return;
+    const card = btn.closest(".course-accordion");
     if (!card) return;
+
     const courseId = card.getAttribute("data-course-id");
     const courseCode = card.getAttribute("data-course");
     if (!courseId || !courseCode) return;
@@ -320,6 +373,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   wireQuickActions();
+  initCourseListAccordion();
+  setCourseListPanelOpen(false);
   wireCourseExplainFlow();
   wireAskAdvisor();
   await loadCourses();

@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("adminToken");
   const list = document.getElementById("pendingList");
 
-  const res = await fetch("http://localhost:5000/api/materials/pending", {
+  const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/materials/pending", {
     headers: { Authorization: `Bearer ${token}` }
   });
 
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function approve(id) {
   const token = localStorage.getItem("adminToken");
 
-  await fetch(`http://localhost:5000/api/materials/${id}/approve`, {
+  await fetch((window.ISA_API_ORIGIN || "") + `/api/materials/${id}/approve`, {
     method: "PUT",
     headers: { Authorization: `Bearer ${token}` }
   });

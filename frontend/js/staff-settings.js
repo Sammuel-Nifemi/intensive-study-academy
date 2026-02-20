@@ -1,6 +1,6 @@
 const staffToken = localStorage.getItem("staffToken");
 if (!staffToken) {
-  window.location.href = "/frontend/pages/staff-login.html";
+  window.location.href = "/pages/staff-login.html";
 }
 
 function setStatus(id, message, type) {
@@ -13,7 +13,7 @@ function setStatus(id, message, type) {
 
 async function loadSettings() {
   try {
-    const res = await fetch("http://localhost:5000/api/staff/settings", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/staff/settings", {
       headers: { Authorization: `Bearer ${staffToken}` }
     });
     const data = await res.json();
@@ -22,7 +22,7 @@ async function loadSettings() {
         window.location.href = data.redirectTo;
         return;
       }
-      window.location.href = "/frontend/pages/staff-login.html";
+      window.location.href = "/pages/staff-login.html";
       return;
     }
 
@@ -30,7 +30,7 @@ async function loadSettings() {
     document.getElementById("inAppNotifications").checked = Boolean(data.inAppNotifications);
     document.getElementById("darkMode").checked = Boolean(data.darkMode);
   } catch (err) {
-    window.location.href = "/frontend/pages/staff-login.html";
+    window.location.href = "/pages/staff-login.html";
   }
 }
 
@@ -45,7 +45,7 @@ async function saveSettings(e) {
   };
 
   try {
-    const res = await fetch("http://localhost:5000/api/staff/settings", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/staff/settings", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -74,7 +74,7 @@ async function changePassword(e) {
   };
 
   try {
-    const res = await fetch("http://localhost:5000/api/staff/change-password", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/staff/change-password", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -97,7 +97,7 @@ async function changePassword(e) {
 async function requestDeactivation() {
   setStatus("deactivateStatus", "Submitting request...", "loading");
   try {
-    const res = await fetch("http://localhost:5000/api/staff/deactivate-request", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/staff/deactivate-request", {
       method: "POST",
       headers: { Authorization: `Bearer ${staffToken}` }
     });

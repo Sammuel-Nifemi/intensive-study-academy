@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5000/api/admin";
+const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/admin";
 const token = localStorage.getItem("adminToken");
 const sessionQuestions = [];
 

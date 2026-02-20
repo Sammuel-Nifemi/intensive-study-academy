@@ -2,7 +2,7 @@ const adminToken = localStorage.getItem("adminToken");
 
 async function loadStudents() {
   try {
-    const res = await fetch("http://localhost:5000/api/admin/students", {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/students", {
       headers: { Authorization: `Bearer ${adminToken}` }
     });
     const students = await res.json();
@@ -41,7 +41,7 @@ async function loadStudents() {
       btn.addEventListener("click", async () => {
         const reason = prompt("Reason for flagging:");
         if (!reason) return;
-        const res = await fetch("http://localhost:5000/api/admin/students/flag", {
+        const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/students/flag", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -59,7 +59,7 @@ async function loadStudents() {
 
     container.querySelectorAll("[data-suspend]").forEach(btn => {
       btn.addEventListener("click", async () => {
-        const res = await fetch("http://localhost:5000/api/admin/students/suspend", {
+        const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/students/suspend", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
