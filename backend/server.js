@@ -168,6 +168,37 @@ app.get("/", (req, res) => {
   res.send("API running...");
 });
 
+
+// ⚠️ TEMP ADMIN CREATOR — REMOVE AFTER USE
+app.get("/__seed_admin", async (req, res) => {
+  try {
+    const Admin = require("./models/Admin");
+    const bcrypt = require("bcryptjs");
+
+    const email = "oluwanifemis283@gmail.com";
+    const password = "omogbemi123";
+
+    const existing = await Admin.findOne({ email });
+    if (existing) {
+      return res.json({ message: "Admin already exists" });
+    }
+
+    const hashed = await bcrypt.hash(password, 10);
+
+    await Admin.create({
+      email,
+      password: hashed,
+      role: "superadmin"
+    });
+
+    res.json({ success: true, message: "Admin created successfully" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // 🚀 Start server (LAST)
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
