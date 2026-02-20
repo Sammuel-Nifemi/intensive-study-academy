@@ -62,10 +62,34 @@ startBirthdayCron();
 // 🌍 Global middleware (ORDER MATTERS)
 // const cors = require("cors");
 
-app.use(cors({
-  origin: ["http://127.0.0.1:5502", "http://localhost:5502"],
-  credentials: true
-}));
+const defaultAllowedOrigins = [
+  "http://127.0.0.1:5502",
+  "http://localhost:5502",
+  "https://intensivestudyacademy.com",
+  "https://www.intensivestudyacademy.com"
+];
+
+const envAllowedOrigins = String(process.env.CORS_ORIGINS || "")
+  .split(",")
+  .map((value) => value.trim())
+  .filter(Boolean);
+
+const allowedOrigins = Array.from(
+  new Set([...defaultAllowedOrigins, ...envAllowedOrigins])
+);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(new Error(`Not allowed by CORS: ${origin}`));
+    },
+    credentials: true
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

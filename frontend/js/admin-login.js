@@ -1,4 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const isProductionHost =
+    window.location.hostname === "intensivestudyacademy.com" ||
+    window.location.hostname === "www.intensivestudyacademy.com";
+  const API_BASE = isProductionHost
+    ? "https://intensive-study-backend.onrender.com/api"
+    : "http://localhost:5000/api";
+
   const form = document.getElementById("adminLoginForm");
   const msg = document.getElementById("msg");
   const warning = document.getElementById("tokenWarning");
@@ -24,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     msg.textContent = "Logging in...";
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/admin/login", {
+      const res = await fetch(`${API_BASE}/auth/admin/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -43,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("adminToken", data.token);
 
       // 🚀 Redirect
-      window.location.href = "/frontend/pages/admin-dashboard.html";
+      window.location.href = "./admin-dashboard.html";
 
     } catch (err) {
       console.error(err);
