@@ -1,4 +1,4 @@
-const staffToken = localStorage.getItem("staffToken");
+﻿const staffToken = localStorage.getItem("staffToken");
 window.NOTIFICATION_TOKEN = staffToken;
 
 function showLoader() {
@@ -17,7 +17,7 @@ function showApp() {
 
 async function guardStaff() {
   if (!staffToken) {
-    window.location.href = "/pages/staff-login.html";
+    window.location.href = "./staff-login.html";
     return;
   }
 
@@ -30,15 +30,16 @@ async function guardStaff() {
     const data = await res.json();
 
     if (!res.ok) {
-      window.location.href = "/pages/staff-login.html";
+      window.location.href = "./staff-login.html";
       return;
     }
 
     // No profile completion gating. Always allow staff pages.
     showApp();
   } catch (err) {
-    window.location.href = "/pages/staff-login.html";
+    window.location.href = "./staff-login.html";
   }
 }
 
 document.addEventListener("DOMContentLoaded", guardStaff);
+

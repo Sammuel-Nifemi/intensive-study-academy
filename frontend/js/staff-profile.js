@@ -1,7 +1,7 @@
-// Profile = identity only (edit-only, no completion gating).
+﻿// Profile = identity only (edit-only, no completion gating).
 const staffToken = localStorage.getItem("staffToken");
 if (!staffToken) {
-  window.location.href = "/pages/staff-login.html";
+  window.location.href = "./staff-login.html";
 }
 
 function setStatus(message, type) {
@@ -31,7 +31,7 @@ async function loadProfile() {
     });
     const payload = await res.json();
     if (!res.ok || !payload?.success) {
-      window.location.href = "/pages/staff-login.html";
+      window.location.href = "./staff-login.html";
       return;
     }
     const data = payload.data || {};
@@ -43,7 +43,7 @@ async function loadProfile() {
     document.getElementById("avatarUrl").value = data.avatarUrl || "";
     setSaveState(false);
   } catch (err) {
-    window.location.href = "/pages/staff-login.html";
+    window.location.href = "./staff-login.html";
   }
 }
 
@@ -112,3 +112,4 @@ document.addEventListener("DOMContentLoaded", () => {
       el.addEventListener("change", () => setSaveState(false));
     });
 });
+

@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+﻿document.addEventListener("DOMContentLoaded", () => {
   const logoutBtn = document.getElementById("logoutBtn");
 
   if (!logoutBtn) return;
@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.removeItem("token");
     localStorage.removeItem("authToken");
     localStorage.removeItem("role");
-    window.location.href = "/pages/staff-login.html";
+    window.location.href = "./staff-login.html";
   });
 });
+

@@ -3,10 +3,11 @@ const router = express.Router();
 
 const Program = require("../models/Program");
 const StudyCenter = require("../models/StudyCenter");
-const authAdmin = require("../middleware/authAdmin");
+const requireAdmin = require("../middleware/requireAdmin");
+const requireAdminOrStaff = require("../middleware/requireAdminOrStaff");
 
 // CREATE PROGRAM
-router.post("/programs", authAdmin, async (req, res) => {
+router.post("/programs", requireAdmin, async (req, res) => {
   try {
     const { name, facultyId } = req.body;
     if (!name || !facultyId) {
@@ -35,7 +36,7 @@ router.post("/programs", authAdmin, async (req, res) => {
 });
 
 // GET PROGRAMS
-router.get("/programs", authAdmin, async (req, res) => {
+router.get("/programs", requireAdminOrStaff, async (req, res) => {
   try {
     const programs = await Program.find()
       .populate("facultyId", "name")
@@ -60,7 +61,7 @@ router.get("/programs", authAdmin, async (req, res) => {
 // ======================
 // GET ALL STUDY CENTERS
 // ======================
-router.get("/study-centers", authAdmin, async (req, res) => {
+router.get("/study-centers", requireAdminOrStaff, async (req, res) => {
   try {
     const centers = await StudyCenter.find().sort({ createdAt: -1 });
     res.json(centers);
@@ -72,7 +73,7 @@ router.get("/study-centers", authAdmin, async (req, res) => {
 // ======================
 // CREATE STUDY CENTER
 // ======================
-router.post("/study-centers", authAdmin, async (req, res) => {
+router.post("/study-centers", requireAdmin, async (req, res) => {
   try {
     const { name, city } = req.body;
     if (!name || !city) {
@@ -101,7 +102,7 @@ router.post("/study-centers", authAdmin, async (req, res) => {
 // ======================
 // DELETE STUDY CENTER
 // ======================
-router.delete("/study-centers/:id", authAdmin, async (req, res) => {
+router.delete("/study-centers/:id", requireAdmin, async (req, res) => {
   await StudyCenter.findByIdAndDelete(req.params.id);
   res.json({ success: true });
 });
@@ -109,7 +110,7 @@ router.delete("/study-centers/:id", authAdmin, async (req, res) => {
 
 
 // DELETE PROGRAM
-router.delete("/programs/:id", authAdmin, async (req, res) => {
+router.delete("/programs/:id", requireAdmin, async (req, res) => {
   await Program.findByIdAndDelete(req.params.id);
   res.json({ success: true });
 });

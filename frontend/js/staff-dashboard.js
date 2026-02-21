@@ -1,4 +1,4 @@
-// Dashboard = work overview only (no identity editing).
+﻿// Dashboard = work overview only (no identity editing).
 function getStaffToken() {
   return localStorage.getItem("staffToken");
 }
@@ -12,7 +12,7 @@ function handleSessionError(error) {
   console.error(error);
   alert("Session expired. Please login again.");
   localStorage.removeItem("staffToken");
-  window.location.href = "/pages/staff-login.html";
+  window.location.href = "./staff-login.html";
 }
 
 function setLoaderState(message, isError = false) {
@@ -199,7 +199,7 @@ async function loadMockSummary() {
         (item) => `
       <div class="dashboard-card">
         <h3>${item.title || "Mock Exam"}</h3>
-        <p><strong>Course:</strong> ${item.courseCode || "—"}</p>
+        <p><strong>Course:</strong> ${item.courseCode || "â€”"}</p>
         <p><strong>Attempts:</strong> ${item.attempts}</p>
         <p><strong>Average Score:</strong> ${item.averageScore}%</p>
       </div>`
@@ -273,8 +273,8 @@ async function loadDashboardStats() {
     }
 
     const name = [data.title, data.fullName].filter(Boolean).join(" ");
-    document.getElementById("staffName").textContent = name || "—";
-    document.getElementById("staffRole").textContent = data.role || "—";
+    document.getElementById("staffName").textContent = name || "â€”";
+    document.getElementById("staffRole").textContent = data.role || "â€”";
     document.getElementById("statMaterials").textContent =
       data.stats?.materialsUploaded ?? 0;
     document.getElementById("statMocks").textContent =
@@ -372,7 +372,7 @@ async function submitForm({
 document.addEventListener("DOMContentLoaded", async () => {
   const token = getStaffToken();
   if (!token) {
-    window.location.href = "/pages/staff-login.html";
+    window.location.href = "./staff-login.html";
     return;
   }
 
@@ -455,3 +455,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     submitAnnouncement(announcementForm);
   });
 });
+

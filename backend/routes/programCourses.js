@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const authAdmin = require("../middleware/authAdmin");
+const requireAdmin = require("../middleware/requireAdmin");
+const requireAdminOrStaff = require("../middleware/requireAdminOrStaff");
 const ProgramCourse = require("../models/ProgramCourse");
 const Program = require("../models/Program");
 const AdminCourse = require("../models/AdminCourse");
@@ -11,7 +12,7 @@ function normalizeCourseCode(value) {
 }
 
 // POST /api/admin/program-courses
-router.post("/program-courses", authAdmin, async (req, res) => {
+router.post("/program-courses", requireAdminOrStaff, async (req, res) => {
   try {
     const { program, level, semester, courseCode, category } = req.body || {};
 
@@ -65,7 +66,7 @@ router.post("/program-courses", authAdmin, async (req, res) => {
 });
 
 // GET /api/admin/program-courses
-router.get("/program-courses", authAdmin, async (req, res) => {
+router.get("/program-courses", requireAdminOrStaff, async (req, res) => {
   try {
     const items = await ProgramCourse.find()
       .populate({ path: "program", select: "name" })
@@ -92,7 +93,7 @@ router.get("/program-courses", authAdmin, async (req, res) => {
 });
 
 // DELETE /api/admin/program-courses/:id
-router.delete("/program-courses/:id", authAdmin, async (req, res) => {
+router.delete("/program-courses/:id", requireAdmin, async (req, res) => {
   try {
     const deleted = await ProgramCourse.findByIdAndDelete(req.params.id);
     if (!deleted) {

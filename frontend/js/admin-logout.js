@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   logoutBtn.addEventListener("click", () => {
     localStorage.removeItem("adminToken");
+    localStorage.removeItem("staffToken");
     localStorage.removeItem("token");
     localStorage.removeItem("authToken");
     localStorage.removeItem("role");

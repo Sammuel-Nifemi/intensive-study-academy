@@ -1,5 +1,9 @@
 function getAdminToken() {
-  return (localStorage.getItem("adminToken") || localStorage.getItem("token"));
+  return (
+    localStorage.getItem("adminToken") ||
+    localStorage.getItem("staffToken") ||
+    localStorage.getItem("token")
+  );
 }
 
 async function fetchJson(url, options = {}) {

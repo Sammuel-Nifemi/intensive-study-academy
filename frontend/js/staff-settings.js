@@ -1,6 +1,6 @@
-const staffToken = localStorage.getItem("staffToken");
+﻿const staffToken = localStorage.getItem("staffToken");
 if (!staffToken) {
-  window.location.href = "/pages/staff-login.html";
+  window.location.href = "./staff-login.html";
 }
 
 function setStatus(id, message, type) {
@@ -22,7 +22,7 @@ async function loadSettings() {
         window.location.href = data.redirectTo;
         return;
       }
-      window.location.href = "/pages/staff-login.html";
+      window.location.href = "./staff-login.html";
       return;
     }
 
@@ -30,7 +30,7 @@ async function loadSettings() {
     document.getElementById("inAppNotifications").checked = Boolean(data.inAppNotifications);
     document.getElementById("darkMode").checked = Boolean(data.darkMode);
   } catch (err) {
-    window.location.href = "/pages/staff-login.html";
+    window.location.href = "./staff-login.html";
   }
 }
 
@@ -118,3 +118,4 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("passwordForm").addEventListener("submit", changePassword);
   document.getElementById("deactivateBtn").addEventListener("click", requestDeactivation);
 });
+

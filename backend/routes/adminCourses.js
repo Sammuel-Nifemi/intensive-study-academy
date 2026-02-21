@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const authAdmin = require("../middleware/authAdmin");
+const requireAdmin = require("../middleware/requireAdmin");
+const requireAdminOrStaff = require("../middleware/requireAdminOrStaff");
 const AdminCourse = require("../models/AdminCourse");
 
 function normalizeCourseCode(value) {
@@ -18,7 +19,7 @@ router.get("/public/courses", async (req, res) => {
   }
 });
 
-router.get("/courses/check", authAdmin, async (req, res) => {
+router.get("/courses/check", requireAdminOrStaff, async (req, res) => {
   try {
     const code = normalizeCourseCode(req.query.code);
     if (!code) {
@@ -33,7 +34,7 @@ router.get("/courses/check", authAdmin, async (req, res) => {
   }
 });
 
-router.post("/courses", authAdmin, async (req, res) => {
+router.post("/courses", requireAdminOrStaff, async (req, res) => {
   try {
     const {
       courseCode,
@@ -83,7 +84,7 @@ router.post("/courses", authAdmin, async (req, res) => {
   }
 });
 
-router.get("/courses", authAdmin, async (req, res) => {
+router.get("/courses", requireAdminOrStaff, async (req, res) => {
   try {
     const courses = await AdminCourse.find()
       .sort({ createdAt: -1 })
@@ -95,7 +96,7 @@ router.get("/courses", authAdmin, async (req, res) => {
   }
 });
 
-router.delete("/courses/:id", authAdmin, async (req, res) => {
+router.delete("/courses/:id", requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const deleted = await AdminCourse.findByIdAndDelete(id);

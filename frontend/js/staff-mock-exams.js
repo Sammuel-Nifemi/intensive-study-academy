@@ -1,4 +1,4 @@
-
+﻿
 /* =====================================================
    STAFF / ADMIN MOCK EXAM MANAGER
 ===================================================== */
@@ -7,7 +7,7 @@
 const token = localStorage.getItem("staffToken");
 
 if (!token) {
-  window.location.href = "../pages/staff-login.html";
+  window.location.href = ".../staff-login.html";
 }
 
 /* ================= STORAGE ================= */
@@ -40,7 +40,7 @@ function loadCourses() {
   courses.forEach(course => {
     const opt = document.createElement("option");
     opt.value = course.id;
-    opt.textContent = `${course.code} – ${course.title}`;
+    opt.textContent = `${course.code} â€“ ${course.title}`;
     courseSelect.appendChild(opt);
   });
 }
@@ -145,3 +145,4 @@ function renderExams() {
 /* ================= INIT ================= */
 loadCourses();
 renderExams();
+

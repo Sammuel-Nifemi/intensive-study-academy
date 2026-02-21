@@ -1,3 +1,3 @@
-const adminOnly = require("./adminOnly");
+const authRoles = require("./authRoles");
 
-module.exports = adminOnly;
+module.exports = authRoles(["admin"]);

@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const authAdmin = require("../middleware/authAdmin");
+const requireAdmin = require("../middleware/requireAdmin");
+const requireAdminOrStaff = require("../middleware/requireAdminOrStaff");
 const createPdfUploader = require("../utils/uploadPdf");
 
 const CourseMaterial = require("../models/CourseMaterial");
@@ -46,7 +47,7 @@ function parseOtherFees(value) {
 /* =========================
    COURSE MATERIALS
 ========================= */
-router.get("/course-materials", authAdmin, async (req, res) => {
+router.get("/course-materials", requireAdminOrStaff, async (req, res) => {
   try {
     const items = await CourseMaterial.find(buildFilter(req.query))
       .populate("program", "name")
@@ -59,7 +60,7 @@ router.get("/course-materials", authAdmin, async (req, res) => {
 
 router.post(
   "/course-materials",
-  authAdmin,
+  requireAdminOrStaff,
   uploadMaterials.array("files"),
   async (req, res) => {
     try {
@@ -96,7 +97,7 @@ router.post(
   }
 );
 
-router.get("/course-materials/:id", authAdmin, async (req, res) => {
+router.get("/course-materials/:id", requireAdminOrStaff, async (req, res) => {
   try {
     const item = await CourseMaterial.findById(req.params.id).populate("program", "name");
     if (!item) return res.status(404).json({ message: "Material not found" });
@@ -108,7 +109,7 @@ router.get("/course-materials/:id", authAdmin, async (req, res) => {
 
 router.put(
   "/course-materials/:id",
-  authAdmin,
+  requireAdminOrStaff,
   uploadMaterials.single("file"),
   async (req, res) => {
     try {
@@ -128,7 +129,7 @@ router.put(
   }
 );
 
-router.delete("/course-materials/:id", authAdmin, async (req, res) => {
+router.delete("/course-materials/:id", requireAdmin, async (req, res) => {
   try {
     await CourseMaterial.findByIdAndDelete(req.params.id);
     res.json({ message: "Material deleted" });
@@ -140,7 +141,7 @@ router.delete("/course-materials/:id", authAdmin, async (req, res) => {
 /* =========================
    MOCK EXAMS
 ========================= */
-router.get("/mocks", authAdmin, async (req, res) => {
+router.get("/mocks", requireAdminOrStaff, async (req, res) => {
   try {
     const items = await MockExam.find(buildFilter(req.query))
       .populate("program", "name")
@@ -151,7 +152,7 @@ router.get("/mocks", authAdmin, async (req, res) => {
   }
 });
 
-router.post("/mocks", authAdmin, uploadMocks.array("files"), async (req, res) => {
+router.post("/mocks", requireAdminOrStaff, uploadMocks.array("files"), async (req, res) => {
   try {
     const error = requireAcademicFields(req.body);
     if (error) return res.status(400).json({ message: error });
@@ -180,7 +181,7 @@ router.post("/mocks", authAdmin, uploadMocks.array("files"), async (req, res) =>
   }
 });
 
-router.get("/mocks/:id", authAdmin, async (req, res) => {
+router.get("/mocks/:id", requireAdminOrStaff, async (req, res) => {
   try {
     const item = await MockExam.findById(req.params.id).populate("program", "name");
     if (!item) return res.status(404).json({ message: "Mock exam not found" });
@@ -190,7 +191,7 @@ router.get("/mocks/:id", authAdmin, async (req, res) => {
   }
 });
 
-router.put("/mocks/:id", authAdmin, uploadMocks.single("file"), async (req, res) => {
+router.put("/mocks/:id", requireAdminOrStaff, uploadMocks.single("file"), async (req, res) => {
   try {
     const updates = { ...req.body };
     if (req.file) {
@@ -204,7 +205,7 @@ router.put("/mocks/:id", authAdmin, uploadMocks.single("file"), async (req, res)
   }
 });
 
-router.delete("/mocks/:id", authAdmin, async (req, res) => {
+router.delete("/mocks/:id", requireAdmin, async (req, res) => {
   try {
     await MockExam.findByIdAndDelete(req.params.id);
     res.json({ message: "Mock exam deleted" });
@@ -216,7 +217,7 @@ router.delete("/mocks/:id", authAdmin, async (req, res) => {
 /* =========================
    EXAM TIMETABLES
 ========================= */
-router.get("/exam-timetables", authAdmin, async (req, res) => {
+router.get("/exam-timetables", requireAdminOrStaff, async (req, res) => {
   try {
     const items = await ExamTimetable.find(buildFilter(req.query))
       .populate("program", "name")
@@ -229,7 +230,7 @@ router.get("/exam-timetables", authAdmin, async (req, res) => {
 
 router.post(
   "/exam-timetables",
-  authAdmin,
+  requireAdminOrStaff,
   uploadTimetables.array("files"),
   async (req, res) => {
     try {
@@ -261,7 +262,7 @@ router.post(
   }
 );
 
-router.get("/exam-timetables/:id", authAdmin, async (req, res) => {
+router.get("/exam-timetables/:id", requireAdminOrStaff, async (req, res) => {
   try {
     const item = await ExamTimetable.findById(req.params.id).populate("program", "name");
     if (!item) return res.status(404).json({ message: "Exam timetable not found" });
@@ -273,7 +274,7 @@ router.get("/exam-timetables/:id", authAdmin, async (req, res) => {
 
 router.put(
   "/exam-timetables/:id",
-  authAdmin,
+  requireAdminOrStaff,
   uploadTimetables.single("file"),
   async (req, res) => {
     try {
@@ -292,7 +293,7 @@ router.put(
   }
 );
 
-router.delete("/exam-timetables/:id", authAdmin, async (req, res) => {
+router.delete("/exam-timetables/:id", requireAdmin, async (req, res) => {
   try {
     await ExamTimetable.findByIdAndDelete(req.params.id);
     res.json({ message: "Exam timetable deleted" });
@@ -304,7 +305,7 @@ router.delete("/exam-timetables/:id", authAdmin, async (req, res) => {
 /* =========================
    FEE STRUCTURES
 ========================= */
-router.get("/fee-structures", authAdmin, async (req, res) => {
+router.get("/fee-structures", requireAdminOrStaff, async (req, res) => {
   try {
     const items = await FeeStructure.find(buildFilter(req.query))
       .populate("program", "name")
@@ -315,7 +316,7 @@ router.get("/fee-structures", authAdmin, async (req, res) => {
   }
 });
 
-router.post("/fee-structures", authAdmin, async (req, res) => {
+router.post("/fee-structures", requireAdminOrStaff, async (req, res) => {
   try {
     const error = requireAcademicFields(req.body);
     if (error) return res.status(400).json({ message: error });
@@ -339,7 +340,7 @@ router.post("/fee-structures", authAdmin, async (req, res) => {
   }
 });
 
-router.get("/fee-structures/:id", authAdmin, async (req, res) => {
+router.get("/fee-structures/:id", requireAdminOrStaff, async (req, res) => {
   try {
     const item = await FeeStructure.findById(req.params.id).populate("program", "name");
     if (!item) return res.status(404).json({ message: "Fee structure not found" });
@@ -349,7 +350,7 @@ router.get("/fee-structures/:id", authAdmin, async (req, res) => {
   }
 });
 
-router.put("/fee-structures/:id", authAdmin, async (req, res) => {
+router.put("/fee-structures/:id", requireAdminOrStaff, async (req, res) => {
   try {
     const updates = { ...req.body };
     if (updates.otherFees) {
@@ -366,7 +367,7 @@ router.put("/fee-structures/:id", authAdmin, async (req, res) => {
   }
 });
 
-router.delete("/fee-structures/:id", authAdmin, async (req, res) => {
+router.delete("/fee-structures/:id", requireAdmin, async (req, res) => {
   try {
     await FeeStructure.findByIdAndDelete(req.params.id);
     res.json({ message: "Fee structure deleted" });

@@ -1,7 +1,11 @@
 
 
 async function fetchJson(url, options = {}) {
-  const token = (localStorage.getItem("adminToken") || localStorage.getItem("token"));
+  const token = (
+    localStorage.getItem("adminToken") ||
+    localStorage.getItem("staffToken") ||
+    localStorage.getItem("token")
+  );
 
   options.headers = options.headers || {};
 
@@ -59,6 +63,132 @@ function setStatus(id, message, isError, isLoading, isSuccess) {
       progress.classList.toggle("loading", Boolean(isLoading));
     }
   }
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function wireAccordion(container) {
+  container.querySelectorAll(".program-accordion-header").forEach((header) => {
+    header.addEventListener("click", () => {
+      const targetId = header.dataset.accordionTarget;
+      if (!targetId) return;
+
+      const panel = document.getElementById(targetId);
+      if (!panel) return;
+
+      const isOpening = panel.hidden;
+      container.querySelectorAll(".program-accordion-panel").forEach((item) => {
+        item.hidden = true;
+      });
+      container.querySelectorAll(".program-accordion-header").forEach((item) => {
+        item.classList.remove("active");
+        item.setAttribute("aria-expanded", "false");
+      });
+
+      if (isOpening) {
+        panel.hidden = false;
+        header.classList.add("active");
+        header.setAttribute("aria-expanded", "true");
+      }
+    });
+  });
+}
+
+function renderMaterialsAccordion(items) {
+  const tbody = document.getElementById("materialsTableBody");
+  if (!tbody) return;
+
+  const table = tbody.closest("table");
+  const host = table?.parentElement;
+  if (!table || !host) return;
+
+  let accordion = document.getElementById("materialsAccordion");
+  if (!accordion) {
+    accordion = document.createElement("div");
+    accordion.id = "materialsAccordion";
+    accordion.className = "program-accordion";
+    host.appendChild(accordion);
+  }
+
+  table.style.display = "none";
+
+  if (!Array.isArray(items) || items.length === 0) {
+    accordion.innerHTML = `<p class="status-text">No materials found.</p>`;
+    return;
+  }
+
+  const grouped = items.reduce((acc, item) => {
+    const programName = item.program?.name || item.program || "Unknown Program";
+    if (!acc[programName]) acc[programName] = [];
+    acc[programName].push(item);
+    return acc;
+  }, {});
+
+  const groupNames = Object.keys(grouped).sort((a, b) => a.localeCompare(b));
+
+  accordion.innerHTML = groupNames
+    .map((programName, index) => {
+      const panelId = `materialsPanel${index}`;
+      const rows = grouped[programName]
+        .map((item) => `
+          <tr>
+            <td>${escapeHtml(item.title)}</td>
+            <td>${escapeHtml(item.program?.name || item.program)}</td>
+            <td>${escapeHtml(item.level)}</td>
+            <td>${escapeHtml(item.semester)}</td>
+            <td><a href="${escapeHtml(item.fileUrl)}" target="_blank">Download</a></td>
+            <td>
+              <button class="action-btn" data-edit="${escapeHtml(item._id)}">Edit</button>
+              <button class="action-btn danger" data-delete="${escapeHtml(item._id)}">Delete</button>
+            </td>
+          </tr>
+        `)
+        .join("");
+
+      return `
+        <article class="program-accordion-item">
+          <button type="button" class="program-accordion-header" data-accordion-target="${panelId}" aria-expanded="false">
+            <span class="program-accordion-title">
+              <span class="program-accordion-arrow">▶</span>
+              <span>${escapeHtml(programName)}</span>
+            </span>
+            <span class="program-accordion-count">(${grouped[programName].length})</span>
+          </button>
+          <div id="${panelId}" class="program-accordion-panel" hidden>
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Program</th>
+                  <th>Level</th>
+                  <th>Semester</th>
+                  <th>File</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+
+  wireAccordion(accordion);
+
+  accordion.querySelectorAll("[data-delete]").forEach((btn) => {
+    btn.addEventListener("click", () => deleteItem(btn.dataset.delete));
+  });
+  accordion.querySelectorAll("[data-edit]").forEach((btn) => {
+    btn.addEventListener("click", () => editItem(btn.dataset.edit));
+  });
 }
 
 async function loadCourses(selectEl) {
@@ -156,32 +286,7 @@ async function loadMaterials() {
   }
 
   setStatus("listStatus", "", false, false, false);
-  const tbody = document.getElementById("materialsTableBody");
-  if (!tbody) return;
-  tbody.innerHTML = data
-    .map((item) => {
-      return `
-        <tr>
-          <td>${item.title}</td>
-          <td>${item.program?.name || item.program}</td>
-          <td>${item.level}</td>
-          <td>${item.semester}</td>
-          <td><a href="${item.fileUrl}" target="_blank">Download</a></td>
-          <td>
-            <button class="action-btn" data-edit="${item._id}">Edit</button>
-            <button class="action-btn danger" data-delete="${item._id}">Delete</button>
-          </td>
-        </tr>
-      `;
-    })
-    .join("");
-
-  tbody.querySelectorAll("[data-delete]").forEach((btn) => {
-    btn.addEventListener("click", () => deleteItem(btn.dataset.delete));
-  });
-  tbody.querySelectorAll("[data-edit]").forEach((btn) => {
-    btn.addEventListener("click", () => editItem(btn.dataset.edit));
-  });
+  renderMaterialsAccordion(data);
 }
 
 async function deleteItem(id) {

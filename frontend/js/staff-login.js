@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+﻿document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("staffLoginForm");
   const otpForm = document.getElementById("staffOtpForm");
   const resetForm = document.getElementById("staffResetForm");
@@ -159,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const redirectAfterProfileCheck = async () => {
     const token = localStorage.getItem("staffToken");
     if (!token) {
-      window.location.href = "/pages/staff-login.html";
+      window.location.href = "./staff-login.html";
       return;
     }
 
@@ -169,16 +169,16 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       const data = await res.json();
       if (!res.ok) {
-        window.location.href = "/pages/staff-login.html";
+        window.location.href = "./staff-login.html";
         return;
       }
       if (!data.profileCompleted) {
-        window.location.href = "/pages/staff-profile.html";
+        window.location.href = "./staff-profile.html";
       } else {
-        window.location.href = "/pages/staff-dashboard.html";
+        window.location.href = "./staff-dashboard.html";
       }
     } catch (err) {
-      window.location.href = "/pages/staff-login.html";
+      window.location.href = "./staff-login.html";
     }
   };
 
@@ -213,3 +213,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+

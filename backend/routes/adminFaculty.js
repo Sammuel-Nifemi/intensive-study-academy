@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const Faculty = require("../models/Faculty");
-const authAdmin = require("../middleware/authAdmin");
+const requireAdmin = require("../middleware/requireAdmin");
+const requireAdminOrStaff = require("../middleware/requireAdminOrStaff");
 
 // CREATE
-router.post("/faculties", authAdmin, async (req, res) => {
+router.post("/faculties", requireAdmin, async (req, res) => {
   try {
     const name = String(req.body.name || "").trim();
     if (!name) {
@@ -31,13 +32,13 @@ router.post("/faculties", authAdmin, async (req, res) => {
 });
 
 // READ
-router.get("/faculties", authAdmin, async (req, res) => {
+router.get("/faculties", requireAdminOrStaff, async (req, res) => {
   const faculties = await Faculty.find().sort({ createdAt: -1 });
   res.json(faculties);
 });
 
 // DELETE
-router.delete("/faculties/:id", authAdmin, async (req, res) => {
+router.delete("/faculties/:id", requireAdmin, async (req, res) => {
   await Faculty.findByIdAndDelete(req.params.id);
   res.json({ success: true });
 });

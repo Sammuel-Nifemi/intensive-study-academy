@@ -312,3 +312,285 @@ async function deleteProgram(id) {
   showToast("Program deleted");
   await loadPrograms();
 }
+
+function escapeAccordionHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function wireCentersAccordion(container) {
+  container.querySelectorAll(".program-accordion-header").forEach((header) => {
+    header.addEventListener("click", () => {
+      const targetId = header.dataset.accordionTarget;
+      if (!targetId) return;
+
+      const panel = document.getElementById(targetId);
+      if (!panel) return;
+
+      const isOpening = panel.hidden;
+      container.querySelectorAll(".program-accordion-panel").forEach((item) => {
+        item.hidden = true;
+      });
+      container.querySelectorAll(".program-accordion-header").forEach((item) => {
+        item.classList.remove("active");
+        item.setAttribute("aria-expanded", "false");
+      });
+
+      if (isOpening) {
+        panel.hidden = false;
+        header.classList.add("active");
+        header.setAttribute("aria-expanded", "true");
+      }
+    });
+  });
+}
+
+function renderStudyCentersAccordion(centers) {
+  const tbody = document.getElementById("centersTableBody");
+  if (!tbody) return;
+
+  const table = tbody.closest("table");
+  const host = table?.parentElement;
+  if (!table || !host) return;
+
+  let accordion = document.getElementById("centersAccordion");
+  if (!accordion) {
+    accordion = document.createElement("div");
+    accordion.id = "centersAccordion";
+    accordion.className = "program-accordion";
+    host.appendChild(accordion);
+  }
+
+  table.style.display = "none";
+
+  if (!Array.isArray(centers) || centers.length === 0) {
+    accordion.innerHTML = `<p class="status-text">No study centers found.</p>`;
+    return;
+  }
+
+  const grouped = centers.reduce((acc, center) => {
+    const city = String(center.city || "Unknown");
+    if (!acc[city]) acc[city] = [];
+    acc[city].push(center);
+    return acc;
+  }, {});
+
+  const cities = Object.keys(grouped).sort((a, b) => a.localeCompare(b));
+
+  accordion.innerHTML = cities
+    .map((city, index) => {
+      const panelId = `centersPanel${index}`;
+      const rows = grouped[city]
+        .map(
+          (center) => `
+            <tr>
+              <td>${escapeAccordionHtml(center.name)}</td>
+              <td>${escapeAccordionHtml(center.city || "-")}</td>
+              <td>
+                <button class="action-btn danger" data-delete="${escapeAccordionHtml(center._id)}">Delete</button>
+              </td>
+            </tr>
+          `
+        )
+        .join("");
+
+      return `
+        <article class="program-accordion-item">
+          <button type="button" class="program-accordion-header" data-accordion-target="${panelId}" aria-expanded="false">
+            <span class="program-accordion-title">
+              <span class="program-accordion-arrow">▶</span>
+              <span>${escapeAccordionHtml(city)}</span>
+            </span>
+            <span class="program-accordion-count">(${grouped[city].length})</span>
+          </button>
+          <div id="${panelId}" class="program-accordion-panel" hidden>
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>City</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+
+  wireCentersAccordion(accordion);
+
+  accordion.querySelectorAll("[data-delete]").forEach((btn) => {
+    btn.addEventListener("click", () => deleteStudyCenter(btn.dataset.delete));
+  });
+}
+
+function renderStudyCenters(searchTerm) {
+  const term = String(searchTerm || "").toLowerCase();
+  const filtered = state.centers.filter((c) => {
+    const name = String(c.name || "").toLowerCase();
+    const city = String(c.city || "").toLowerCase();
+    return !term || name.includes(term) || city.includes(term);
+  });
+
+  renderStudyCentersAccordion(filtered);
+}
+
+function renderFacultiesAccordion(faculties) {
+  const tbody = document.getElementById("facultiesTableBody");
+  if (!tbody) return;
+
+  const table = tbody.closest("table");
+  const host = table?.parentElement;
+  if (!table || !host) return;
+
+  let accordion = document.getElementById("facultiesAccordion");
+  if (!accordion) {
+    accordion = document.createElement("div");
+    accordion.id = "facultiesAccordion";
+    accordion.className = "program-accordion";
+    host.appendChild(accordion);
+  }
+
+  table.style.display = "none";
+
+  if (!Array.isArray(faculties) || faculties.length === 0) {
+    accordion.innerHTML = `<p class="status-text">No faculties found.</p>`;
+    return;
+  }
+
+  accordion.innerHTML = faculties
+    .map((faculty, index) => {
+      const panelId = `facultyPanel${index}`;
+      return `
+        <article class="program-accordion-item">
+          <button type="button" class="program-accordion-header" data-accordion-target="${panelId}" aria-expanded="false">
+            <span class="program-accordion-title">
+              <span class="program-accordion-arrow">▶</span>
+              <span>${escapeAccordionHtml(faculty.name)}</span>
+            </span>
+            <span class="program-accordion-count">(1)</span>
+          </button>
+          <div id="${panelId}" class="program-accordion-panel" hidden>
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Faculty</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>${escapeAccordionHtml(faculty.name)}</td>
+                  <td>
+                    <button class="action-btn danger" data-delete="${escapeAccordionHtml(faculty._id)}">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+
+  wireCentersAccordion(accordion);
+  accordion.querySelectorAll("[data-delete]").forEach((btn) => {
+    btn.addEventListener("click", () => deleteFaculty(btn.dataset.delete));
+  });
+}
+
+function renderProgramsAccordion(programs) {
+  const tbody = document.getElementById("programsTableBody");
+  if (!tbody) return;
+
+  const table = tbody.closest("table");
+  const host = table?.parentElement;
+  if (!table || !host) return;
+
+  let accordion = document.getElementById("programsAccordion");
+  if (!accordion) {
+    accordion = document.createElement("div");
+    accordion.id = "programsAccordion";
+    accordion.className = "program-accordion";
+    host.appendChild(accordion);
+  }
+
+  table.style.display = "none";
+
+  if (!Array.isArray(programs) || programs.length === 0) {
+    accordion.innerHTML = `<p class="status-text">No programs found.</p>`;
+    return;
+  }
+
+  const grouped = programs.reduce((acc, program) => {
+    const faculty = String(program.facultyName || "Unassigned");
+    if (!acc[faculty]) acc[faculty] = [];
+    acc[faculty].push(program);
+    return acc;
+  }, {});
+
+  const faculties = Object.keys(grouped).sort((a, b) => a.localeCompare(b));
+
+  accordion.innerHTML = faculties
+    .map((faculty, index) => {
+      const panelId = `programPanel${index}`;
+      const rows = grouped[faculty]
+        .map(
+          (program) => `
+            <tr>
+              <td>${escapeAccordionHtml(program.name)}</td>
+              <td>${escapeAccordionHtml(program.facultyName || "-")}</td>
+              <td>
+                <button class="action-btn danger" data-delete="${escapeAccordionHtml(program._id)}">Delete</button>
+              </td>
+            </tr>
+          `
+        )
+        .join("");
+
+      return `
+        <article class="program-accordion-item">
+          <button type="button" class="program-accordion-header" data-accordion-target="${panelId}" aria-expanded="false">
+            <span class="program-accordion-title">
+              <span class="program-accordion-arrow">▶</span>
+              <span>${escapeAccordionHtml(faculty)}</span>
+            </span>
+            <span class="program-accordion-count">(${grouped[faculty].length})</span>
+          </button>
+          <div id="${panelId}" class="program-accordion-panel" hidden>
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Program</th>
+                  <th>Faculty</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+
+  wireCentersAccordion(accordion);
+  accordion.querySelectorAll("[data-delete]").forEach((btn) => {
+    btn.addEventListener("click", () => deleteProgram(btn.dataset.delete));
+  });
+}
+
+function renderFaculties() {
+  renderFacultiesAccordion(state.faculties);
+}
+
+function renderPrograms() {
+  renderProgramsAccordion(state.programs);
+}
