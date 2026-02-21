@@ -172,6 +172,10 @@ app.get("/", (req, res) => {
   res.send("API running...");
 });
 
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok" });
+});
+
 // ⚠️ TEMP ADMIN CREATOR — REMOVE AFTER USE
 app.get("/__seed_admin", async (req, res) => {
   try {
