@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("studentToken", data.token);
 
       // 🚀 redirect
-      window.location.href = "/frontend/pages/student-dashboard.html";
+      window.location.href = "/pages/student-dashboard.html";
 
     } catch (err) {
       console.error(err);
