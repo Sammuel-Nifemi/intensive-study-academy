@@ -1,6 +1,7 @@
 const cron = require("node-cron");
 const User = require("../models/User");
 const { notifyUsers } = require("./notifyUsers");
+const { sendMail } = require("./mailer");
 
 function formatDate(date) {
   return date.toLocaleDateString("en-US", {
@@ -74,6 +75,14 @@ async function runBirthdayNotifications() {
           userMessage,
           { userId: user._id }
         );
+      }
+
+      if (user.email) {
+        await sendMail({
+          to: user.email,
+          subject: "Happy Birthday from Intensive Study Academy",
+          text: `Happy Birthday, ${user.fullName || "Student"}! Wishing you a wonderful year ahead.`
+        });
       }
     }
   }

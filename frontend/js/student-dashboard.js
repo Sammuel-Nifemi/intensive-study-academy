@@ -1,5 +1,5 @@
 (() => {
-  
+  const STUDENT_LOGIN_URL = "/frontend/pages/student-login.html";
 
   const applyTheme = () => {
     const theme = localStorage.getItem("theme") || "classic";
@@ -132,13 +132,14 @@
     try {
       const app = document.getElementById("dashboardApp");
       const loader = document.getElementById("dashboardLoader");
-      if (loader) loader.style.display = "none";
-      if (app) app.style.display = "block";
+      if (loader) loader.style.display = "block";
+      if (app) app.style.display = "none";
 
       applyTheme();
 
       const token = localStorage.getItem("studentToken");
       if (!token) {
+        window.location.href = STUDENT_LOGIN_URL;
         return;
       }
       setupReviewModal();
@@ -147,18 +148,34 @@
       if (cached) {
         renderProfile(cached);
         if (window.hydrateStudentHeader) window.hydrateStudentHeader(cached);
+        if (loader) loader.style.display = "none";
+        if (app) app.style.display = "block";
       }
 
       const profile = window.loadStudent
-        ? await window.loadStudent({ force: !cached })
+        ? await window.loadStudent({ force: true })
         : cached;
 
       if (profile) {
         renderProfile(profile);
         if (window.hydrateStudentHeader) window.hydrateStudentHeader(profile);
+      } else if (!cached) {
+        safeText("studentName", `${getGreeting()}, Student`);
+        safeText("profileTitle", "-");
+        safeText("profileName", "Student");
+        safeText("profileGender", "-");
+        safeText("profileEmail", "-");
+        safeText("profilePhone", "-");
       }
+
+      if (loader) loader.style.display = "none";
+      if (app) app.style.display = "block";
     } catch (err) {
       console.error("Student dashboard boot error", err);
+      const app = document.getElementById("dashboardApp");
+      const loader = document.getElementById("dashboardLoader");
+      if (loader) loader.style.display = "none";
+      if (app) app.style.display = "block";
     }
   };
 
@@ -170,4 +187,3 @@
     }
   });
 })();
-

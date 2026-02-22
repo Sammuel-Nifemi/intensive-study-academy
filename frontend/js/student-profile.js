@@ -1,11 +1,21 @@
+const STUDENT_LOGIN_URL = "/frontend/pages/student-login.html";
+
 document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("studentToken");
   if (!token) {
-    window.location.href = "/pages/student-login.html";
+    window.location.href = STUDENT_LOGIN_URL;
     return;
   }
 
   applyTheme();
+  setText("profileName", "Loading...");
+  setText("profileTitle", "-");
+  setText("profilePhone", "-");
+  setText("profileStudyCenter", "-");
+  setText("profileFaculty", "-");
+  setText("profileProgram", "-");
+  setText("profileLevel", "-");
+  setText("profileSemester", "-");
 
   try {
     const cached = window.readStudentCache ? window.readStudentCache() : null;
@@ -14,11 +24,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (window.hydrateStudentHeader) window.hydrateStudentHeader(cached);
     }
 
-    const profile = window.loadStudent ? await window.loadStudent({ force: !cached }) : null;
+    const profile = window.loadStudent ? await window.loadStudent({ force: true }) : null;
     if (!profile) {
-      if (!cached) {
-        window.location.href = "/pages/student-login.html";
-      }
+      if (!cached) setText("profileName", "Student");
       return;
     }
 
@@ -32,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     localStorage.removeItem("studentToken");
     localStorage.removeItem("studentProfileCache");
     localStorage.removeItem("studentProfileCacheToken");
-    window.location.href = "/pages/student-login.html";
+    window.location.href = STUDENT_LOGIN_URL;
   });
 });
 
@@ -43,7 +51,7 @@ function applyTheme() {
 
 function setText(id, value) {
   const el = document.getElementById(id);
-  if (el) el.textContent = value ?? "—";
+  if (el) el.textContent = value ?? "-";
 }
 
 function renderProfile(profile) {
@@ -60,4 +68,3 @@ function renderProfile(profile) {
   setText("profileLevel", profile?.level);
   setText("profileSemester", profile?.semester);
 }
-
