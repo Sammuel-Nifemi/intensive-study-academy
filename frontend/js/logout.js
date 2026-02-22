@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("role");
     localStorage.removeItem("user");
-    window.location.href = "/frontend/pages/student-login.html";
+    window.location.href = "/pages/student-login.html";
   };
 
   logoutButtons.forEach((button) => {

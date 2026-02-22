@@ -1,5 +1,5 @@
 (() => {
-  const API_BASE = (window.ISA_API_ORIGIN || "") + "";
+  
 
   const applyTheme = () => {
     const theme = localStorage.getItem("theme") || "classic";
@@ -32,8 +32,8 @@
         <h2>Course Registration Status</h2>
         <p>Have you registered your courses on the NOUN portal yet?</p>
         <div class="directive-actions">
-          <a class="primary-btn" href="/frontend/pages/select-courses.html">Select My Courses</a>
-          <a class="secondary-btn" href="/frontend/pages/fees.html">Use Fee Analyzer (Guide)</a>
+          <a class="primary-btn" href="/pages/select-courses.html">Select My Courses</a>
+          <a class="secondary-btn" href="/pages/fees.html">Use Fee Analyzer (Guide)</a>
         </div>
         <div class="directive-hints">
           <p><strong>Select My Courses:</strong> Choose your registered courses to unlock materials and mocks.</p>
@@ -52,7 +52,7 @@
       <p>Great! You have already selected your courses for this semester.</p>
       <ul class="activity-list">${list}</ul>
       <div class="directive-actions">
-        <a class="secondary-btn" href="/frontend/pages/select-courses.html">Edit Course Selection</a>
+        <a class="secondary-btn" href="/pages/select-courses.html">Edit Course Selection</a>
       </div>
     `;
   };
@@ -100,7 +100,7 @@
       status.textContent = "Submitting...";
       submitBtn.disabled = true;
       try {
-        const res = await fetch(`${API_BASE}/api/student/review`, {
+        const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/student/review`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

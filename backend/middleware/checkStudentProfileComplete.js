@@ -14,7 +14,7 @@ module.exports = async (req, res, next) => {
     if (!student) {
       return res.status(403).json({
         message: "Student profile not found",
-        redirectUrl: "/frontend/pages/complete-profile.html"
+        redirectUrl: "/pages/complete-profile.html"
       });
     }
 
@@ -26,7 +26,7 @@ module.exports = async (req, res, next) => {
     if (!profileCompleted) {
       return res.status(403).json({
         message: "Complete your profile to continue",
-        redirectUrl: "/frontend/pages/complete-profile.html"
+        redirectUrl: "/pages/complete-profile.html"
       });
     }
 

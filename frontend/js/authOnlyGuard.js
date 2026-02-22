@@ -4,7 +4,7 @@
   window.NOTIFICATION_TOKEN = token;
 
   if (!token) {
-    window.location.href = "/frontend/pages/student-login.html";
+    window.location.href = "/pages/student-login.html";
   }
 })();
 

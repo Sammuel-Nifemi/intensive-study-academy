@@ -1,9 +1,9 @@
 const token = localStorage.getItem("studentToken");
 if (!token) {
-  window.location.href = "/frontend/pages/student-login.html";
+  window.location.href = "/pages/student-login.html";
 }
 
-const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/cbt";
+
 
 function setStatus(message) {
   const el = document.getElementById("historyStatus");
@@ -50,7 +50,7 @@ function renderHistory(data) {
 
 async function loadHistory() {
   try {
-    const res = await fetch(`${API_BASE}/me/history`, {
+    const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "/api/cbt")}/me/history`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await res.json();

@@ -38,7 +38,7 @@ signInForm.addEventListener("submit", function (e) {
 
   if (profile) {
     // Returning student → dashboard
-    window.location.href = "/frontend/pages/student-dashboard.html";
+    window.location.href = "/pages/student-dashboard.html";
   } else {
     // First-time student → setup
     window.location.href = "student-setup.html";

@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const API_BASE = window.ISA_API_BASE || (window.ISA_API_ORIGIN || "") + "/api";
+  
 
   const form = document.getElementById("adminLoginForm");
   const msg = document.getElementById("msg");
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     msg.textContent = "Logging in...";
 
     try {
-      const res = await fetch(`${API_BASE}/auth/admin/login`, {
+      const res = await fetch(`${(window.ISA_API_BASE || (window.ISA_API_ORIGIN || "") + "/api")}/auth/admin/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

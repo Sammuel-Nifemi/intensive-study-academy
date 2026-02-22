@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("studentToken");
 
   if (!token) {
-    window.location.href = "/frontend/pages/student-login.html";
+    window.location.href = "/pages/student-login.html";
     return;
   }
 
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       setTimeout(() => {
-        window.location.href = "/frontend/pages/student-dashboard.html";
+        window.location.href = "/pages/student-dashboard.html";
       }, 1400);
     } catch (err) {
       console.error(err);

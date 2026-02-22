@@ -18,7 +18,7 @@ async function fetchJson(url, options = {}) {
   return { res, data };
 }
 
-const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/admin/course-materials";
+
 const COURSES_API = (window.ISA_API_ORIGIN || "") + "/api/admin/public/courses";
 
 const facultySelect = document.getElementById("facultySelect");
@@ -242,7 +242,7 @@ async function uploadMaterials() {
   Array.from(files).forEach((file) => formData.append("files", file));
 
   setStatus("uploadStatus", "Uploading...", false, true, false);
-  const { res, data } = await fetchJson(API_BASE, {
+  const { res, data } = await fetchJson(((window.ISA_API_ORIGIN || "") + "/api/admin/course-materials"), {
     method: "POST",
     body: formData
   });
@@ -279,7 +279,7 @@ function buildQuery() {
 
 async function loadMaterials() {
   setStatus("listStatus", "Loading...", false, true, false);
-  const { res, data } = await fetchJson(`${API_BASE}${buildQuery()}`);
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin/course-materials")}${buildQuery()}`);
   if (!res.ok) {
     setStatus("listStatus", data.message || "Failed to load materials", true, false, false);
     return;
@@ -291,7 +291,7 @@ async function loadMaterials() {
 
 async function deleteItem(id) {
   if (!id || !confirm("Delete this material?")) return;
-  const { res, data } = await fetchJson(`${API_BASE}/${id}`, { method: "DELETE" });
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin/course-materials")}/${id}`, { method: "DELETE" });
   if (!res.ok) {
     alert(data.message || "Delete failed");
     return;
@@ -307,7 +307,7 @@ async function editItem(id) {
   if (description) payload.description = description;
   if (!Object.keys(payload).length) return;
 
-  const { res, data } = await fetchJson(`${API_BASE}/${id}`, {
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin/course-materials")}/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)

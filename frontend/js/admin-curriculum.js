@@ -1,4 +1,4 @@
-const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/admin/program-courses";
+
 const COURSE_API = (window.ISA_API_ORIGIN || "") + "/api/admin/courses";
 
 const courseSelect = document.getElementById("courseSelect");
@@ -65,7 +65,7 @@ async function assignCourse() {
   }
 
   setStatus("formStatus", "Saving...");
-  const { res, data } = await fetchJson(API_BASE, {
+  const { res, data } = await fetchJson(((window.ISA_API_ORIGIN || "") + "/api/admin/program-courses"), {
     method: "POST",
     body: JSON.stringify(payload)
   });
@@ -82,7 +82,7 @@ async function assignCourse() {
 
 async function loadProgramCourses() {
   setStatus("listStatus", "Loading...");
-  const { res, data } = await fetchJson(API_BASE);
+  const { res, data } = await fetchJson(((window.ISA_API_ORIGIN || "") + "/api/admin/program-courses"));
   if (!res.ok) {
     setStatus("listStatus", data.message || "Failed to load program courses", true);
     return;
@@ -189,7 +189,7 @@ async function loadProgramCourses() {
 
 async function deleteProgramCourse(id) {
   if (!id || !confirm("Delete this assignment?")) return;
-  const { res, data } = await fetchJson(`${API_BASE}/${id}`, { method: "DELETE" });
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin/program-courses")}/${id}`, { method: "DELETE" });
   if (!res.ok) {
     alert(data.message || "Delete failed");
     return;

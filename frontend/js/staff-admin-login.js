@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const msg = document.getElementById("msg");
   const passwordInput = document.getElementById("password");
   const togglePassword = document.getElementById("togglePassword");
-  const API_BASE = window.ISA_API_BASE || (window.ISA_API_ORIGIN || "") + "/api";
+  
 
   if (togglePassword && passwordInput) {
     togglePassword.addEventListener("click", () => {
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     msg.textContent = "Logging in...";
 
     try {
-      const res = await fetch(`${API_BASE}/auth/staff/login`, {
+      const res = await fetch(`${(window.ISA_API_BASE || (window.ISA_API_ORIGIN || "") + "/api")}/auth/staff/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })

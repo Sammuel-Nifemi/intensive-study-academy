@@ -10,9 +10,136 @@
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
   />
-<script src="../js/api-base.js"></script>
+  <script src="../js/api-base.js"></script>
+  <style>
+    .page-live-classes .dashboard-main {
+      padding: 30px 34px 40px;
+    }
+    .page-live-classes .page-header {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-bottom: 14px;
+    }
+    .page-live-classes .page-header h1 {
+      margin-bottom: 6px;
+    }
+    .page-live-classes .dashboard-section {
+      padding: 22px;
+    }
+    .isa-notice-card {
+      background: #fef9c3;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      padding: 12px 14px;
+      color: #713f12;
+      border: 1px solid #fde68a;
+      line-height: 1.45;
+    }
+    .live-empty-card {
+      max-width: 560px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 20px 16px;
+      border-radius: 12px;
+      border: 1px solid #dbe4f0;
+      background: #f8fafc;
+      color: #1e293b;
+    }
+    .live-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    .session-type-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-bottom: 12px;
+    }
+    .session-type-card {
+      border: 1px solid #dbe4f0;
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+    }
+    .session-type-card input {
+      margin-right: 8px;
+    }
+    .session-type-card p {
+      margin: 6px 0 0;
+      color: #475569;
+      font-size: 0.94rem;
+    }
+    .booking-form {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: #fff;
+      padding: 16px;
+    }
+    .booking-form .form-row {
+      margin-bottom: 12px;
+    }
+    .booking-form label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #0f172a;
+    }
+    .booking-form input,
+    .booking-form select,
+    .booking-form textarea {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font: inherit;
+      background: #fff;
+    }
+    .booking-form textarea {
+      resize: vertical;
+      min-height: 88px;
+    }
+    .booking-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .booking-response {
+      min-height: 22px;
+      margin-top: 10px;
+      color: #065f46;
+      font-weight: 600;
+    }
+    .whatsapp-help {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      color: #065f46;
+      border: 1px solid #86efac;
+      background: #f0fdf4;
+      border-radius: 999px;
+      padding: 8px 12px;
+    }
+    .whatsapp-help i {
+      color: #16a34a;
+    }
+    @media (max-width: 900px) {
+      .page-live-classes .dashboard-main {
+        padding: 22px 20px 30px;
+      }
+      .page-live-classes .page-header,
+      .page-live-classes .dashboard-section {
+        padding: 16px;
+      }
+    }
+  </style>
 </head>
-<body class="page-student-dashboard">
+<body class="page-student-dashboard page-live-classes">
 
 <header class="dashboard-header">
   <div class="header-container">
@@ -58,17 +185,17 @@
       <h1>Live Classes</h1>
       <p>Live classes are structured academic sessions designed to provide focused support.</p>
     </section>
+    <section class="isa-notice-card" role="status" aria-live="polite">
+      &#128679; Some features are still being improved.<br>
+      Relax &mdash; your data is safe.<br>
+      If you need help, contact support.
+    </section>
 
     <section class="dashboard-section">
       <h2>Live Classes Overview</h2>
       <p>
-        Live classes are structured academic sessions designed to provide
-        focused support for specific courses. All sessions are booking-based
-        and require confirmation before attendance.
-      </p>
-      <p>
-        <strong>Note:</strong> Free or open sessions may be announced occasionally.
-        Regular live classes are paid and scheduled.
+        Choose either a personal one-on-one class or a group class.
+        Select your course, preferred date, and preferred time to request a booking.
       </p>
     </section>
 
@@ -79,89 +206,80 @@
 
     <section class="dashboard-section">
       <h3>Session Types</h3>
-      <div class="modules-grid">
-        <div class="module-card">
-          <h4>Individual Session (1-on-1)</h4>
-          <p><strong>Duration:</strong> 1 Hour</p>
-          <p><strong>Fee:</strong> ?1,000</p>
-          <ul>
-            <li>Personalised explanation</li>
-            <li>Exam-focused tips</li>
-            <li>Private Q&A</li>
-            <li>Study strategy guidance</li>
-          </ul>
-        </div>
-
-        <div class="module-card">
-          <h4>Group Session (Max 5 students)</h4>
-          <p><strong>Duration:</strong> 1 – 1.5 Hours</p>
-          <p><strong>Fee:</strong> ?500 per student</p>
-          <ul>
-            <li>Shared explanation</li>
-            <li>Collaborative learning</li>
-            <li>Group Q&A</li>
-            <li>Same course code required</li>
-          </ul>
-        </div>
+      <div class="session-type-grid">
+        <article class="session-type-card">
+          <h4>Personal Session (1-on-1)</h4>
+          <p>Focused private guidance for one student.</p>
+        </article>
+        <article class="session-type-card">
+          <h4>Group Session (Max 5)</h4>
+          <p>Collaborative session for students taking the same course.</p>
+        </article>
       </div>
     </section>
 
     <section class="dashboard-section">
       <h3>Book a Live Session</h3>
-      <form class="summary-box">
-        <p>
-          <label>
-            <strong>Session Type:</strong><br>
-            <input type="radio" name="sessionType" required> Individual (?1,000)
-            <br>
-            <input type="radio" name="sessionType"> Group (?500 per student)
-          </label>
-        </p>
+      <form id="liveBookingForm" class="booking-form">
+        <div class="form-row">
+          <label>Session Type</label>
+          <div class="session-type-grid">
+            <label class="session-type-card" for="sessionTypePersonal">
+              <input id="sessionTypePersonal" type="radio" name="sessionType" value="personal" required>
+              Personal
+              <p>One-on-one support with a tutor.</p>
+            </label>
+            <label class="session-type-card" for="sessionTypeGroup">
+              <input id="sessionTypeGroup" type="radio" name="sessionType" value="group" required>
+              Group
+              <p>Shared session with up to 5 students.</p>
+            </label>
+          </div>
+        </div>
 
-        <p>
-          <label>
-            <strong>Course Code:</strong><br>
-            <input type="text" placeholder="e.g. GST105" required>
-          </label>
-        </p>
+        <div class="form-row">
+          <label for="liveCourseCode">Course</label>
+          <select id="liveCourseCode" name="courseCode" required>
+            <option value="">Loading courses...</option>
+          </select>
+        </div>
 
-        <p>
-          <label>
-            <strong>Preferred Day:</strong><br>
-            <select required>
-              <option value="">Select a day</option>
-              <option>Monday</option>
-              <option>Tuesday</option>
-              <option>Wednesday</option>
-              <option>Thursday</option>
-              <option>Friday</option>
-              <option>Saturday</option>
-            </select>
-          </label>
-        </p>
+        <div class="form-row">
+          <label for="preferredDate">Preferred Date</label>
+          <input id="preferredDate" name="preferredDate" type="date" required>
+        </div>
 
-        <p>
-          <label>
-            <strong>Preferred Time:</strong><br>
-            <select required>
-              <option value="">Select time</option>
-              <option>10:00 AM – 11:00 AM</option>
-              <option>12:00 PM – 1:00 PM</option>
-              <option>3:00 PM – 4:00 PM</option>
-              <option>6:00 PM – 7:00 PM</option>
-              <option>8:00 PM – 9:00 PM</option>
-            </select>
-          </label>
-        </p>
+        <div class="form-row">
+          <label for="preferredTime">Preferred Time</label>
+          <select id="preferredTime" name="preferredTime" required>
+            <option value="">Select time</option>
+            <option value="10:00 AM - 11:00 AM">10:00 AM - 11:00 AM</option>
+            <option value="12:00 PM - 1:00 PM">12:00 PM - 1:00 PM</option>
+            <option value="3:00 PM - 4:00 PM">3:00 PM - 4:00 PM</option>
+            <option value="6:00 PM - 7:00 PM">6:00 PM - 7:00 PM</option>
+            <option value="8:00 PM - 9:00 PM">8:00 PM - 9:00 PM</option>
+          </select>
+        </div>
 
-        <p>
-          <label>
-            <strong>Additional Notes (optional):</strong><br>
-            <textarea rows="3" placeholder="Specific topic, exam focus, or concerns"></textarea>
-          </label>
-        </p>
+        <div class="form-row">
+          <label for="bookingNotes">Additional Notes (Optional)</label>
+          <textarea id="bookingNotes" name="notes" placeholder="Specific topic, exam focus, or concerns"></textarea>
+        </div>
 
-        <button type="submit">Submit Booking Request</button>
+        <div class="booking-actions">
+          <button class="primary-btn" type="submit">Submit Booking Request</button>
+          <a
+            class="whatsapp-help"
+            href="https://wa.me/2348127796978"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Chat with support on WhatsApp"
+          >
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+            WhatsApp Support
+          </a>
+        </div>
+        <p id="bookingResponse" class="booking-response" role="status" aria-live="polite"></p>
       </form>
     </section>
   </main>
@@ -188,50 +306,102 @@
   document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("studentToken");
     const container = document.getElementById("liveClassesContainer");
+    const courseSelect = document.getElementById("liveCourseCode");
+    const bookingForm = document.getElementById("liveBookingForm");
+    const bookingResponse = document.getElementById("bookingResponse");
+
     if (!container) return;
 
-    if (!token) {
-      container.textContent = "No live classes scheduled for your registered courses.";
-      return;
-    }
+    const renderEmptyState = () => {
+      container.innerHTML = `
+        <div class="live-empty-card">
+          <p>No live classes scheduled yet.</p>
+          <p>Book a private or group session below.</p>
+        </div>
+      `;
+    };
 
     try {
       const res = await fetch((window.ISA_API_ORIGIN || "") + "/student/live-classes", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
-
-      const classes = await res.json();
+      const classes = await res.json().catch(() => []);
 
       if (!res.ok || !Array.isArray(classes) || classes.length === 0) {
-        container.textContent = "No live classes scheduled for your registered courses.";
-        return;
-      }
-
-      container.innerHTML = classes.map(c => {
-        const date = c.date ? new Date(c.date).toLocaleDateString() : "";
-        return `
-          <div class="dashboard-card">
-            <h3>${c.title || "Live Class"}</h3>
-            <p><strong>Date:</strong> ${date}</p>
-            <p><strong>Time:</strong> ${c.start_time} – ${c.end_time}</p>
-            <a class="primary-btn" href="${c.meeting_link}" target="_blank" rel="noopener noreferrer">Join Class</a>
+        renderEmptyState();
+      } else {
+        container.innerHTML = `
+          <div class="live-grid">
+            ${classes.map((c) => {
+              const date = c.date ? new Date(c.date).toLocaleDateString() : "TBA";
+              return `
+                <article class="dashboard-card">
+                  <h3>${c.title || "Live Class"}</h3>
+                  <p><strong>Date:</strong> ${date}</p>
+                  <p><strong>Time:</strong> ${c.start_time || "TBA"} - ${c.end_time || "TBA"}</p>
+                  ${c.meeting_link ? `<a class="primary-btn" href="${c.meeting_link}" target="_blank" rel="noopener noreferrer">Join Class</a>` : ""}
+                </article>
+              `;
+            }).join("")}
           </div>
         `;
-      }).join("");
+      }
     } catch (err) {
       console.error(err);
-      container.textContent = "No live classes scheduled for your registered courses.";
+      renderEmptyState();
     }
+
+    try {
+      const resCourses = await fetch((window.ISA_API_ORIGIN || "") + "/api/courses", {
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
+      });
+      const dataCourses = await resCourses.json().catch(() => []);
+      const rows = Array.isArray(dataCourses) ? dataCourses : [];
+
+      if (courseSelect) {
+        if (!rows.length) {
+          courseSelect.innerHTML = `<option value="">No courses available</option>`;
+        } else {
+          courseSelect.innerHTML = [
+            `<option value="">Select course</option>`,
+            ...rows.map((item) => {
+              const code = String(item.courseCode || item.code || "").trim().toUpperCase();
+              const title = String(item.title || item.name || "").trim();
+              if (!code) return "";
+              const label = title ? `${code} - ${title}` : code;
+              return `<option value="${code}">${label}</option>`;
+            })
+          ].join("");
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load courses:", err);
+      if (courseSelect) {
+        courseSelect.innerHTML = `<option value="">No courses available</option>`;
+      }
+    }
+
+    bookingForm?.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(bookingForm);
+      const bookingPayload = {
+        sessionType: String(formData.get("sessionType") || ""),
+        courseCode: String(formData.get("courseCode") || ""),
+        preferredDate: String(formData.get("preferredDate") || ""),
+        preferredTime: String(formData.get("preferredTime") || ""),
+        notes: String(formData.get("notes") || "").trim()
+      };
+
+      window.__ISA_LIVE_CLASS_BOOKING = bookingPayload;
+      if (bookingResponse) {
+        bookingResponse.textContent = "An Admin would reach out to you.";
+      }
+      bookingForm.reset();
+    });
   });
 </script>
 
-  <script src="../js/theme.js"></script>
+<script src="../js/theme.js"></script>
 </body>
 </html>
-
-
-
-
-

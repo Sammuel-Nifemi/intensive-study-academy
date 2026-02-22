@@ -1,4 +1,4 @@
-const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/admin";
+
 const token = (localStorage.getItem("adminToken") || localStorage.getItem("token"));
 const sessionQuestions = [];
 
@@ -90,7 +90,7 @@ async function deleteFromBank(localId) {
 
   setStatus("Deleting question...", false);
   try {
-    const res = await fetch(`${API_BASE}/question-bank`, {
+    const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "/api/admin")}/question-bank`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -136,7 +136,7 @@ async function addToBank() {
 
   setStatus("Adding question to bank...", false);
   try {
-    const res = await fetch(`${API_BASE}/question-bank`, {
+    const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "/api/admin")}/question-bank`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -184,7 +184,7 @@ async function generateMock() {
 
   setStatus("Generating mock exam...", false);
   try {
-    const res = await fetch(`${API_BASE}/generate-mock`, {
+    const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "/api/admin")}/generate-mock`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

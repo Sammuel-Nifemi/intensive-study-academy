@@ -1,4 +1,4 @@
-const API_BASE = (window.ISA_API_ORIGIN || "") + "";
+
 
 const assignmentsBody = document.getElementById("assignmentsBody");
 const responsesBody = document.getElementById("responsesBody");
@@ -147,10 +147,10 @@ async function fetchAssignments() {
 
   try {
     const [requestsRes, responsesRes] = await Promise.all([
-      fetch(`${API_BASE}/api/assignments`, {
+      fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/assignments`, {
         headers: { Authorization: `Bearer ${token}` }
       }),
-      fetch(`${API_BASE}/api/assignments/responses`, {
+      fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/assignments/responses`, {
         headers: { Authorization: `Bearer ${token}` }
       })
     ]);
@@ -185,7 +185,7 @@ async function updateAssignmentStatus(id, status) {
 
   setStatus("");
   try {
-    const res = await fetch(`${API_BASE}/api/assignments/${id}`, {
+    const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/assignments/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

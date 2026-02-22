@@ -1,4 +1,4 @@
-const API_BASE = (window.ISA_API_ORIGIN || "") + "";
+
 const MATERIAL_CONTEXT_KEY = "aiAssistantMaterialContext";
 const searchInput = document.getElementById("materialsSearch");
 const resultsContainer = document.getElementById("materialsResults");
@@ -43,7 +43,7 @@ function escapeHtml(value) {
 function normalizeFileUrl(fileUrl) {
   if (!fileUrl) return "#";
   if (/^https?:\/\//i.test(fileUrl)) return fileUrl;
-  return `${API_BASE}${fileUrl}`;
+  return `${((window.ISA_API_ORIGIN || "") + "")}${fileUrl}`;
 }
 
 function renderItems(items) {
@@ -106,7 +106,7 @@ function filterMaterials(query = "") {
 
 async function loadMaterials() {
   try {
-    const endpoint = `${API_BASE}/api/materials/public`;
+    const endpoint = `${((window.ISA_API_ORIGIN || "") + "")}/api/materials/public`;
 
     const response = await fetch(endpoint);
     const data = await response.json();
@@ -145,7 +145,7 @@ resultsContainer?.addEventListener("click", (event) => {
   const context = String(btn.getAttribute("data-context") || "").trim();
   if (!context) return;
   localStorage.setItem(MATERIAL_CONTEXT_KEY, context);
-  window.location.href = "/frontend/pages/ai-assistant.html";
+  window.location.href = "/pages/ai-assistant.html";
 });
 
 loadMaterials();

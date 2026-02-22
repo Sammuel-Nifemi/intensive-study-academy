@@ -41,7 +41,7 @@ function wrapFetchForRedirect() {
 async function loadStudent({ force = false } = {}) {
   const token = localStorage.getItem("studentToken");
   if (!token) {
-    window.location.href = "/frontend/pages/student-login.html";
+    window.location.href = "/pages/student-login.html";
     return null;
   }
 
@@ -62,7 +62,7 @@ async function loadStudent({ force = false } = {}) {
       localStorage.removeItem("token");
       localStorage.removeItem("authToken");
       localStorage.removeItem("role");
-      window.location.href = "/frontend/pages/student-login.html";
+      window.location.href = "/pages/student-login.html";
       return null;
     }
 
@@ -88,7 +88,7 @@ window.readStudentCache = window.readStudentCache || readStudentCache;
 
   // No token -> login
   if (!token) {
-    window.location.href = "/frontend/pages/student-login.html";
+    window.location.href = "/pages/student-login.html";
     return;
   }
 
@@ -96,7 +96,7 @@ window.readStudentCache = window.readStudentCache || readStudentCache;
 
   const data = await loadStudent();
   if (!data) {
-    window.location.href = "/frontend/pages/student-login.html";
+    window.location.href = "/pages/student-login.html";
     return;
   }
 
@@ -104,7 +104,7 @@ window.readStudentCache = window.readStudentCache || readStudentCache;
   const isDashboard = path.includes("student-dashboard");
   const isCompleteProfile = path.includes("complete-profile");
   if (!data.profileCompleted && !isDashboard && !isCompleteProfile) {
-    window.location.href = "/frontend/pages/complete-profile.html";
+    window.location.href = "/pages/complete-profile.html";
   }
 })();
 

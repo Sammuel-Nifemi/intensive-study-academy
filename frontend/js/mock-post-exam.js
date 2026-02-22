@@ -82,8 +82,8 @@
 
     sidebar.innerHTML = `
       <ul class="sidebar-top">
-        <li><a href="/frontend/pages/mock-exams.html"><strong>Mock Exams</strong></a></li>
-        <li><a href="/frontend/pages/student-dashboard.html">Main Dashboard</a></li>
+        <li><a href="/pages/mock-exams.html"><strong>Mock Exams</strong></a></li>
+        <li><a href="/pages/student-dashboard.html">Main Dashboard</a></li>
       </ul>
     `;
   }

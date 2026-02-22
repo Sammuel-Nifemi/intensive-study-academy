@@ -1,5 +1,5 @@
 (function initLearningProtection() {
-  const API_BASE = (window.ISA_API_ORIGIN || "") + "";
+  
   const BRAND_LINE = "IntensiveStudyAcademy.com • 08127796978 • 07073859837";
 
   function normalizeAlias(value) {
@@ -129,7 +129,7 @@
     };
 
     try {
-      const res = await fetch(`${API_BASE}/api/payments/mock`, {
+      const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/payments/mock`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)

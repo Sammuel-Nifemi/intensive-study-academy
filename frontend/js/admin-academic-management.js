@@ -1,4 +1,4 @@
-const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/admin";
+
 
 const state = {
   centers: [],
@@ -46,7 +46,7 @@ function setStatus(id, message, isError) {
 }
 
 async function loadStudyCenters() {
-  const { res, data } = await fetchJson(`${API_BASE}/study-centers`);
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin")}/study-centers`);
   if (!res.ok) {
     console.error("Failed to load study centers", data);
     setStatus("centerStatus", data.message || "Failed to load study centers", true);
@@ -103,7 +103,7 @@ async function createStudyCenter() {
   }
 
   setStatus("centerStatus", "Saving...");
-  const { res, data } = await fetchJson(`${API_BASE}/study-centers`, {
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin")}/study-centers`, {
     method: "POST",
     body: JSON.stringify({ name, city })
   });
@@ -122,7 +122,7 @@ async function createStudyCenter() {
 
 async function deleteStudyCenter(id) {
   if (!id || !confirm("Delete this study center?")) return;
-  const { res, data } = await fetchJson(`${API_BASE}/study-centers/${id}`, {
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin")}/study-centers/${id}`, {
     method: "DELETE"
   });
   if (!res.ok) {
@@ -134,7 +134,7 @@ async function deleteStudyCenter(id) {
 }
 
 async function loadFaculties() {
-  const { res, data } = await fetchJson(`${API_BASE}/faculties`);
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin")}/faculties`);
   if (!res.ok) {
     console.error("Failed to load faculties", data);
     setStatus("facultyStatus", data.message || "Failed to load faculties", true);
@@ -195,7 +195,7 @@ async function createFaculty() {
   }
 
   setStatus("facultyStatus", "Saving...");
-  const { res, data } = await fetchJson(`${API_BASE}/faculties`, {
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin")}/faculties`, {
     method: "POST",
     body: JSON.stringify({ name })
   });
@@ -215,7 +215,7 @@ async function createFaculty() {
 
 async function deleteFaculty(id) {
   if (!id || !confirm("Delete this faculty?")) return;
-  const { res, data } = await fetchJson(`${API_BASE}/faculties/${id}`, {
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin")}/faculties/${id}`, {
     method: "DELETE"
   });
   if (!res.ok) {
@@ -228,7 +228,7 @@ async function deleteFaculty(id) {
 }
 
 async function loadPrograms() {
-  const { res, data } = await fetchJson(`${API_BASE}/programs`);
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin")}/programs`);
   if (!res.ok) {
     console.error("Failed to load programs", data);
     setStatus("programStatus", data.message || "Failed to load programs", true);
@@ -283,7 +283,7 @@ async function createProgram() {
   }
 
   setStatus("programStatus", "Saving...");
-  const { res, data } = await fetchJson(`${API_BASE}/programs`, {
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin")}/programs`, {
     method: "POST",
     body: JSON.stringify({ facultyId, name })
   });
@@ -302,7 +302,7 @@ async function createProgram() {
 
 async function deleteProgram(id) {
   if (!id || !confirm("Delete this program?")) return;
-  const { res, data } = await fetchJson(`${API_BASE}/programs/${id}`, {
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin")}/programs/${id}`, {
     method: "DELETE"
   });
   if (!res.ok) {

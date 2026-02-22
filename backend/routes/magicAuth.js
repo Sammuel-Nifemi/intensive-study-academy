@@ -181,8 +181,8 @@ router.post("/resend", async (req, res) => {
       student.profileComplete || student.profile_complete
     );
     const target = isProfileComplete
-      ? "/frontend/pages/student-dashboard.html"
-      : "/frontend/pages/complete-profile.html";
+      ? "/pages/student-dashboard.html"
+      : "/pages/complete-profile.html";
 
     res.redirect(`${target}?token=${sessionToken}`);
 

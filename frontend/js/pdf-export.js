@@ -1,5 +1,5 @@
 (function initPdfExportModule() {
-  const API_BASE = (window.ISA_API_ORIGIN || "") + "";
+  
   const PDF_FEE = 200;
 
   function getToken() {
@@ -19,7 +19,7 @@
     const ok = window.confirm(`Download as PDF costs ₦${amount}. Continue?`);
     if (!ok) return null;
 
-    const res = await fetch(`${API_BASE}/api/payments/mock`, {
+    const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/payments/mock`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -36,7 +36,7 @@
   }
 
   async function verifyPayment(reference) {
-    const res = await fetch(`${API_BASE}/api/pdf-export/verify-payment`, {
+    const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/pdf-export/verify-payment`, {
       method: "POST",
       headers: headers(),
       body: JSON.stringify({ reference })
@@ -49,7 +49,7 @@
 
   async function downloadPdf(payload) {
     const reference = payload?.reference;
-    const res = await fetch(`${API_BASE}/api/pdf-export/download`, {
+    const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/pdf-export/download`, {
       method: "POST",
       headers: headers(),
       body: JSON.stringify({

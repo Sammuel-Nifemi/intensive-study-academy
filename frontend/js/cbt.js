@@ -1,9 +1,9 @@
 const token = localStorage.getItem("studentToken");
 if (!token) {
-  window.location.href = "/frontend/pages/student-login.html";
+  window.location.href = "/pages/student-login.html";
 }
 
-const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/cbt";
+
 
 let questions = [];
 let currentIndex = 0;
@@ -114,7 +114,7 @@ async function loadExam() {
 
   setText("cbtCategory", `Category: ${courseCode}`);
 
-  const examRes = await fetch(`${API_BASE}/${courseCode}/exam`, {
+  const examRes = await fetch(`${((window.ISA_API_ORIGIN || "") + "/api/cbt")}/${courseCode}/exam`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   if (!examRes.ok) {
@@ -125,7 +125,7 @@ async function loadExam() {
   examDurationSeconds = (Number(exam.durationMinutes) || 50) * 60;
   remainingSeconds = examDurationSeconds;
 
-  const questionRes = await fetch(`${API_BASE}/${courseCode}/questions`, {
+  const questionRes = await fetch(`${((window.ISA_API_ORIGIN || "") + "/api/cbt")}/${courseCode}/questions`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   if (!questionRes.ok) {
@@ -164,7 +164,7 @@ async function submitExam() {
   setText("cbtStatus", "Submitting your answers...");
 
   try {
-    const res = await fetch(`${API_BASE}/${courseCode}/submit`, {
+    const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "/api/cbt")}/${courseCode}/submit`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,4 +1,5 @@
 const SUMMARY_API_BASE = (window.ISA_API_ORIGIN || "") + "";
+const COMING_SOON_MESSAGE = "\uD83D\uDEA7 Content coming soon.\nWe are preparing quality materials for you.";
 
 function normalizeCourse(value) {
   return String(value || "").replace(/\s+/g, "").toUpperCase();
@@ -18,17 +19,17 @@ async function loadSummary(courseCode) {
     );
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
-      statusEl.textContent = data.message || "Generate a summary by selecting a course.";
+      statusEl.textContent = data.message || COMING_SOON_MESSAGE;
       return;
     }
 
     const titleEl = document.getElementById("summaryTitle");
     if (titleEl) titleEl.textContent = `${data.courseCode} Summary`;
     statusEl.textContent = "";
-    contentEl.textContent = data.content || "Generate a summary by selecting a course.";
+    contentEl.textContent = data.content || COMING_SOON_MESSAGE;
   } catch (err) {
     console.error("Load summary error:", err);
-    statusEl.textContent = "Generate a summary by selecting a course.";
+    statusEl.textContent = COMING_SOON_MESSAGE;
   }
 }
 

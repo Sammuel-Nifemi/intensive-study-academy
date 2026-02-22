@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("studentToken");
   if (!token) {
-    window.location.href = "/frontend/pages/student-login.html";
+    window.location.href = "/pages/student-login.html";
     return;
   }
 
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const profile = window.loadStudent ? await window.loadStudent({ force: !cached }) : null;
     if (!profile) {
       if (!cached) {
-        window.location.href = "/frontend/pages/student-login.html";
+        window.location.href = "/pages/student-login.html";
       }
       return;
     }
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     localStorage.removeItem("studentToken");
     localStorage.removeItem("studentProfileCache");
     localStorage.removeItem("studentProfileCacheToken");
-    window.location.href = "/frontend/pages/student-login.html";
+    window.location.href = "/pages/student-login.html";
   });
 });
 

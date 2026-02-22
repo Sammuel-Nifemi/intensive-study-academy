@@ -1,4 +1,4 @@
-const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/admin/courses";
+
 
 document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("submitBtn")?.addEventListener("click", createCourse);
@@ -161,7 +161,7 @@ async function createCourse() {
   }
 
   setStatus("formStatus", "Saving...");
-  const { res, data } = await fetchJson(API_BASE, {
+  const { res, data } = await fetchJson(((window.ISA_API_ORIGIN || "") + "/api/admin/courses"), {
     method: "POST",
     body: JSON.stringify(payload)
   });
@@ -180,7 +180,7 @@ async function createCourse() {
 
 async function loadCourses() {
   setStatus("listStatus", "Loading...");
-  const { res, data } = await fetchJson(API_BASE);
+  const { res, data } = await fetchJson(((window.ISA_API_ORIGIN || "") + "/api/admin/courses"));
   if (!res.ok) {
     setStatus("listStatus", data.message || "Failed to load courses", true);
     return;
@@ -192,7 +192,7 @@ async function loadCourses() {
 
 async function deleteCourse(id) {
   if (!id || !confirm("Delete this course?")) return;
-  const { res, data } = await fetchJson(`${API_BASE}/${id}`, { method: "DELETE" });
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin/courses")}/${id}`, { method: "DELETE" });
   if (!res.ok) {
     alert(data.message || "Delete failed");
     return;

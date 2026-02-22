@@ -8,7 +8,7 @@
 const token = localStorage.getItem("studentToken");
 
 if (!token) {
-  // window.location.href = "/frontend/pages/student-login.html";
+  // window.location.href = "/pages/student-login.html";
 }
 
 /* ================= STORAGE ================= */
@@ -23,7 +23,7 @@ const exam = mockExams.find(e => e.id === activeExamId);
 
 if (!exam) {
   alert("No practice exam found.");
-  window.location.href = "/frontend/pages/mock-exams.html";
+  window.location.href = "/pages/mock-exams.html";
 }
 
 /* ================= DOM ================= */

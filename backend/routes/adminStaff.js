@@ -47,7 +47,7 @@ router.post("/staff", authAdmin, async (req, res) => {
       `Email: ${staff.email}`,
       `Temporary Password: ${tempPassword}`,
       `OTP Code: ${otpCode}`,
-      "Login link: http://localhost:5000/frontend/pages/staff-login.html",
+      "Login link: http://localhost:5000/pages/staff-login.html",
       "",
       "This code expires in 7 days."
     ].join("\n");

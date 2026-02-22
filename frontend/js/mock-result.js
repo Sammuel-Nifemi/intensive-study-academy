@@ -8,7 +8,7 @@
 const token = localStorage.getItem("studentToken");
 
 if (!token) {
-  window.location.href = "/frontend/pages/mock-exams.html";
+  window.location.href = "/pages/mock-exams.html";
 
 
 }
@@ -22,7 +22,7 @@ const mockExams =
 
 if (!lastResult) {
   alert("No mock result found.");
-  window.location.href = "/frontend/pages/mock-exams.html";
+  window.location.href = "/pages/mock-exams.html";
 }
 
 /* ================= FIND EXAM ================= */
@@ -30,7 +30,7 @@ const exam = mockExams.find(e => e.id === lastResult.examId);
 
 if (!exam) {
   alert("Exam data missing.");
-  window.location.href = "/frontend/pages/mock-exams.html";
+  window.location.href = "/pages/mock-exams.html";
 }
 
 /* ================= DOM ================= */

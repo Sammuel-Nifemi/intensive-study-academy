@@ -1,7 +1,8 @@
 
+
+const originalFetch = window.fetch.bind(window);
 window.ISA_API_ORIGIN = "https://intensive-study-backend.onrender.com";
 
-const API_BASE = "https://intensive-study-backend.onrender.com";
 (function configureApiBase() {
   const apiOrigin = window.ISA_API_ORIGIN || "https://intensive-study-backend.onrender.com";
   const host = window.location.hostname;

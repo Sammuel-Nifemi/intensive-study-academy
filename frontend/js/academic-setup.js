@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Active session
   if (academicProfile && studentSession) {
-    window.location.href = "/frontend/pages/student-dashboard.html";
+    window.location.href = "/pages/student-dashboard.html";
     return;
   }
 
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       localStorage.setItem("studentSession", JSON.stringify(session));
-      window.location.href = "/frontend/pages/student-dashboard.html";
+      window.location.href = "/pages/student-dashboard.html";
     });
   }
 

@@ -1,4 +1,4 @@
-const API_BASE = (window.ISA_API_ORIGIN || "") + "";
+
 
 let studentProfile = null;
 let searchTimer = null;
@@ -10,13 +10,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const token = localStorage.getItem("studentToken");
   if (!token) {
-    window.location.href = "/frontend/pages/student-login.html";
+    window.location.href = "/pages/student-login.html";
     return;
   }
 
   studentProfile = window.loadStudent ? await window.loadStudent() : null;
   if (!studentProfile) {
-    window.location.href = "/frontend/pages/student-login.html";
+    window.location.href = "/pages/student-login.html";
     return;
   }
 
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("saveCoursesBtn")?.addEventListener("click", () => saveCourses(token));
   document.getElementById("logoutBtn")?.addEventListener("click", () => {
     localStorage.removeItem("studentToken");
-    window.location.href = "/frontend/pages/student-login.html";
+    window.location.href = "/pages/student-login.html";
   });
 
   document.getElementById("globalCourseSearch")?.addEventListener("input", (event) => {
@@ -186,14 +186,14 @@ async function loadCourses(token) {
   if (statusEl) statusEl.textContent = "Loading courses...";
 
   try {
-    const res = await fetch(`${API_BASE}/courses/available`, {
+    const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/courses/available`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await res.json().catch(() => []);
 
     if (!res.ok) {
       if (res.status === 401 || res.status === 403) {
-        window.location.href = "/frontend/pages/student-login.html";
+        window.location.href = "/pages/student-login.html";
         return;
       }
       if (statusEl) statusEl.textContent = data?.message || "Unable to load courses.";
@@ -248,7 +248,7 @@ function applyPersistedSelections() {
 
 async function loadPersistedSelections(token) {
   try {
-    const res = await fetch(`${API_BASE}/api/student/courses`, {
+    const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/student/courses`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await res.json().catch(() => ({}));
@@ -284,14 +284,14 @@ async function searchManualCourses(query, token) {
   statusEl.textContent = "Searching courses...";
 
   try {
-    const res = await fetch(`${API_BASE}/courses/search?q=${encodeURIComponent(query)}`, {
+    const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/courses/search?q=${encodeURIComponent(query)}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await res.json().catch(() => []);
 
     if (!res.ok) {
       if (res.status === 401 || res.status === 403) {
-        window.location.href = "/frontend/pages/student-login.html";
+        window.location.href = "/pages/student-login.html";
         return;
       }
       statusEl.textContent = data?.message || "Failed to search courses.";
@@ -337,7 +337,7 @@ async function saveCourses(token) {
   if (statusEl) statusEl.textContent = "Saving courses...";
 
   try {
-    const res = await fetch(`${API_BASE}/api/student/courses`, {
+    const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/student/courses`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

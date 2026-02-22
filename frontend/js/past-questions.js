@@ -1,10 +1,11 @@
 const token = localStorage.getItem("studentToken");
+const COMING_SOON_MESSAGE = "\uD83D\uDEA7 Content coming soon.\nWe are preparing quality materials for you.";
 
 if (!token) {
-  window.location.href = "/frontend/pages/student-login.html";
+  window.location.href = "/pages/student-login.html";
 }
 
-const API_BASE = (window.ISA_API_ORIGIN || "") + "";
+
 let studentProfile = null;
 let registeredCourses = new Set();
 let searchTimeout = null;
@@ -167,7 +168,7 @@ async function requestPayPerUse({ courseCode, platform, resourceId }) {
       statusEl.textContent = "";
 
       try {
-        const payRes = await fetch(`${API_BASE}/api/payments/mock`, {
+        const payRes = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/payments/mock`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ amount: 500, courseCode, platform })
@@ -181,7 +182,7 @@ async function requestPayPerUse({ courseCode, platform, resourceId }) {
           return;
         }
 
-        await fetch(`${API_BASE}/api/access/log`, {
+        await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/access/log`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -216,14 +217,16 @@ async function requestPayPerUse({ courseCode, platform, resourceId }) {
 }
 
 async function ensurePaidAccess(courseCode, platform, resourceId) {
-  return true;
+  await loadStudentProfile();
+  if (isCourseRegistered(courseCode)) return true;
+  return requestPayPerUse({ courseCode, platform, resourceId });
 }
 
 function renderPastQuestions(courseCode, items) {
   if (!resultsEl) return;
 
   if (!Array.isArray(items) || items.length === 0) {
-    resultsEl.innerHTML = "<p>Past questions will show here when uploaded.</p>";
+    resultsEl.innerHTML = `<p>${COMING_SOON_MESSAGE.replace("\n", "<br>")}</p>`;
     return;
   }
 
@@ -231,8 +234,8 @@ function renderPastQuestions(courseCode, items) {
     .map((item) => {
       const isSummary = item.type === "summary";
       const label = isSummary ? "Summary" : "Past Question";
-      const buttonLabel = isSummary ? "Open Summary" : "View Past Question";
-      const yearText = item.year ? ` • ${item.year}` : "";
+      const buttonLabel = isSummary ? "Download Summary" : "View Past Question";
+      const yearText = item.year ? ` ï¿½ ${item.year}` : "";
       const title = item.title || `${courseCode} ${label}`;
 
       return `
@@ -254,21 +257,21 @@ async function loadPastQuestions(courseCode) {
   resultsEl.innerHTML = "<p>Loading...</p>";
 
   try {
-    const res = await fetch(`${API_BASE}/api/past-questions/${courseCode}`, {
+    const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/past-questions/${courseCode}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
     const data = await res.json();
 
     if (!res.ok) {
-      resultsEl.innerHTML = `<p>${data.message || "Past questions will show here when uploaded."}</p>`;
+      resultsEl.innerHTML = `<p>${data.message || COMING_SOON_MESSAGE.replace("\n", "<br>")}</p>`;
       return;
     }
 
     renderPastQuestions(courseCode, data.items || []);
   } catch (err) {
     console.error(err);
-    resultsEl.innerHTML = "<p>Past questions will show here when uploaded.</p>";
+    resultsEl.innerHTML = `<p>${COMING_SOON_MESSAGE.replace("\n", "<br>")}</p>`;
   }
 }
 
@@ -296,7 +299,26 @@ document.addEventListener("click", async (event) => {
   event.preventDefault();
   const courseCode = btn.getAttribute("data-course");
   const url = btn.getAttribute("data-url");
+  const itemType = String(btn.getAttribute("data-type") || "pq").toLowerCase();
   if (!courseCode || !url) return;
+
+  const hasAccess = await ensurePaidAccess(
+    courseCode,
+    itemType === "summary" ? "summary" : "past_question",
+    url
+  );
+  if (!hasAccess) return;
+
+  if (itemType === "summary") {
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "");
+    link.rel = "noopener";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    return;
+  }
 
   window.open(url, "_blank", "noopener");
 });
@@ -326,7 +348,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!profile) return;
   const line =
     window.ISA_LearningProtection?.buildWatermarkLine(profile) ||
-    "Student • ISA-00000 • IntensiveStudyAcademy.com • 08127796978 • 07073859837";
+    "Student ï¿½ ISA-00000 ï¿½ IntensiveStudyAcademy.com ï¿½ 08127796978 ï¿½ 07073859837";
   watermarkEl.textContent = line;
 });
 

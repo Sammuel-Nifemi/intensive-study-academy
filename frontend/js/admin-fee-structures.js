@@ -1,4 +1,4 @@
-const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/admin/fee-structures";
+
 
 const facultySelect = document.getElementById("facultySelect");
 const programSelect = document.getElementById("programSelect");
@@ -45,7 +45,7 @@ async function createFeeStructure() {
   };
 
   setStatus("createStatus", "Saving...");
-  const { res, data } = await fetchJson(API_BASE, {
+  const { res, data } = await fetchJson(((window.ISA_API_ORIGIN || "") + "/api/admin/fee-structures"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
@@ -77,7 +77,7 @@ function buildQuery() {
 
 async function loadFeeStructures() {
   setStatus("listStatus", "Loading...");
-  const { res, data } = await fetchJson(`${API_BASE}${buildQuery()}`);
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin/fee-structures")}${buildQuery()}`);
   if (!res.ok) {
     setStatus("listStatus", data.message || "Failed to load fees", true);
     return;
@@ -116,7 +116,7 @@ async function loadFeeStructures() {
 
 async function deleteItem(id) {
   if (!id || !confirm("Delete this fee structure?")) return;
-  const { res, data } = await fetchJson(`${API_BASE}/${id}`, { method: "DELETE" });
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin/fee-structures")}/${id}`, { method: "DELETE" });
   if (!res.ok) {
     alert(data.message || "Delete failed");
     return;
@@ -136,7 +136,7 @@ async function editItem(id) {
 
   if (!Object.keys(payload).length) return;
 
-  const { res, data } = await fetchJson(`${API_BASE}/${id}`, {
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin/fee-structures")}/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)

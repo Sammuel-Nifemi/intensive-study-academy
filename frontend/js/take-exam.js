@@ -1,8 +1,8 @@
 const token = localStorage.getItem("studentToken");
-const API_BASE = (window.ISA_API_ORIGIN || "") + "";
+
 
 if (!token) {
-  window.location.href = "/frontend/pages/student-login.html";
+  window.location.href = "/pages/student-login.html";
 }
 
 const params = new URLSearchParams(window.location.search);
@@ -155,7 +155,7 @@ async function submitExam() {
 
   try {
     const durationUsed = Math.max(0, Number(exam?.duration || 0) * 60 - remainingSeconds);
-    const res = await fetch(`${API_BASE}/api/cbt/${encodeURIComponent(courseCode)}/submit`, {
+    const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/cbt/${encodeURIComponent(courseCode)}/submit`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -187,7 +187,7 @@ async function loadExam() {
   }
 
   try {
-    const res = await fetch(`${API_BASE}/api/cbt/latest/${encodeURIComponent(courseCode)}`, {
+    const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/cbt/latest/${encodeURIComponent(courseCode)}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await res.json().catch(() => ({}));

@@ -1,4 +1,4 @@
-const API_BASE = (window.ISA_API_ORIGIN || "") + "/api/admin/exam-timetables";
+
 
 const facultySelect = document.getElementById("facultySelect");
 const programSelect = document.getElementById("programSelect");
@@ -50,7 +50,7 @@ async function uploadTimetables() {
   Array.from(files).forEach((file) => formData.append("files", file));
 
   setStatus("uploadStatus", "Uploading...");
-  const { res, data } = await fetchJson(API_BASE, {
+  const { res, data } = await fetchJson(((window.ISA_API_ORIGIN || "") + "/api/admin/exam-timetables"), {
     method: "POST",
     body: formData
   });
@@ -81,7 +81,7 @@ function buildQuery() {
 
 async function loadTimetables() {
   setStatus("listStatus", "Loading...");
-  const { res, data } = await fetchJson(`${API_BASE}${buildQuery()}`);
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin/exam-timetables")}${buildQuery()}`);
   if (!res.ok) {
     setStatus("listStatus", data.message || "Failed to load timetables", true);
     return;
@@ -118,7 +118,7 @@ async function loadTimetables() {
 
 async function deleteItem(id) {
   if (!id || !confirm("Delete this timetable?")) return;
-  const { res, data } = await fetchJson(`${API_BASE}/${id}`, { method: "DELETE" });
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin/exam-timetables")}/${id}`, { method: "DELETE" });
   if (!res.ok) {
     alert(data.message || "Delete failed");
     return;
@@ -132,7 +132,7 @@ async function editItem(id) {
   if (title) payload.title = title;
   if (!Object.keys(payload).length) return;
 
-  const { res, data } = await fetchJson(`${API_BASE}/${id}`, {
+  const { res, data } = await fetchJson(`${((window.ISA_API_ORIGIN || "") + "/api/admin/exam-timetables")}/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)

@@ -126,7 +126,7 @@ setupForm.addEventListener("submit", async (e) => {
     // optional: cache for frontend use
     localStorage.setItem("studentProfile", JSON.stringify(profile));
 
-window.location.href = "/frontend/pages/student-dashboard.html";
+window.location.href = "/pages/student-dashboard.html";
   } catch (err) {
     alert("Unable to complete setup. Please try again.");
   }
