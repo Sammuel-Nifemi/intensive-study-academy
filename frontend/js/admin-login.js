@@ -66,17 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        if (res.status === 401 && data?.message === "Admin account not found") {
-          msg.textContent = "Admin email not found.";
-          return;
-        }
-
-        if (res.status === 401 && data?.message === "Incorrect password") {
-          msg.textContent = "Incorrect password.";
-          return;
-        }
-
-        msg.textContent = data.message || "Login failed.";
+        msg.textContent = String(data?.message || "Login failed.");
         return;
       }
 

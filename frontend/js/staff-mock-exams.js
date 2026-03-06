@@ -7,7 +7,7 @@
 const token = localStorage.getItem("staffToken");
 
 if (!token) {
-  window.location.href = ".../staff-login.html";
+  window.location.href = "./staff-login.html";
 }
 
 /* ================= STORAGE ================= */

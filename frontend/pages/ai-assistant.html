@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>AI Assistant | Student Dashboard</title>
+  <title>Academic Intel | Student Dashboard</title>
   <link rel="stylesheet" href="../css/student-dashboard.css">
   <link rel="stylesheet" href="../css/theme.css">
-  <link rel="stylesheet" href="/css/watermark.css" />
+  <link rel="stylesheet" href="../css/watermark.css" />
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -120,6 +120,61 @@
       padding: 10px;
       background: #fff;
     }
+    .intel-result-view {
+      border: 1px solid #dbe2ea;
+      border-radius: 14px;
+      background: #fff;
+      padding: 18px;
+    }
+    .intel-result-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .intel-result-title {
+      margin: 0;
+      font-size: 1.3rem;
+      color: #0f172a;
+    }
+    .intel-result-subtitle {
+      margin: 0;
+      color: #475569;
+      font-size: 0.95rem;
+    }
+    .intel-result-body {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 14px;
+      background: #f8fafc;
+      white-space: pre-wrap;
+      line-height: 1.55;
+      color: #0f172a;
+      min-height: 120px;
+    }
+    .intel-result-actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .ask-intel-textarea {
+      width: min(760px, 100%);
+      min-height: 140px;
+      padding: 12px;
+      line-height: 1.5;
+      resize: vertical;
+    }
+    .intel-locked-btn {
+      opacity: 0.85;
+      transition: opacity 0.2s ease;
+    }
+    .intel-locked-btn:hover,
+    .intel-locked-btn:focus-visible {
+      opacity: 1;
+    }
   </style>
 <script src="../js/api-base.js"></script>
 <style>
@@ -165,7 +220,7 @@
       <li><a href="/frontend/pages/past-questions.html">Past Questions</a></li>
       <li><a href="/frontend/pages/live-classes.html">Live Classes</a></li>
       <li class="divider"></li>
-      <li><a href="/frontend/pages/ai-assistant.html" class="active">AI Assistant</a></li>
+      <li><a href="/frontend/pages/ai-assistant.html" class="active">Academic Intel</a></li>
       <li><a href="/frontend/pages/student-profile.html">Profile</a></li>
       <li><a href="/frontend/pages/student-settings.html">Settings</a></li>
     </ul>
@@ -177,12 +232,28 @@
 
   <main class="dashboard-main">
     <section class="page-header">
-      <h1>&#129302; Your AI Academic Advisor</h1>
+      <h1>&#129302; Your Academic Advisor</h1>
     </section>
     <section class="isa-notice-card" role="status" aria-live="polite">
       &#128679; Some features are still being improved.<br>
       Relax &mdash; your data is safe.<br>
       If you need help, contact support.
+    </section>
+
+    <section id="intelResultView" class="dashboard-section hidden">
+      <div class="intel-result-view">
+        <div class="intel-result-head">
+          <div>
+            <h2 id="intelResultTitle" class="intel-result-title">Academic Intel Response</h2>
+            <p id="intelResultSubtitle" class="intel-result-subtitle">Your generated guidance appears here.</p>
+          </div>
+          <button id="intelResultBackBtn" class="secondary-btn" type="button">Back</button>
+        </div>
+        <div id="intelResultBody" class="intel-result-body"></div>
+        <div class="intel-result-actions">
+          <button id="intelResultDownloadBtn" class="primary-btn" type="button">Download as PDF</button>
+        </div>
+      </div>
     </section>
 
     <section id="advisorFeedbackSection" class="dashboard-section hidden">
@@ -237,21 +308,21 @@
     </section>
 
     <section class="dashboard-section">
-      <h2>Ask Your Advisor</h2>
+      <h2>Ask Academic Intel</h2>
       <div class="form-row">
-        <textarea id="advisorQuestionInput" rows="4" placeholder="Ask your academic advisor anything..."></textarea>
+        <textarea id="advisorQuestionInput" class="ask-intel-textarea" rows="6" placeholder="Ask your academic advisor anything..."></textarea>
       </div>
-      <button id="askAdvisorBtn" class="primary-btn" type="button">Ask Advisor</button>
+      <button id="askAdvisorBtn" class="primary-btn intel-locked-btn" type="button">&#128274; Ask Academic Intel</button>
       <p id="askAdvisorStatus" class="status-text" style="margin-top:8px;"></p>
       <div id="advisorAnswerWrap" class="advisor-card" style="margin-top:12px;" hidden>
-        <h3>Advisor Response</h3>
+        <h3>Academic Intel Response</h3>
         <p id="advisorAnswerText"></p>
       </div>
     </section>
 
     <section class="dashboard-section">
       <div class="notice-box">
-        NB: AI currently supports GST, PCR, MAC and general courses only. Maths, Physics, Biology and Chemistry are not yet supported. Contact Admin for help.
+        NB: Academic Intel currently supports GST, PCR, MAC and general courses only. Maths, Physics, Biology and Chemistry are not yet supported. Contact Admin for help.
       </div>
     </section>
   </main>
@@ -262,6 +333,7 @@
 <script src="/frontend/js/pdf-export.js"></script>
 <script src="/frontend/js/learning-content.js"></script>
 <script src="../js/learning-protection.js"></script>
+<script src="../js/locked-feature-modal.js"></script>
 <script src="../pages/student/js/ai-assistant.js"></script>
 <script src="../js/community-dropoff.js"></script>
 <script src="../js/theme.js"></script>

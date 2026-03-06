@@ -23,12 +23,21 @@ router.post("/quick-login", async (req, res) => {
 
     let student = await Student.findOne({ user_id: user._id });
     if (!student) {
-      student = await Student.create({
-        user_id: user._id,
-        email: user.email,
-        profileComplete: false,
-        profile_complete: false
-      });
+      try {
+        student = await Student.create({
+          user_id: user._id,
+          email: user.email,
+          profileComplete: false,
+          profile_complete: false
+        });
+      } catch (createErr) {
+        // Handle race/legacy duplicate cases gracefully instead of returning 500.
+        if (createErr?.code === 11000) {
+          student = await Student.findOne({ user_id: user._id });
+        } else {
+          throw createErr;
+        }
+      }
     }
 
     const sessionToken = jwt.sign(
@@ -36,6 +45,10 @@ router.post("/quick-login", async (req, res) => {
       JWT_SECRET,
       { expiresIn: "7d" }
     );
+
+    if (!student) {
+      return res.status(500).json({ message: "Unable to initialize student profile" });
+    }
 
     res.json({ token: sessionToken });
   } catch (err) {

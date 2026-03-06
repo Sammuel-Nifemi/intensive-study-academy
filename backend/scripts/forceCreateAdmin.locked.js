@@ -12,13 +12,10 @@ const bcrypt = require("bcrypt");
     const hash = await bcrypt.hash("omogbemi123", 10);
 
     const result = await mongoose.connection.db
-      .collection("users")
+      .collection("admins")
       .insertOne({
-        name: "Oluwa Nifemi",
         email: "oluwanifemis283@gmail.com",
         password: hash,
-        role: "admin",
-        status: "active",
         createdAt: new Date()
       });
 

@@ -1,4 +1,5 @@
 const PastQuestion = require("../models/PastQuestion");
+const MaterialUsage = require("../models/MaterialUsage");
 
 exports.getPastQuestionsByCourse = async (req, res) => {
   try {
@@ -9,7 +10,19 @@ exports.getPastQuestionsByCourse = async (req, res) => {
       isActive: true
     }).sort({ year: -1 });
 
-    // Usage for PQ/Summary is recorded on access (consume endpoint)
+    if (req.student?._id && Array.isArray(questions) && questions.length) {
+      const first = questions[0];
+      try {
+        await MaterialUsage.create({
+          student: req.student._id,
+          materialId: first._id,
+          materialTitle: first.title || `${courseCode.toUpperCase()} Past Questions`,
+          type: "past-question"
+        });
+      } catch (usageErr) {
+        console.error("Past question usage write failed:", usageErr);
+      }
+    }
 
     res.json({
       courseCode,

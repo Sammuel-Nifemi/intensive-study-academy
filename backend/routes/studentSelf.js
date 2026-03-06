@@ -10,6 +10,7 @@ const Faculty = require("../models/Faculty");
 const StudyCenter = require("../models/StudyCenter");
 const CourseMaterial = require("../models/CourseMaterial");
 const MockExam = require("../models/MockExam");
+const MaterialUsage = require("../models/MaterialUsage");
 const requirePayPerUse = require("../middleware/requirePayPerUse");
 const { getMyFees } = require("../controllers/fees.controller");
 const { submitStudentReview } = require("../controllers/reviewController");
@@ -228,6 +229,21 @@ router.get(
 
       if (!item || !item.fileUrl) {
         return res.status(404).json({ message: "Material not found" });
+      }
+
+      const studentProfile =
+        req.student || (await Student.findOne({ user_id: req.user.id }).select("_id"));
+      if (studentProfile?._id) {
+        try {
+          await MaterialUsage.create({
+            student: studentProfile._id,
+            materialId: item._id,
+            materialTitle: item.title || item.courseCode || "Course Material",
+            type: "raw-material"
+          });
+        } catch (usageErr) {
+          console.error("Material usage write failed:", usageErr);
+        }
       }
 
       const fileUrl = String(item.fileUrl);

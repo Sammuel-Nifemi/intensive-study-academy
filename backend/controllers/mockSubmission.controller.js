@@ -6,6 +6,7 @@ const User = require("../models/User");
 const AssignmentRequest = require("../models/AssignmentRequest");
 const Assignment = require("../models/Assignment");
 const Course = require("../models/Course");
+const MaterialUsage = require("../models/MaterialUsage");
 const { incrementCourseUsage } = require("../utils/courseEntitlements");
 
 function normalizeCourseCode(value) {
@@ -120,6 +121,21 @@ exports.submitMockAttempt = async (req, res) => {
       submittedAt: new Date(),
       durationUsed: Number(durationUsed) || 0
     });
+
+    const usageStudentProfile =
+      req.student || (await Student.findOne({ user_id: req.user?.id }).select("_id"));
+    if (usageStudentProfile?._id) {
+      try {
+        await MaterialUsage.create({
+          student: usageStudentProfile._id,
+          materialId: mock._id,
+          materialTitle: mock.title || mock.courseCode || "Mock Exam",
+          type: "mock"
+        });
+      } catch (usageErr) {
+        console.error("Mock usage write failed:", usageErr);
+      }
+    }
 
     await incrementCourseUsage(req.user?.id || studentId, "mock", courseCode);
 

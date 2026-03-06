@@ -19,13 +19,16 @@
     const ok = window.confirm(`Download as PDF costs ₦${amount}. Continue?`);
     if (!ok) return null;
 
+    const token = getToken();
     const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/payments/mock`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      },
       body: JSON.stringify({
         amount,
-        platform: "pdf_export",
-        courseCode: "GENERAL"
+        platform: "pdf_export"
       })
     });
     const data = await res.json().catch(() => ({}));
@@ -36,7 +39,7 @@
   }
 
   async function verifyPayment(reference) {
-    const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/pdf-export/verify-payment`, {
+    const res = await fetch(`${window.ISA_API_ORIGIN || ""}/api/pdf/verify-payment`, {
       method: "POST",
       headers: headers(),
       body: JSON.stringify({ reference })
@@ -49,26 +52,46 @@
 
   async function downloadPdf(payload) {
     const reference = payload?.reference;
-    const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/pdf-export/download`, {
+    const requestBody = payload?.attemptId
+      ? {
+          reference,
+          attemptId: payload.attemptId,
+          title: "Mock Attempt Report"
+        }
+      : {
+          reference,
+          title: payload?.title || "Learning Content",
+          content: payload?.content || "",
+          fileName: payload?.fileName || "learning-content.pdf"
+        };
+
+    const res = await fetch(`${window.ISA_API_ORIGIN || ""}/api/pdf/download`, {
       method: "POST",
       headers: headers(),
-      body: JSON.stringify({
-        reference,
-        title: payload?.title || "Learning Content",
-        content: payload?.content || "",
-        fileName: payload?.fileName || "learning-content.pdf"
-      })
+      body: JSON.stringify(requestBody)
     });
     if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      throw new Error(data.message || "PDF export failed");
+      let backendMessage = "";
+      try {
+        const data = await res.json();
+        backendMessage = String(data?.message || data?.error || "").trim();
+      } catch (_) {
+        try {
+          const rawText = await res.text();
+          backendMessage = String(rawText || "").trim();
+        } catch (_) {
+          backendMessage = "";
+        }
+      }
+      const reason = backendMessage || "PDF export failed";
+      throw new Error(`HTTP ${res.status}: ${reason}`);
     }
 
     const blob = await res.blob();
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = payload?.fileName || "learning-content.pdf";
+    a.download = payload?.attemptId ? "mock-attempt.pdf" : payload?.fileName || "learning-content.pdf";
     document.body.appendChild(a);
     a.click();
     a.remove();

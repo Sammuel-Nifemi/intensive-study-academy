@@ -1,5 +1,6 @@
 const cron = require("node-cron");
 const User = require("../models/User");
+const Admin = require("../models/Admin");
 const { notifyUsers } = require("./notifyUsers");
 const { sendMail } = require("./mailer");
 
@@ -23,7 +24,8 @@ async function runBirthdayNotifications() {
   const users = await User.find({ dobDay: { $exists: true }, dobMonth: { $exists: true } }).lean();
   if (!users.length) return;
 
-  const admins = await User.find({ role: "admin" }).select("_id role").lean();
+  const admins = await Admin.find().select("_id").lean();
+  const adminRecipients = admins.map((a) => ({ id: a._id, role: "admin" }));
 
   for (const user of users) {
     const day = Number(user.dobDay);
@@ -40,7 +42,7 @@ async function runBirthdayNotifications() {
     if (daysUntil === 7) {
       const message = `${user.fullName}'s birthday is in 7 days (${formatDate(nextBirthday)}). Phone: ${user.phoneNumber || "N/A"}`;
       await notifyUsers(
-        admins.map((a) => ({ id: a._id, role: "admin" })),
+        adminRecipients,
         "birthday-reminder",
         "Upcoming Birthday",
         message,
@@ -51,7 +53,7 @@ async function runBirthdayNotifications() {
     if (daysUntil === 0) {
       const adminMessage = `It's ${user.fullName}'s birthday today! Phone: ${user.phoneNumber || "N/A"}`;
       await notifyUsers(
-        admins.map((a) => ({ id: a._id, role: "admin" })),
+        adminRecipients,
         "birthday-today",
         "Happy Birthday!",
         adminMessage,
@@ -59,15 +61,7 @@ async function runBirthdayNotifications() {
       );
 
       const userMessage = `It's ${user.fullName}'s birthday today!`;
-      if (user.role === "admin") {
-        await notifyUsers(
-          [{ id: user._id, role: "admin" }],
-          "birthday-today",
-          "Happy Birthday!",
-          adminMessage,
-          { userId: user._id }
-        );
-      } else {
+      if (user.role !== "admin") {
         await notifyUsers(
           [{ id: user._id, role: user.role }],
           "birthday-today",

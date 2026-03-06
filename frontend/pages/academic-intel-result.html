@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Academic Intel Result | Intensive Study Academy</title>
+  <link rel="stylesheet" href="../css/student-dashboard.css" />
+  <link rel="stylesheet" href="../css/theme.css" />
+  <style>
+    .intel-result-card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .intel-result-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .intel-result-title {
+      margin: 0;
+      font-size: 1.65rem;
+      line-height: 1.2;
+      color: #0f172a;
+    }
+    .intel-result-subtitle {
+      margin: 6px 0 0;
+      color: #475569;
+      font-size: 0.95rem;
+    }
+    .intel-result-body {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #f8fafc;
+      padding: 16px;
+      white-space: pre-wrap;
+      line-height: 1.6;
+      color: #0f172a;
+      min-height: 180px;
+    }
+    .intel-result-actions {
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .intel-empty {
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+  </style>
+  <script src="../js/api-base.js"></script>
+</head>
+<body class="page-student-dashboard">
+  <header class="dashboard-header">
+    <div class="header-container">
+      <div class="logo">
+        <img src="../image/isa.png" alt="Intensive Study Academy Logo" />
+      </div>
+      <div class="user-text">
+        <span class="welcome-text" id="studentName">Loading...</span>
+      </div>
+      <div class="notification-wrapper">
+        <button id="notificationBell" class="notification-bell" type="button" aria-label="Notifications">
+          <span class="bell-icon">&#128276;</span>
+          <span id="notificationBadge" class="notification-badge" hidden>0</span>
+        </button>
+        <div id="notificationDropdown" class="notification-dropdown" hidden></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-layout">
+    <nav class="dashboard-sidebar" aria-label="Student Navigation">
+      <ul class="sidebar-top">
+        <li><a href="/frontend/pages/student-dashboard.html">Dashboard</a></li>
+        <li><a href="/frontend/pages/course-materials.html">Course Materials</a></li>
+        <li><a href="/frontend/pages/mock-exams.html">Mock Exams</a></li>
+        <li><a href="/frontend/pages/fees.html">Fee Analyzer</a></li>
+        <li><a href="/frontend/pages/exam-timetable.html">Exam Timetable</a></li>
+        <li><a href="/frontend/pages/past-questions.html">Past Questions</a></li>
+        <li><a href="/frontend/pages/live-classes.html">Live Classes</a></li>
+        <li class="divider"></li>
+        <li><a href="/frontend/pages/ai-assistant.html" class="active">Academic Intel</a></li>
+        <li><a href="/frontend/pages/student-profile.html">Profile</a></li>
+        <li><a href="/frontend/pages/student-settings.html">Settings</a></li>
+      </ul>
+      <div class="sidebar-bottom">
+        <button id="logoutBtn" class="logout-btn" type="button">Logout</button>
+      </div>
+    </nav>
+
+    <main class="dashboard-main">
+      <section class="page-header">
+        <h1>Academic Intel Result</h1>
+        <p id="intelResultTime" class="status-text"></p>
+      </section>
+
+      <section class="dashboard-section">
+        <article class="intel-result-card">
+          <div class="intel-result-head">
+            <div>
+              <h2 id="intelResultTitle" class="intel-result-title">Academic Intel Response</h2>
+              <p id="intelResultSubtitle" class="intel-result-subtitle">Your latest response appears here.</p>
+            </div>
+            <a href="/frontend/pages/ai-assistant.html" class="secondary-btn">Back to Academic Intel</a>
+          </div>
+          <div id="intelResultBody" class="intel-result-body"></div>
+          <div class="intel-result-actions">
+            <button id="intelDownloadBtn" class="primary-btn" type="button">Download as PDF</button>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="/frontend/js/student-auth-guard.js"></script>
+  <script src="../js/notifications.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/academic-intel-result.js"></script>
+</body>
+</html>

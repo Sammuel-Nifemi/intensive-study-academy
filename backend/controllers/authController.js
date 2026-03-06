@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Staff = require("../models/Staff");
+const Admin = require("../models/Admin");
+const Student = require("../models/Student");
 const { generateOtp, normalizeOtp } = require("../utils/staffAuth");
 const { sendMail } = require("../utils/mailer");
 
@@ -33,6 +35,19 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
+    if (user.role === "student") {
+      try {
+        const student = await Student.findOne({ user_id: user._id });
+        if (student) {
+          student.lastLogin = new Date();
+          student.loginCount = Number(student.loginCount || 0) + 1;
+          await student.save();
+        }
+      } catch (trackErr) {
+        console.error("Student login tracking error:", trackErr);
+      }
+    }
+
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
@@ -56,7 +71,7 @@ exports.login = async (req, res) => {
 // =========================
 exports.adminLogin = async (req, res) => {
   try {
-    const normalizedEmail = String(req.body?.email || "").trim().toLowerCase();
+    const normalizedEmail = String(req.body?.email || "").toLowerCase().trim();
     const password = String(req.body?.password || "");
 
     if (!normalizedEmail) {
@@ -67,29 +82,28 @@ exports.adminLogin = async (req, res) => {
       return res.status(400).json({ message: "Password is required" });
     }
 
-    // Admin auth uses User model only. Staff auth is handled by staffLogin + Staff model.
-    const user = await User.findOne({ email: normalizedEmail, role: "admin" });
+    const admin = await Admin.findOne({ email: normalizedEmail });
 
-    if (!user) {
-      return res.status(401).json({ message: "Admin account not found" });
+    if (!admin) {
+      return res.status(401).json({ message: "Admin account not found." });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, admin.password);
 
     if (!isMatch) {
       return res.status(401).json({ message: "Incorrect password" });
     }
 
     const token = jwt.sign(
-      { id: user._id, role: user.role },
+      { id: admin._id, role: "admin" },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "7d" }
     );
 
     res.json({
       token,
-      role: user.role,
-      email: user.email
+      role: "admin",
+      email: admin.email
     });
   } catch (err) {
     console.error("Admin login error:", err);

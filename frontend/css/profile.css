@@ -56,6 +56,10 @@ button {
   font-size: 0.95rem;
 }
 
+.prep-banner[hidden] {
+  display: none !important;
+}
+
 .prep-spinner {
   width: 20px;
   height: 20px;

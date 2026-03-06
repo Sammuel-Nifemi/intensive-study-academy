@@ -3,10 +3,14 @@ const router = express.Router();
 const webhookController = require("../controllers/webhookController");
 
 router.post(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  webhookController.paystackWebhook
+);
+
+router.post(
   "/paystack",
-  express.json({ verify: (req, res, buf) => {
-    req.rawBody = buf.toString();
-  }}),
+  express.raw({ type: "application/json" }),
   webhookController.paystackWebhook
 );
 

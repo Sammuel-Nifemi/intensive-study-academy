@@ -22,34 +22,35 @@
       border: 1px solid #86efac;
       font-size: 0.9rem;
     }
-    .resend-btn {
-      background: none;
-      border: none;
-      color: #2563eb;
-      cursor: pointer;
-      padding: 0;
-      margin-top: 10px;
-      text-decoration: underline;
-      font-size: 0.9rem;
-    }
     .auth-container form {
       margin-bottom: 10px;
     }
+    .password-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .password-row input {
+      flex: 1;
+    }
+    .toggle-password-btn {
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #fff;
+      padding: 8px 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
   </style>
-<script src="../js/api-base.js"></script>
+  <script src="../js/api-base.js"></script>
 </head>
 
 <body class="student-registration-page">
-
   <div class="auth-container">
     <h2>Create Student Account</h2>
-    <p class="subtitle">
-      Enter your email to get started.
-    </p>
+    <p class="subtitle">Enter your details to get started.</p>
 
     <form id="studentRegisterForm">
-
-      <!-- EMAIL -->
       <label>Email Address</label>
       <input
         type="email"
@@ -59,7 +60,6 @@
         required
       />
 
-      <!-- OPTIONAL NAME -->
       <label>Full Name (optional)</label>
       <input
         type="text"
@@ -68,30 +68,47 @@
         placeholder="e.g. Samson Adewale"
       />
 
-      <button type="submit" class="primary-btn">
-        Create Account
-      </button>
+      <label>Password</label>
+      <div class="password-row">
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Minimum 8 characters"
+          required
+          minlength="8"
+        />
+        <button type="button" id="togglePasswordBtn" class="toggle-password-btn">Show</button>
+      </div>
+
+      <label>Confirm Password</label>
+      <div class="password-row">
+        <input
+          type="password"
+          name="confirmPassword"
+          id="confirmPassword"
+          placeholder="Re-enter your password"
+          required
+          minlength="8"
+        />
+        <button type="button" id="toggleConfirmPasswordBtn" class="toggle-password-btn">Show</button>
+      </div>
+
+      <button type="submit" class="primary-btn">Create Account</button>
 
       <p class="auth-footer">
         Already registered?
         <a href="/frontend/pages/student-login.html">Sign in</a>
       </p>
-
     </form>
 
     <div id="registerSuccess" class="auth-success-card" hidden>
-      <div class="success-alert" role="alert">
-        Account created successfully.
-      </div>
+      <div class="success-alert" role="alert">Account created successfully.</div>
       <h3>Account created successfully</h3>
-      <p>We’ve sent a login link to your email. This link expires in 15 minutes.</p>
-      <button id="openEmailBtn" class="primary-btn" type="button">Open Email</button>
-      <button id="resendLinkBtn" class="resend-btn" type="button">Resend login link</button>
+      <p>Redirecting you to complete your profile.</p>
     </div>
   </div>
-  
-<script src="../js/student-registration.js"></script>
 
+  <script src="../js/student-registration.js"></script>
 </body>
 </html>
-

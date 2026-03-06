@@ -1,6 +1,6 @@
 const token = localStorage.getItem("studentToken");
 if (!token) {
-  window.location.href = "/pages/student-login.html";
+  window.location.href = "/frontend/pages/student-login.html";
 }
 
 
@@ -66,5 +66,6 @@ async function loadHistory() {
 }
 
 document.addEventListener("DOMContentLoaded", loadHistory);
+
 
 

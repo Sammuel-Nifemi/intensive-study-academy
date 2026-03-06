@@ -19,44 +19,6 @@
     el.textContent = value ?? "";
   };
 
-  const setDirectiveCard = (profile) => {
-    const card = document.querySelector(".directive-card");
-    if (!card) return;
-
-    const courses = Array.isArray(profile?.registeredCourses)
-      ? profile.registeredCourses.filter(Boolean)
-      : [];
-
-    if (!courses.length) {
-      card.innerHTML = `
-        <h2>Course Registration Status</h2>
-        <p>Have you registered your courses on the NOUN portal yet?</p>
-        <div class="directive-actions">
-          <a class="primary-btn" href="/pages/select-courses.html">Select My Courses</a>
-          <a class="secondary-btn" href="/pages/fees.html">Use Fee Analyzer (Guide)</a>
-        </div>
-        <div class="directive-hints">
-          <p><strong>Select My Courses:</strong> Choose your registered courses to unlock materials and mocks.</p>
-          <p><strong>Use Fee Analyzer:</strong> Preview expected courses and fees for your semester.</p>
-        </div>
-      `;
-      return;
-    }
-
-    const list = courses
-      .map((code) => `<li>${code}</li>`)
-      .join("");
-
-    card.innerHTML = `
-      <h2>Registered Courses</h2>
-      <p>Great! You have already selected your courses for this semester.</p>
-      <ul class="activity-list">${list}</ul>
-      <div class="directive-actions">
-        <a class="secondary-btn" href="/pages/select-courses.html">Edit Course Selection</a>
-      </div>
-    `;
-  };
-
   const renderProfile = (profile) => {
     const name = profile?.fullName || profile?.name || "Student";
     safeText("studentName", `${getGreeting()}, ${name}`);
@@ -65,7 +27,105 @@
     safeText("profileGender", profile?.gender || "-");
     safeText("profileEmail", profile?.email || "-");
     safeText("profilePhone", profile?.phone || profile?.phoneNumber || "-");
-    setDirectiveCard(profile);
+  };
+
+  const renderReferrals = ({ rows, referralCode, totalReferrals }) => {
+    const tbody = document.getElementById("referralReportBody");
+    const status = document.getElementById("referralSidebarStatus");
+    const linkInput = document.getElementById("referralLinkInput");
+    if (!tbody || !status || !linkInput) return;
+
+    const code = String(referralCode || "").trim();
+    const referralLink = code
+      ? `${window.location.origin}/frontend/pages/student-registration.html?ref=${encodeURIComponent(code)}`
+      : "";
+    linkInput.value = referralLink;
+
+    tbody.innerHTML = "";
+    const list = Array.isArray(rows) ? rows : [];
+    const total = Number(totalReferrals || list.length || 0);
+
+    if (!list.length) {
+      status.textContent = "No referrals yet. Share your link to invite friends.";
+      const emptyRow = document.createElement("tr");
+      emptyRow.innerHTML = `<td colspan="3">No referrals yet.</td>`;
+      tbody.appendChild(emptyRow);
+      return;
+    }
+
+    status.textContent = `${total} referral(s)`;
+    list.slice(0, 8).forEach((row) => {
+      const tr = document.createElement("tr");
+      const dateText = row?.createdAt
+        ? new Date(row.createdAt).toLocaleDateString()
+        : "-";
+      tr.innerHTML = `
+        <td>${row?.fullName || "-"}</td>
+        <td>${row?.email || "-"}</td>
+        <td>${dateText}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  };
+
+  const loadReferrals = async () => {
+    const token = localStorage.getItem("studentToken");
+    const status = document.getElementById("referralSidebarStatus");
+    const tbody = document.getElementById("referralReportBody");
+    if (!token || !status || !tbody) return;
+
+    status.textContent = "Loading referrals...";
+    try {
+      const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/api/students/my-referrals`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        status.textContent = data?.message || "Failed to load referrals.";
+        tbody.innerHTML = "";
+        return;
+      }
+
+      renderReferrals({
+        rows: data?.referrals || [],
+        referralCode: data?.referralCode || "",
+        totalReferrals: data?.totalReferrals || 0
+      });
+    } catch (err) {
+      console.error("Referrals load error:", err);
+      status.textContent = "Failed to load referrals.";
+      tbody.innerHTML = "";
+    }
+  };
+
+  const setupReferralSidebarActions = () => {
+    const copyBtn = document.getElementById("copyReferralLinkBtn");
+    const linkInput = document.getElementById("referralLinkInput");
+    const status = document.getElementById("referralSidebarStatus");
+    const anchor = document.getElementById("referralSidebarAnchor");
+    const card = document.getElementById("referralSection");
+
+    copyBtn?.addEventListener("click", async () => {
+      const link = String(linkInput?.value || "").trim();
+      if (!link) {
+        if (status) status.textContent = "Referral link not available.";
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(link);
+        if (status) status.textContent = "Referral link copied.";
+      } catch {
+        if (status) status.textContent = "Unable to copy link.";
+      }
+    });
+
+    anchor?.addEventListener("click", (event) => {
+      event.preventDefault();
+      card?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   };
 
   const setupReviewModal = () => {
@@ -132,7 +192,7 @@
     try {
       const app = document.getElementById("dashboardApp");
       const loader = document.getElementById("dashboardLoader");
-      if (loader) loader.style.display = "block";
+      if (loader) loader.style.display = "flex";
       if (app) app.style.display = "none";
 
       applyTheme();
@@ -143,6 +203,7 @@
         return;
       }
       setupReviewModal();
+      setupReferralSidebarActions();
 
       const cached = window.readStudentCache ? window.readStudentCache() : null;
       if (cached) {
@@ -168,6 +229,8 @@
         safeText("profilePhone", "-");
       }
 
+      await loadReferrals();
+
       if (loader) loader.style.display = "none";
       if (app) app.style.display = "block";
     } catch (err) {
@@ -187,3 +250,5 @@
     }
   });
 })();
+
+

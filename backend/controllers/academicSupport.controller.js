@@ -1,54 +1,56 @@
 const mongoose = require("mongoose");
 const PDFDocument = require("pdfkit");
+const OpenAI = require("openai");
 const MockAttempt = require("../models/MockAttempt");
 const User = require("../models/User");
 const AdminCourse = require("../models/AdminCourse");
-const OPENAI_API_URL = "https://api.openai.com/v1/responses";
-const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
+const OPENAI_MODEL = "gpt-4o-mini";
+const AI_UNAVAILABLE_MESSAGE = "AI assistant is temporarily unavailable.";
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+function isAiConfigured() {
+  return Boolean(process.env.OPENAI_API_KEY);
+}
+
+function sendAiUnavailable(res) {
+  return res.status(200).json({
+    success: false,
+    message: AI_UNAVAILABLE_MESSAGE
+  });
+}
+
+function isAiProviderUnavailableError(err) {
+  const text = String(err?.message || "").toLowerCase();
+  return (
+    text.includes("openai_api_key") ||
+    text.includes("quota") ||
+    text.includes("billing") ||
+    text.includes("insufficient_quota") ||
+    text.includes("rate limit") ||
+    text.includes("temporarily unavailable")
+  );
+}
 
 async function generateAcademicSupportAnswer(prompt) {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
+  if (!process.env.OPENAI_API_KEY) {
     throw new Error("OPENAI_API_KEY is not configured");
   }
 
-  const systemPrompt = [
-    "You are an academic tutor focused on academic improvement.",
-    "Use only the student's provided exam context.",
-    "Do not behave like a generic chatbot.",
-    "Explain simply like a friendly tutor using 3-5 short bullet points.",
-    "Avoid long academic explanations.",
-    "Use plain text only. No markdown."
-  ].join(" ");
-
-  const response = await fetch(OPENAI_API_URL, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model: OPENAI_MODEL,
-      input: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: prompt }
-      ],
-      temperature: 0.2,
-      max_output_tokens: 220
-    })
+  const completion = await client.chat.completions.create({
+    model: OPENAI_MODEL,
+    messages: [
+      {
+        role: "system",
+        content: "You are Academic Intel, an academic advisor for Nigerian university students."
+      },
+      { role: "user", content: String(prompt || "") }
+    ]
   });
 
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    const msg =
-      data?.error?.message || "Failed to get response from Academic Support AI";
-    throw new Error(msg);
+  const text = completion?.choices?.[0]?.message?.content;
+  if (!text) {
+    throw new Error("No response from OpenAI");
   }
-
-  const text =
-    data?.output_text ||
-    data?.output?.[0]?.content?.[0]?.text ||
-    "I could not generate an explanation right now.";
 
   return String(text).trim();
 }
@@ -218,6 +220,10 @@ exports.getStudyTip = async (req, res) => {
 
 exports.askAcademicSupport = async (req, res) => {
   try {
+    if (!isAiConfigured()) {
+      return sendAiUnavailable(res);
+    }
+
     const question = String(req.body?.question || "").trim();
     const course = String(req.body?.course || "").trim();
     const studentId = req.user?.id;
@@ -249,15 +255,22 @@ exports.askAcademicSupport = async (req, res) => {
       .join("\n");
 
     const answer = await generateAcademicSupportAnswer(prompt);
-    res.json({ answer });
+    res.json({ success: true, answer });
   } catch (err) {
     console.error("Academic support ask error:", err);
-    res.status(500).json({ message: err.message || "Failed to answer question" });
+    res.json({
+      success: false,
+      message: "AI Assistant is warming up :)"
+    });
   }
 };
 
 exports.explainQuestion = async (req, res) => {
   try {
+    if (!isAiConfigured()) {
+      return sendAiUnavailable(res);
+    }
+
     const question = String(req.body?.question || "").trim();
     const correctAnswer = String(req.body?.correctAnswer || "").trim();
     const studentAnswer = String(req.body?.studentAnswer || "").trim();
@@ -284,12 +297,19 @@ exports.explainQuestion = async (req, res) => {
     res.json({ explanation });
   } catch (err) {
     console.error("Academic support explain-question error:", err);
+    if (isAiProviderUnavailableError(err)) {
+      return sendAiUnavailable(res);
+    }
     res.status(500).json({ message: err.message || "Failed to explain question" });
   }
 };
 
 exports.getAdvisorObservation = async (req, res) => {
   try {
+    if (!isAiConfigured()) {
+      return sendAiUnavailable(res);
+    }
+
     const studentId = req.user?.id;
     if (!studentId || !mongoose.Types.ObjectId.isValid(studentId)) {
       return res.status(400).json({ message: "Invalid student id" });
@@ -319,12 +339,19 @@ exports.getAdvisorObservation = async (req, res) => {
     res.json({ observation });
   } catch (err) {
     console.error("Academic advisor observation error:", err);
+    if (isAiProviderUnavailableError(err)) {
+      return sendAiUnavailable(res);
+    }
     res.status(500).json({ message: err.message || "Failed to load advisor observation" });
   }
 };
 
 exports.getAdvisorFeedbackForAttempt = async (req, res) => {
   try {
+    if (!isAiConfigured()) {
+      return sendAiUnavailable(res);
+    }
+
     const studentId = req.user?.id;
     const attemptId = String(req.params?.attemptId || "").trim();
     if (!studentId || !mongoose.Types.ObjectId.isValid(studentId)) {
@@ -404,6 +431,9 @@ exports.getAdvisorFeedbackForAttempt = async (req, res) => {
     });
   } catch (err) {
     console.error("Academic advisor feedback error:", err);
+    if (isAiProviderUnavailableError(err)) {
+      return sendAiUnavailable(res);
+    }
     return res.status(500).json({ message: err.message || "Failed to load advisor feedback" });
   }
 };
@@ -490,6 +520,10 @@ exports.exportAiResponseAsPdf = async (req, res) => {
 
 exports.explainCourse = async (req, res) => {
   try {
+    if (!isAiConfigured()) {
+      return sendAiUnavailable(res);
+    }
+
     const courseId = String(req.body?.courseId || "").trim();
     const studentId = req.user?.id;
 
@@ -534,6 +568,7 @@ exports.explainCourse = async (req, res) => {
 
     const answer = await generateAcademicSupportAnswer(prompt);
     return res.json({
+      success: true,
       courseId,
       courseCode,
       courseTitle,
@@ -541,6 +576,9 @@ exports.explainCourse = async (req, res) => {
     });
   } catch (err) {
     console.error("Academic support explain-course error:", err);
-    return res.status(500).json({ message: err.message || "Failed to explain course" });
+    return res.json({
+      success: false,
+      message: "AI Assistant is warming up :)"
+    });
   }
 };

@@ -24,6 +24,19 @@
 <header class="header">
   <img src="./image/isa.png" alt="Intensive Study Academy Logo" class="logo">
 
+  <button
+    type="button"
+    class="mobile-menu-btn"
+    id="mobileMenuOpenBtn"
+    aria-label="Open menu"
+    aria-controls="mobileNav"
+    aria-expanded="false"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
   <nav class="navbar">
     <ul>
       <li><a href="index.html">Home</a></li>
@@ -36,6 +49,25 @@
     </ul>
   </nav>
 </header>
+
+<div class="mobile-nav-overlay" id="mobileNavOverlay" hidden></div>
+<aside class="mobile-nav" id="mobileNav" aria-hidden="true">
+  <div class="mobile-nav-header">
+    <strong>Menu</strong>
+    <button type="button" class="mobile-nav-close" id="mobileMenuCloseBtn" aria-label="Close menu">
+      &times;
+    </button>
+  </div>
+  <nav class="mobile-nav-links">
+    <a href="index.html">Home</a>
+    <a href="pages/about-us.html">About Us</a>
+    <a href="pages/programs.html">Academic Programs</a>
+    <a href="pages/admission.html">Admissions</a>
+    <a href="pages/resources.html">Academic Resources</a>
+    <a href="pages/blog.html">Academic Blog</a>
+    <a href="pages/gallery.html">Gallery</a>
+  </nav>
+</aside>
 
 <main>
 

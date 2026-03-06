@@ -69,6 +69,44 @@ async function loadMockSummary() {
   }
 }
 
+function renderUsageList(containerId, items) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const rows = Array.isArray(items) ? items : [];
+  if (!rows.length) {
+    container.innerHTML = "<p>No usage data yet.</p>";
+    return;
+  }
+  container.innerHTML = rows
+    .map(
+      (item) => `
+      <p><strong>${item.materialTitle || "Untitled"}</strong> - ${item.count || 0}</p>
+    `
+    )
+    .join("");
+}
+
+async function loadUsageSummary() {
+  try {
+    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/admin/usage-summary", {
+      headers: { Authorization: `Bearer ${adminToken}` }
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      renderUsageList("usagePastQuestions", []);
+      renderUsageList("usageRawMaterials", []);
+      renderUsageList("usageMocks", []);
+      return;
+    }
+
+    renderUsageList("usagePastQuestions", data.pastQuestions || []);
+    renderUsageList("usageRawMaterials", data.rawMaterials || []);
+    renderUsageList("usageMocks", data.mocks || []);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 function applyAdminTheme() {
   const theme = localStorage.getItem("adminTheme") || "light";
   document.body.setAttribute("data-admin-theme", theme);
@@ -79,5 +117,6 @@ document.addEventListener("DOMContentLoaded", () => {
   loadStats();
   loadStudyCenters();
   loadMockSummary();
+  loadUsageSummary();
 });
 

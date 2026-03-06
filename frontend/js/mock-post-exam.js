@@ -1,6 +1,8 @@
 (function initMockPostExam() {
   const HISTORY_KEY = "mockExamHistory";
   const LAST_KEY = "mockExamLastAttempt";
+  const HISTORY_RETENTION_MS = 7 * 24 * 60 * 60 * 1000;
+  const MAX_ATTEMPTS_PER_COURSE = 3;
 
   function escapeHtml(value) {
     return String(value || "")
@@ -21,7 +23,36 @@
   function getMockHistory() {
     try {
       const parsed = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
-      return Array.isArray(parsed) ? parsed : [];
+      const rows = Array.isArray(parsed) ? parsed : [];
+      const now = Date.now();
+      const withinRetention = rows.filter((item) => {
+        const ts = Date.parse(item?.submittedAt || "");
+        if (!Number.isFinite(ts)) return false;
+        return now - ts <= HISTORY_RETENTION_MS;
+      });
+
+      // Keep only latest N attempts per course.
+      const perCourseCount = new Map();
+      const kept = [];
+      for (const item of withinRetention) {
+        const key = String(item?.courseCode || "MOCK").toUpperCase();
+        const count = Number(perCourseCount.get(key) || 0);
+        if (count >= MAX_ATTEMPTS_PER_COURSE) continue;
+        kept.push(item);
+        perCourseCount.set(key, count + 1);
+      }
+
+      if (kept.length !== rows.length) {
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(kept));
+        const latest = kept[0] || null;
+        if (latest) {
+          localStorage.setItem(LAST_KEY, JSON.stringify(latest));
+        } else {
+          localStorage.removeItem(LAST_KEY);
+        }
+      }
+
+      return kept;
     } catch (err) {
       return [];
     }
@@ -82,8 +113,8 @@
 
     sidebar.innerHTML = `
       <ul class="sidebar-top">
-        <li><a href="/pages/mock-exams.html"><strong>Mock Exams</strong></a></li>
-        <li><a href="/pages/student-dashboard.html">Main Dashboard</a></li>
+        <li><a href="/frontend/pages/mock-exams.html"><strong>Mock Exams</strong></a></li>
+        <li><a href="/frontend/pages/student-dashboard.html">Main Dashboard</a></li>
       </ul>
     `;
   }

@@ -3,19 +3,50 @@ const fs = require("fs");
 const pdfParse = require("pdf-parse");
 const router = express.Router();
 
-const authAdmin = require("../middleware/authAdmin");
+const authRoles = require("../middleware/authRoles");
 const createPdfUploader = require("../utils/uploadPdf");
 const { createCBTExam } = require("../controllers/cbtExam.controller");
 const {
   addQuestionToBank,
   generateMockExam,
-  deleteQuestionFromBank
+  deleteQuestionFromBank,
+  generateQuestionsWithAi
 } = require("../controllers/questionBank.controller");
 
 const CBTQuestion = require("../models/CBTQuestion");
 const CBTExam = require("../models/CBTExam");
+const Staff = require("../models/Staff");
 
 const uploadCbt = createPdfUploader("cbt");
+
+async function canManageCbt(req, res, next) {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    if (req.user.role === "admin") {
+      return next();
+    }
+
+    if (req.user.role !== "staff") {
+      return res.status(403).json({ message: "Access denied." });
+    }
+
+    const staff = await Staff.findById(req.user.id).select("permissions");
+    if (!staff) {
+      return res.status(403).json({ message: "Staff not found" });
+    }
+
+    if (!Array.isArray(staff.permissions) || !staff.permissions.includes("cbt")) {
+      return res.status(403).json({ message: "Insufficient permissions" });
+    }
+
+    return next();
+  } catch (err) {
+    return res.status(500).json({ message: "Permission check failed" });
+  }
+}
 
 function normalizeCourseCode(value) {
   return String(value || "").trim().toUpperCase();
@@ -94,14 +125,21 @@ function parseQuestions(rawText) {
     .filter(Boolean);
 }
 
-router.post("/cbt", authAdmin, createCBTExam);
-router.post("/question-bank", authAdmin, addQuestionToBank);
-router.delete("/question-bank", authAdmin, deleteQuestionFromBank);
-router.post("/generate-mock", authAdmin, generateMockExam);
+router.post("/cbt", authRoles(["admin", "staff"]), canManageCbt, createCBTExam);
+router.post("/question-bank", authRoles(["admin", "staff"]), canManageCbt, addQuestionToBank);
+router.post(
+  "/question-bank/generate-ai",
+  authRoles(["admin", "staff"]),
+  canManageCbt,
+  generateQuestionsWithAi
+);
+router.delete("/question-bank", authRoles(["admin", "staff"]), canManageCbt, deleteQuestionFromBank);
+router.post("/generate-mock", authRoles(["admin", "staff"]), canManageCbt, generateMockExam);
 
 router.post(
   "/cbt/convert",
-  authAdmin,
+  authRoles(["admin", "staff"]),
+  canManageCbt,
   uploadCbt.single("file"),
   async (req, res) => {
     try {

@@ -7,6 +7,14 @@ const questionSchema = new mongoose.Schema(
       enum: ["mcq", "fill"],
       default: "mcq"
     },
+    subject: { type: String, trim: true, default: "" },
+    topic: { type: String, trim: true, default: "" },
+    subtopic: { type: String, trim: true, default: "" },
+    difficulty: {
+      type: String,
+      enum: ["easy", "medium", "hard"],
+      default: "medium"
+    },
     text: { type: String, required: true, trim: true },
     options: { type: [String], default: [] },
     correctAnswer: { type: String, required: true, trim: true }

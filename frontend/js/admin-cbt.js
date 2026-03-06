@@ -1,5 +1,9 @@
 
-const token = (localStorage.getItem("adminToken") || localStorage.getItem("token"));
+const token =
+  window.NOTIFICATION_TOKEN ||
+  localStorage.getItem("staffToken") ||
+  localStorage.getItem("adminToken") ||
+  localStorage.getItem("token");
 const sessionQuestions = [];
 
 function setStatus(message, isError) {

@@ -1,7 +1,7 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const User = require("../models/User");
+const Admin = require("../models/Admin");
 
 (async () => {
   try {
@@ -23,14 +23,14 @@ const User = require("../models/User");
 
     const hashed = await bcrypt.hash(newPassword, 10);
 
-    const admin = await User.findOneAndUpdate(
-      { email: adminEmail, role: "admin" },
+    const admin = await Admin.findOneAndUpdate(
+      { email: adminEmail },
       { password: hashed },
       { new: true }
     );
 
     if (!admin) {
-      console.log("Admin not found with role=admin.");
+      console.log("Admin not found.");
     } else {
       console.log("Admin password reset successfully.");
       console.log("Email:", adminEmail);

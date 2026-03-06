@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.removeItem("token");
     localStorage.removeItem("authToken");
     localStorage.removeItem("role");
-    window.location.href = "./admin-login.html";
+    window.location.href = "/frontend/pages/admin-login.html";
   });
 });
 

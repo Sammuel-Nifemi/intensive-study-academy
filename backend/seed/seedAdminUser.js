@@ -3,32 +3,22 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const connectDB = require("../config/db");
-const User = require("../models/User");
+const Admin = require("../models/Admin");
 
 async function upsertAdmin() {
   await connectDB();
 
   const email = "oluwanifemis283@gmail.com";
   const password = "omogbemi123";
-  const fullName = "Admin User";
-
   const hashed = await bcrypt.hash(password, 10);
 
-  const existing = await User.findOne({ email });
+  const existing = await Admin.findOne({ email });
   if (existing) {
     existing.password = hashed;
-    existing.role = "admin";
-    existing.fullName = existing.fullName || fullName;
     await existing.save();
     console.log("Admin user updated:", email);
   } else {
-    await User.create({
-      fullName,
-      email,
-      password: hashed,
-      role: "admin",
-      status: "active"
-    });
+    await Admin.create({ email, password: hashed });
     console.log("Admin user created:", email);
   }
 

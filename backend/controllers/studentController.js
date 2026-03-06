@@ -8,6 +8,7 @@ const Complaint = require("../models/Complaint");
 const AdminCourse = require("../models/AdminCourse");
 const ProgramCourse = require("../models/ProgramCourse");
 const Staff = require("../models/Staff");
+const Admin = require("../models/Admin");
 const { notifyUsers } = require("../utils/notifyUsers");
 
 /* =========================
@@ -99,6 +100,43 @@ exports.getMyProfile = async (req, res) => {
   } catch (err) {
     console.error("Profile error:", err);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+/* =========================
+   GET MY REFERRALS
+========================= */
+exports.getMyReferrals = async (req, res) => {
+  try {
+    const currentStudent = await Student.findOne({ user_id: req.user.id }).select("_id referralCode");
+    if (!currentStudent) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+    if (!currentStudent.referralCode) {
+      await currentStudent.save();
+    }
+
+    const referrals = await Student.find({ referredBy: currentStudent._id })
+      .populate({ path: "user_id", select: "fullName" })
+      .select("isaStudentId email phone createdAt")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const rows = referrals.map((item) => ({
+      fullName: item.user_id?.fullName || "",
+      email: item.email || "",
+      phone: item.phone || "",
+      createdAt: item.createdAt
+    }));
+
+    return res.json({
+      referralCode: currentStudent.referralCode || "",
+      totalReferrals: rows.length,
+      referrals: rows
+    });
+  } catch (err) {
+    console.error("Get referrals error:", err);
+    return res.status(500).json({ message: "Failed to load referrals" });
   }
 };
 
@@ -407,7 +445,7 @@ exports.submitComplaint = async (req, res) => {
     });
 
     const staffUsers = await Staff.find().select("_id").lean();
-    const adminUsers = await User.find({ role: "admin" }).select("_id role").lean();
+    const adminUsers = await Admin.find().select("_id").lean();
     const studentName = user.fullName || user.email || "Student";
 
     await notifyUsers(

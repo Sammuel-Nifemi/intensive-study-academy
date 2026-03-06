@@ -3,11 +3,17 @@ const router = express.Router();
 
 const authStudent = require("../middleware/authStudent");
 const checkStudentProfileComplete = require("../middleware/checkStudentProfileComplete");
-const { loginStudent, registerStudent } = require("../controllers/studentAuth.controller");
+const {
+  loginStudent,
+  registerStudent,
+  sendResetPasswordLink,
+  resetPasswordWithToken
+} = require("../controllers/studentAuth.controller");
 const {
   getMyProfile,
   updatePersonalProfile,
   getMyCourses,
+  getMyReferrals,
   updateMyProfile,
   submitAcademicChangeRequest,
   submitComplaint,
@@ -29,6 +35,7 @@ router.post("/me/profile", authStudent, updatePersonalProfile);
 
 // Get logged-in student courses (master list)
 router.get("/me/courses", authStudent, getMyCourses);
+router.get("/my-referrals", authStudent, getMyReferrals);
 
 // Update logged-in student profile
 router.put("/me", authStudent, updateMyProfile);
@@ -47,6 +54,8 @@ router.post("/register", registerStudent);
 
 // Student login
 router.post("/login", loginStudent);
+router.post("/reset-password", sendResetPasswordLink);
+router.post("/reset-password/confirm", resetPasswordWithToken);
 
 // Student dashboard (protected)
 router.get("/dashboard", authStudent, checkStudentProfileComplete, getStudentDashboard);

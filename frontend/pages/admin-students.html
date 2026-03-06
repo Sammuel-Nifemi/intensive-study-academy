@@ -7,6 +7,147 @@
   <link rel="stylesheet" href="../css/student-dashboard.css" />
   <link rel="stylesheet" href="../css/admin-theme.css" />
 <script src="../js/api-base.js"></script>
+  <style>
+    .student-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 12px;
+    }
+
+    .student-modal {
+      width: min(860px, 96vw);
+      max-height: 88vh;
+      overflow: auto;
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 20px 44px rgba(15, 23, 42, 0.18);
+    }
+
+    .student-modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .student-section {
+      margin-bottom: 16px;
+    }
+
+    .student-section h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      color: #0f172a;
+    }
+
+    .student-modal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 16px;
+    }
+
+    .student-modal-grid p {
+      margin: 0;
+      padding: 10px 12px;
+      border: 1px solid #eef2f7;
+      border-radius: 10px;
+      background: #f8fafc;
+    }
+
+    .student-usage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .student-usage-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 12px;
+      background: #ffffff;
+    }
+
+    .student-usage-card h4 {
+      margin: 0 0 8px;
+      font-size: 0.95rem;
+    }
+
+    .student-usage-card p {
+      margin: 0 0 6px;
+      font-size: 0.92rem;
+    }
+
+    .students-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .data-table tbody tr {
+      transition: background-color 0.18s ease;
+    }
+
+    .data-table tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    .student-name {
+      font-weight: 700;
+      font-size: 1.02rem;
+      color: #0f172a;
+      line-height: 1.25;
+    }
+
+    .student-email {
+      display: inline-block;
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 0.88rem;
+      color: #64748b;
+      vertical-align: bottom;
+    }
+
+    .nowrap-cell {
+      white-space: nowrap;
+    }
+
+    .action-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+    }
+
+    .action-row .action-btn {
+      height: 34px;
+      padding: 0 12px;
+      line-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 720px) {
+      .student-modal {
+        padding: 14px;
+      }
+
+      .student-modal-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
 <header class="dashboard-header">
@@ -45,6 +186,16 @@
       <div id="studentsTable"></div>
     </section>
   </main>
+</div>
+
+<div id="studentDetailsModal" class="student-modal-overlay" aria-hidden="true">
+  <div class="student-modal" role="dialog" aria-modal="true" aria-labelledby="studentModalTitle">
+    <div class="student-modal-head">
+      <h2 id="studentModalTitle">Student Details</h2>
+      <button id="closeStudentModalBtn" class="action-btn" type="button">Close</button>
+    </div>
+    <div id="studentModalBody"></div>
+  </div>
 </div>
 
 <script src="../js/admin-guard.js"></script>

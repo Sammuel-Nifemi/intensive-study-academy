@@ -8,7 +8,7 @@
     localStorage.removeItem("token");
     localStorage.removeItem("authToken");
     localStorage.removeItem("role");
-    window.location.href = "./staff-login.html";
+    window.location.href = "/frontend/pages/staff-login.html";
   });
 });
 

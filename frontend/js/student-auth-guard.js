@@ -92,7 +92,7 @@ async function loadStudent({ force = false } = {}) {
   const token = localStorage.getItem("studentToken");
   if (!token) {
     clearStudentCache();
-    window.location.href = "/pages/student-login.html";
+    window.location.href = "/frontend/pages/student-login.html";
     return null;
   }
 
@@ -102,14 +102,19 @@ async function loadStudent({ force = false } = {}) {
   }
 
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+
     const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/student/me", {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
+      signal: controller.signal
     });
+    clearTimeout(timeoutId);
 
     if (res.status === 401) {
       localStorage.removeItem("studentToken");
       clearStudentCache();
-      window.location.href = "/pages/student-login.html";
+      window.location.href = "/frontend/pages/student-login.html";
       return null;
     }
 
@@ -196,7 +201,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   window.NOTIFICATION_TOKEN = token;
 
   if (!token) {
-    window.location.href = "/pages/student-login.html";
+    window.location.href = "/frontend/pages/student-login.html";
     return;
   }
 
@@ -218,7 +223,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const isDashboard = path.includes("student-dashboard");
   const isCompleteProfile = path.includes("complete-profile");
   if (!profile.profileCompleted && !isDashboard && !isCompleteProfile) {
-    window.location.href = "/pages/complete-profile.html";
+    window.location.href = "/frontend/pages/complete-profile.html";
   }
 });
 
@@ -233,7 +238,7 @@ function bindStudentLogout() {
     localStorage.removeItem("role");
     localStorage.removeItem("user");
     clearStudentCache();
-    window.location.href = "/pages/student-login.html";
+    window.location.href = "/frontend/pages/student-login.html";
   };
 
   logoutButtons.forEach((button) => {

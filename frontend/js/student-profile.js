@@ -1,4 +1,23 @@
 const STUDENT_LOGIN_URL = "/frontend/pages/student-login.html";
+const API_BASE = window.ISA_API_ORIGIN || "";
+
+async function loadProfileFallback(token) {
+  try {
+    const res = await fetch(`${API_BASE}/api/student/me`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (res.status === 401) {
+      localStorage.removeItem("studentToken");
+      window.location.href = STUDENT_LOGIN_URL;
+      return null;
+    }
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    console.error("Profile fallback load failed:", err);
+    return null;
+  }
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("studentToken");
@@ -24,7 +43,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (window.hydrateStudentHeader) window.hydrateStudentHeader(cached);
     }
 
-    const profile = window.loadStudent ? await window.loadStudent({ force: true }) : null;
+    const profile = window.loadStudent
+      ? await window.loadStudent({ force: true })
+      : await loadProfileFallback(token);
     if (!profile) {
       if (!cached) setText("profileName", "Student");
       return;
@@ -68,3 +89,5 @@ function renderProfile(profile) {
   setText("profileLevel", profile?.level);
   setText("profileSemester", profile?.semester);
 }
+
+

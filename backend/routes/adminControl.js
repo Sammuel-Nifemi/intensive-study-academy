@@ -3,7 +3,9 @@ const router = express.Router();
 
 const authAdmin = require("../middleware/authAdmin");
 
+const Admin = require("../models/Admin");
 const User = require("../models/User");
+const Staff = require("../models/Staff");
 const Student = require("../models/Student");
 const StudentFlag = require("../models/StudentFlag");
 const ChangeRequest = require("../models/ChangeRequest");
@@ -11,6 +13,7 @@ const Complaint = require("../models/Complaint");
 const ExamAttempt = require("../models/ExamAttempt");
 const StudyCenter = require("../models/StudyCenter");
 const AdminSettings = require("../models/AdminSettings");
+const MaterialUsage = require("../models/MaterialUsage");
 
 /* =========================
    STATS
@@ -18,8 +21,8 @@ const AdminSettings = require("../models/AdminSettings");
 router.get("/stats", authAdmin, async (req, res) => {
   try {
     const [students, staff, mocks] = await Promise.all([
-      User.countDocuments({ role: "student" }),
-      User.countDocuments({ role: "staff" }),
+      Student.countDocuments({}),
+      Staff.countDocuments({}),
       ExamAttempt.countDocuments({})
     ]);
 
@@ -34,11 +37,148 @@ router.get("/stats", authAdmin, async (req, res) => {
 ========================= */
 router.get("/students", authAdmin, async (req, res) => {
   try {
-    const students = await User.find({ role: "student" })
-      .select("fullName email status student");
-    res.json(students);
+    const users = await User.find({ role: "student" })
+      .select("_id fullName email status")
+      .lean();
+
+    if (!users.length) {
+      return res.json([]);
+    }
+
+    const userIds = users.map((u) => u._id);
+    const profiles = await Student.find({ user_id: { $in: userIds } })
+      .select("user_id phone studyCenter study_center faculty facultyName program programName lastLogin loginCount")
+      .lean();
+    const profileByUserId = new Map(profiles.map((p) => [String(p.user_id), p]));
+
+    const rawCenterValues = profiles
+      .map((p) => p.studyCenter || p.study_center)
+      .filter(Boolean)
+      .map((value) => String(value).trim());
+    const uniqueCenterIds = Array.from(
+      new Set(rawCenterValues.filter((value) => /^[0-9a-fA-F]{24}$/.test(value)))
+    );
+
+    const centerById = new Map();
+    if (uniqueCenterIds.length) {
+      const centers = await StudyCenter.find({ _id: { $in: uniqueCenterIds } })
+        .select("_id name")
+        .lean();
+      centers.forEach((center) => {
+        centerById.set(String(center._id), String(center.name || "").trim());
+      });
+    }
+
+    const students = users.map((user) => {
+      const profile = profileByUserId.get(String(user._id)) || {};
+      const rawCenter = String(profile.studyCenter || profile.study_center || "").trim();
+      const resolvedCenter =
+        (rawCenter && centerById.get(rawCenter)) || rawCenter;
+      return {
+        _id: String(user._id),
+        fullName: user.fullName || "",
+        email: user.email || "",
+        status: user.status || "active",
+        phone: profile.phone || "",
+        studyCenter: resolvedCenter,
+        faculty: profile.facultyName || profile.faculty || "",
+        program: profile.programName || profile.program || "",
+        lastLogin: profile.lastLogin || null,
+        loginCount: Number(profile.loginCount || 0)
+      };
+    });
+
+    return res.json(students);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch students" });
+  }
+});
+
+router.get("/students/:id", authAdmin, async (req, res) => {
+  try {
+    const studentUserId = String(req.params.id || "").trim();
+    if (!studentUserId) {
+      return res.status(400).json({ message: "Student id is required" });
+    }
+
+    const user = await User.findOne({ _id: studentUserId, role: "student" })
+      .select("fullName email status phoneNumber createdAt")
+      .lean();
+    if (!user) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    const studentProfile = await Student.findOne({ user_id: user._id })
+      .select("phone matricNo level semester facultyName programName referralCode createdAt studyCenter study_center lastLogin loginCount")
+      .lean();
+
+    const rawCenter = String(studentProfile?.studyCenter || studentProfile?.study_center || "").trim();
+    let resolvedStudyCenter = rawCenter;
+    if (rawCenter && /^[0-9a-fA-F]{24}$/.test(rawCenter)) {
+      const center = await StudyCenter.findById(rawCenter).select("name").lean();
+      if (center?.name) {
+        resolvedStudyCenter = String(center.name).trim();
+      }
+    }
+
+    const referralCount = await Student.countDocuments({ referredBy: studentProfile?._id });
+
+    const topByType = async (type) =>
+      MaterialUsage.aggregate([
+        { $match: { student: studentProfile?._id, type } },
+        {
+          $group: {
+            _id: "$materialTitle",
+            count: { $sum: 1 },
+            lastUsedAt: { $max: "$createdAt" }
+          }
+        },
+        { $sort: { count: -1, lastUsedAt: -1 } },
+        { $limit: 5 },
+        {
+          $project: {
+            _id: 0,
+            materialTitle: "$_id",
+            count: 1
+          }
+        }
+      ]);
+
+    const [pastQuestions, rawMaterials, mocks] = studentProfile?._id
+      ? await Promise.all([
+          topByType("past-question"),
+          topByType("raw-material"),
+          topByType("mock")
+        ])
+      : [[], [], []];
+
+    return res.json({
+      student: {
+        id: String(user._id),
+        fullName: user.fullName || "",
+        email: user.email || "",
+        status: user.status || "active",
+        phone: studentProfile?.phone || user.phoneNumber || "",
+        matricNo: studentProfile?.matricNo || "",
+        level: studentProfile?.level || "",
+        semester: studentProfile?.semester || "",
+        facultyName: studentProfile?.facultyName || "",
+        programName: studentProfile?.programName || "",
+        studyCenter: resolvedStudyCenter,
+        referralCode: studentProfile?.referralCode || "",
+        lastLogin: studentProfile?.lastLogin || null,
+        loginCount: Number(studentProfile?.loginCount || 0),
+        createdAt: studentProfile?.createdAt || user.createdAt || null
+      },
+      referralCount,
+      topUsedMaterials: {
+        pastQuestions,
+        rawMaterials,
+        mocks
+      }
+    });
+  } catch (err) {
+    return res.status(500).json({ message: "Failed to load student details" });
   }
 });
 
@@ -86,9 +226,59 @@ router.post("/students/suspend", authAdmin, async (req, res) => {
 ========================= */
 router.get("/staff", authAdmin, async (req, res) => {
   try {
-    const staff = await User.find({ role: "staff" })
-      .select("fullName email status");
-    res.json(staff);
+    const staff = await Staff.find()
+      .select("email permissions createdAt createdBy")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    if (!staff.length) {
+      return res.json([]);
+    }
+
+    const creatorIds = Array.from(
+      new Set(
+        staff
+          .map((item) => String(item.createdBy || "").trim())
+          .filter((value) => /^[0-9a-fA-F]{24}$/.test(value))
+      )
+    );
+
+    const [admins, users, creatorsAsStaff] = await Promise.all([
+      creatorIds.length
+        ? Admin.find({ _id: { $in: creatorIds } }).select("_id email").lean()
+        : [],
+      creatorIds.length
+        ? User.find({ _id: { $in: creatorIds } }).select("_id fullName email").lean()
+        : [],
+      creatorIds.length
+        ? Staff.find({ _id: { $in: creatorIds } }).select("_id fullName email").lean()
+        : []
+    ]);
+
+    const adminById = new Map(admins.map((item) => [String(item._id), item]));
+    const userById = new Map(users.map((item) => [String(item._id), item]));
+    const staffById = new Map(creatorsAsStaff.map((item) => [String(item._id), item]));
+
+    const payload = staff.map((item) => {
+      const createdById = String(item.createdBy || "").trim();
+      const admin = adminById.get(createdById);
+      const user = userById.get(createdById);
+      const staffCreator = staffById.get(createdById);
+      const createdByLabel =
+        admin?.email ||
+        user?.fullName ||
+        user?.email ||
+        staffCreator?.fullName ||
+        staffCreator?.email ||
+        "Admin";
+
+      return {
+        ...item,
+        createdBy: createdByLabel
+      };
+    });
+
+    res.json(payload);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch staff" });
   }
@@ -232,6 +422,50 @@ router.get("/settings", authAdmin, async (req, res) => {
     res.json(settings);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch settings" });
+  }
+});
+
+/* =========================
+   MATERIAL USAGE SUMMARY
+========================= */
+router.get("/usage-summary", authAdmin, async (req, res) => {
+  try {
+    const summarizeByType = async (type) => {
+      return MaterialUsage.aggregate([
+        { $match: { type } },
+        {
+          $group: {
+            _id: "$materialTitle",
+            count: { $sum: 1 },
+            lastUsedAt: { $max: "$createdAt" }
+          }
+        },
+        { $sort: { count: -1, lastUsedAt: -1 } },
+        { $limit: 5 },
+        {
+          $project: {
+            _id: 0,
+            materialTitle: "$_id",
+            count: 1,
+            lastUsedAt: 1
+          }
+        }
+      ]);
+    };
+
+    const [pastQuestions, rawMaterials, mocks] = await Promise.all([
+      summarizeByType("past-question"),
+      summarizeByType("raw-material"),
+      summarizeByType("mock")
+    ]);
+
+    res.json({
+      pastQuestions,
+      rawMaterials,
+      mocks
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to load usage summary" });
   }
 });
 

@@ -5,6 +5,8 @@ const ExamAttempt = require("../models/ExamAttempt");
 const MockAttempt = require("../models/MockAttempt");
 const User = require("../models/User");
 const StudentFlag = require("../models/StudentFlag");
+const Student = require("../models/Student");
+const MaterialUsage = require("../models/MaterialUsage");
 
 function shuffle(array) {
   const arr = [...array];
@@ -19,6 +21,22 @@ function buildStableQuestionId(source, originalIndex, question) {
   const text = String(question?.text || question?.question || "").trim();
   const type = question?.type === "fill" ? "fill" : "mcq";
   return `${source}:${originalIndex}:${type}:${text.slice(0, 80)}`;
+}
+
+async function logMockUsage({ req, materialId, materialTitle }) {
+  try {
+    const studentProfile =
+      req.student || (await Student.findOne({ user_id: req.user.id }).select("_id"));
+    if (!studentProfile?._id) return;
+    await MaterialUsage.create({
+      student: studentProfile._id,
+      materialId,
+      materialTitle: materialTitle || "Mock Exam",
+      type: "mock"
+    });
+  } catch (err) {
+    console.error("Mock usage write failed:", err);
+  }
 }
 
 exports.getMockExam = async (req, res) => {
@@ -49,6 +67,12 @@ exports.getMockExam = async (req, res) => {
         options: q.options,
         type: q.type
       }));
+
+      await logMockUsage({
+        req,
+        materialId: exam._id,
+        materialTitle: exam.title || exam.courseCode || "Mock Exam"
+      });
 
       return res.json({
         courseCode: exam.courseCode,
@@ -97,6 +121,12 @@ exports.getMockExam = async (req, res) => {
         options,
         type: qType
       };
+    });
+
+    await logMockUsage({
+      req,
+      materialId: cbtExam?._id || questionBank?._id,
+      materialTitle: cbtExam?.title || questionBank?.title || course
     });
 
     return res.json({
@@ -256,6 +286,12 @@ exports.submitMockExam = async (req, res) => {
       timeSpentSeconds: normalizedTimeSpent,
       submittedAt,
       questions: detailedQuestions
+    });
+
+    await logMockUsage({
+      req,
+      materialId: examId,
+      materialTitle: (exam && (exam.title || exam.courseCode)) || course,
     });
 
     res.json({

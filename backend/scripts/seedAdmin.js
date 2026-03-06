@@ -1,7 +1,7 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const User = require("../models/User");
+const Admin = require("../models/Admin");
 
 (async () => {
   try {
@@ -12,7 +12,6 @@ const User = require("../models/User");
       .trim()
       .toLowerCase();
     const password = String(process.env.ADMIN_PASSWORD || process.argv[3] || "");
-    const fullName = String(process.env.ADMIN_FULL_NAME || process.argv[4] || "Super Admin").trim();
 
     if (!email) {
       throw new Error("Provide admin email via ADMIN_EMAIL or first CLI arg.");
@@ -22,32 +21,21 @@ const User = require("../models/User");
       throw new Error("Provide ADMIN_PASSWORD (or second CLI arg) with at least 8 characters.");
     }
 
-    const existingAdmin = await User.findOne({ role: "admin" });
+    const existingAdmin = await Admin.findOne({});
     if (existingAdmin) {
       console.log("Admin already exists:", existingAdmin.email);
       process.exit(0);
     }
 
-    const existingEmail = await User.findOne({ email });
+    const existingEmail = await Admin.findOne({ email });
     if (existingEmail) {
-      if (existingEmail.role !== "admin") {
-        console.log(`Email ${email} already exists with role=${existingEmail.role}.`);
-        console.log("Use a different email or manually promote this user to admin.");
-        process.exit(1);
-      }
       console.log("Admin already exists with the same email.");
       process.exit(0);
     }
 
     const hashed = await bcrypt.hash(password, 10);
 
-    await User.create({
-      fullName,
-      email,
-      password: hashed,
-      role: "admin",
-      status: "active"
-    });
+    await Admin.create({ email, password: hashed });
 
     console.log("Admin seeded successfully:", email);
     process.exit(0);

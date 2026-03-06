@@ -1,7 +1,9 @@
-﻿// Profile = identity only (edit-only, no completion gating).
+// Profile = identity only (edit-only, no completion gating).
 const staffToken = localStorage.getItem("staffToken");
+const STAFF_LOGIN_URL = "/frontend/pages/staff-login.html";
+const STAFF_DASHBOARD_URL = "/frontend/pages/staff-dashboard.html";
 if (!staffToken) {
-  window.location.href = "./staff-login.html";
+  window.location.href = STAFF_LOGIN_URL;
 }
 
 function setStatus(message, type) {
@@ -24,6 +26,20 @@ function setSaveState(isSaved) {
   }
 }
 
+function setSavingState(isSaving) {
+  const btn = document.querySelector("button[form=\"staffProfileForm\"]");
+  if (!btn) return;
+  if (isSaving) {
+    btn.disabled = true;
+    btn.textContent = "Saving...";
+    return;
+  }
+  if (btn.textContent !== "Saved") {
+    btn.disabled = false;
+    btn.textContent = "Save Profile";
+  }
+}
+
 async function loadProfile() {
   try {
     const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/staff/me", {
@@ -31,7 +47,7 @@ async function loadProfile() {
     });
     const payload = await res.json();
     if (!res.ok || !payload?.success) {
-      window.location.href = "./staff-login.html";
+      window.location.href = STAFF_LOGIN_URL;
       return;
     }
     const data = payload.data || {};
@@ -43,12 +59,13 @@ async function loadProfile() {
     document.getElementById("avatarUrl").value = data.avatarUrl || "";
     setSaveState(false);
   } catch (err) {
-    window.location.href = "./staff-login.html";
+    window.location.href = STAFF_LOGIN_URL;
   }
 }
 
 async function saveProfile(e) {
   e.preventDefault();
+  setSavingState(true);
   setStatus("Saving profile...", "loading");
 
   const payload = {
@@ -63,6 +80,7 @@ async function saveProfile(e) {
   if (!payload.fullName || !payload.title || !payload.role || !payload.dobDay || !payload.dobMonth) {
     setStatus("All profile fields are required.", "error");
     setSaveState(false);
+    setSavingState(false);
     return;
   }
 
@@ -80,14 +98,19 @@ async function saveProfile(e) {
     if (!res.ok || !data?.success) {
       setStatus(data.message || "Failed to save profile", "error");
       setSaveState(false);
+      setSavingState(false);
       return;
     }
 
-    setStatus("Profile updated.", "success");
+    setStatus("Profile updated. Redirecting...", "success");
     setSaveState(true);
+    setTimeout(() => {
+      window.location.href = STAFF_DASHBOARD_URL;
+    }, 600);
   } catch (err) {
     setStatus("Failed to save profile.", "error");
     setSaveState(false);
+    setSavingState(false);
   }
 }
 
@@ -112,4 +135,3 @@ document.addEventListener("DOMContentLoaded", () => {
       el.addEventListener("change", () => setSaveState(false));
     });
 });
-

@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("studentToken");
 
   if (!token) {
-    window.location.href = "/pages/student-login.html";
+    window.location.href = "/frontend/pages/student-login.html";
     return;
   }
 
@@ -17,6 +17,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const facultyInput = document.getElementById("faculty");
   const studyCenterSelect = document.getElementById("studyCenter");
   const dobDaySelect = document.getElementById("dobDay");
+  const prep = document.getElementById("dashboardPrep");
+
+  if (prep) prep.hidden = true;
 
   if (dobDaySelect) {
     dobDaySelect.innerHTML = `<option value="">Day</option>`;
@@ -114,14 +117,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      const prep = document.getElementById("dashboardPrep");
       if (prep) prep.hidden = false;
       form.querySelectorAll("input, select, button").forEach((el) => {
         el.disabled = true;
       });
 
       setTimeout(() => {
-        window.location.href = "/pages/student-dashboard.html";
+        window.location.href = "/frontend/pages/student-dashboard.html";
       }, 1400);
     } catch (err) {
       console.error(err);
@@ -129,4 +131,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 });
+
 

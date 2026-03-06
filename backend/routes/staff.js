@@ -16,6 +16,7 @@ const CBTExam = require("../models/CBTExam");
 const Staff = require("../models/Staff");
 const Announcement = require("../models/Announcement");
 const User = require("../models/User");
+const Program = require("../models/Program");
 
 const uploadMaterials = createPdfUploader("academic/materials");
 const uploadMocks = createPdfUploader("academic/mocks");
@@ -36,6 +37,19 @@ function requireAcademicFields(body) {
     return "faculty, program, level, and semester are required";
   }
   return null;
+}
+
+function isObjectId(value) {
+  return /^[0-9a-fA-F]{24}$/.test(String(value || "").trim());
+}
+
+async function resolveProgramId(programValue) {
+  const raw = String(programValue || "").trim();
+  if (!raw) return null;
+  if (isObjectId(raw)) return raw;
+
+  const program = await Program.findOne({ name: raw }).select("_id").lean();
+  return program?._id || null;
 }
 
 function isProfileComplete(staff) {
@@ -279,6 +293,10 @@ router.post(
       }
 
       const { title, description, faculty, program, level, semester, courseCode, materialType } = req.body;
+      const programId = await resolveProgramId(program);
+      if (!programId) {
+        return res.status(400).json({ message: "Invalid program. Select a valid program." });
+      }
       const filePaths = req.files.map((file) => normalizePath(file.path)).filter(Boolean);
 
       const items = await Promise.all(
@@ -287,7 +305,7 @@ router.post(
             title: title || file.originalname,
             description,
             faculty,
-            program,
+            program: programId,
             level,
             semester,
             courseCode,
@@ -334,13 +352,17 @@ router.post(
       }
 
       const { title, faculty, program, level, semester, courseCode, description } = req.body;
+      const programId = await resolveProgramId(program);
+      if (!programId) {
+        return res.status(400).json({ message: "Invalid program. Select a valid program." });
+      }
       const filePaths = req.files.map((file) => normalizePath(file.path)).filter(Boolean);
       const items = await Promise.all(
         req.files.map((file) =>
           MockExam.create({
             title: title || file.originalname,
             faculty,
-            program,
+            program: programId,
             level,
             semester,
             courseCode,

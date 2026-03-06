@@ -101,6 +101,57 @@
       resize: vertical;
       min-height: 88px;
     }
+    .course-picker {
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      background: #fff;
+      padding: 10px;
+    }
+    .course-search-input {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 9px 10px;
+      font: inherit;
+      margin-bottom: 10px;
+    }
+    .course-chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      max-height: 220px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+    .course-chip {
+      border: 1px solid #cbd5e1;
+      border-radius: 999px;
+      background: #fff;
+      color: #0f172a;
+      font-size: 0.92rem;
+      padding: 7px 12px;
+      cursor: pointer;
+    }
+    .course-chip.active {
+      border-color: #0f766e;
+      background: #ccfbf1;
+      color: #134e4a;
+      font-weight: 700;
+    }
+    .course-chip.empty {
+      border-style: dashed;
+      color: #64748b;
+      cursor: default;
+    }
+    .course-select-note {
+      margin-top: 6px;
+      font-size: 0.9rem;
+      color: #475569;
+    }
+    .course-select-note.error {
+      color: #b91c1c;
+      font-weight: 600;
+    }
     .booking-actions {
       display: flex;
       gap: 10px;
@@ -170,7 +221,7 @@
       <li><a href="/frontend/pages/past-questions.html">Past Questions</a></li>
       <li><a href="live-classes.html" class="active">Live Classes</a></li>
       <li class="divider"></li>
-      <li><a href="/frontend/pages/ai-assistant.html">AI Assistant</a></li>
+      <li><a href="/frontend/pages/ai-assistant.html">Academic Intel</a></li>
       <li><a href="/frontend/pages/student-profile.html">Profile</a></li>
       <li><a href="/frontend/pages/student-settings.html">Settings</a></li>
     </ul>
@@ -238,10 +289,23 @@
         </div>
 
         <div class="form-row">
-          <label for="liveCourseCode">Course</label>
-          <select id="liveCourseCode" name="courseCode" required>
-            <option value="">Loading courses...</option>
-          </select>
+          <label for="liveCourseCode">Courses (Select up to 11)</label>
+          <input id="liveCourseCode" name="courseCode" type="hidden">
+          <div class="course-picker">
+            <input
+              id="liveCourseSearch"
+              class="course-search-input"
+              type="search"
+              placeholder="Search course code or title"
+              autocomplete="off"
+            >
+            <div id="liveCourseChipList" class="course-chip-list" aria-live="polite">
+              <span class="course-chip empty">Loading courses...</span>
+            </div>
+          </div>
+          <p id="liveCourseCodeHelp" class="course-select-note">
+            Select one or more courses (max 11).
+          </p>
         </div>
 
         <div class="form-row">
@@ -285,7 +349,7 @@
   </main>
 </div>
 
-<script src="/js/student-auth-guard.js"></script>
+<script src="/frontend/js/student-auth-guard.js"></script>
 <script src="../js/notifications.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", async () => {
@@ -306,9 +370,15 @@
   document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("studentToken");
     const container = document.getElementById("liveClassesContainer");
-    const courseSelect = document.getElementById("liveCourseCode");
+    const hiddenCourseInput = document.getElementById("liveCourseCode");
+    const courseSearchInput = document.getElementById("liveCourseSearch");
+    const courseChipList = document.getElementById("liveCourseChipList");
     const bookingForm = document.getElementById("liveBookingForm");
     const bookingResponse = document.getElementById("bookingResponse");
+    const courseHelp = document.getElementById("liveCourseCodeHelp");
+    const MAX_BOOKING_COURSES = 11;
+    let availableCourses = [];
+    let selectedCourseCodes = [];
 
     if (!container) return;
 
@@ -358,36 +428,98 @@
       const dataCourses = await resCourses.json().catch(() => []);
       const rows = Array.isArray(dataCourses) ? dataCourses : [];
 
-      if (courseSelect) {
-        if (!rows.length) {
-          courseSelect.innerHTML = `<option value="">No courses available</option>`;
-        } else {
-          courseSelect.innerHTML = [
-            `<option value="">Select course</option>`,
-            ...rows.map((item) => {
-              const code = String(item.courseCode || item.code || "").trim().toUpperCase();
-              const title = String(item.title || item.name || "").trim();
-              if (!code) return "";
-              const label = title ? `${code} - ${title}` : code;
-              return `<option value="${code}">${label}</option>`;
-            })
-          ].join("");
-        }
+      if (courseChipList) {
+        availableCourses = rows
+          .map((item) => {
+            const code = String(item.courseCode || item.code || "").trim().toUpperCase();
+            const title = String(item.title || item.name || "").trim();
+            if (!code) return null;
+            return { code, title, label: title ? `${code} - ${title}` : code };
+          })
+          .filter(Boolean);
       }
     } catch (err) {
       console.error("Failed to load courses:", err);
-      if (courseSelect) {
-        courseSelect.innerHTML = `<option value="">No courses available</option>`;
-      }
+      availableCourses = [];
     }
+
+    const getSelectedCourseCodes = () => selectedCourseCodes.slice();
+
+    const renderCourseChips = (filterText = "") => {
+      if (!courseChipList) return;
+      const q = String(filterText || "").trim().toLowerCase();
+      const rows = availableCourses.filter((item) => {
+        if (!q) return true;
+        return item.code.toLowerCase().includes(q) || item.label.toLowerCase().includes(q);
+      });
+
+      if (!rows.length) {
+        courseChipList.innerHTML = `<span class="course-chip empty">No matching courses</span>`;
+        return;
+      }
+
+      courseChipList.innerHTML = rows
+        .map((item) => {
+          const active = selectedCourseCodes.includes(item.code) ? "active" : "";
+          return `<button type="button" class="course-chip ${active}" data-course-code="${item.code}">${item.label}</button>`;
+        })
+        .join("");
+    };
+
+    const enforceCourseLimit = () => {
+      if (selectedCourseCodes.length > MAX_BOOKING_COURSES) {
+        selectedCourseCodes = selectedCourseCodes.slice(0, MAX_BOOKING_COURSES);
+      }
+      const count = selectedCourseCodes.length;
+      if (hiddenCourseInput) {
+        hiddenCourseInput.value = count ? selectedCourseCodes[0] : "";
+      }
+      if (courseHelp) {
+        courseHelp.classList.remove("error");
+        courseHelp.textContent = `Selected ${count} course${count === 1 ? "" : "s"} (max ${MAX_BOOKING_COURSES}).`;
+      }
+      renderCourseChips(courseSearchInput?.value || "");
+    };
+
+    courseChipList?.addEventListener("click", (event) => {
+      const btn = event.target.closest("[data-course-code]");
+      if (!btn) return;
+      const code = String(btn.getAttribute("data-course-code") || "").trim().toUpperCase();
+      if (!code) return;
+      const idx = selectedCourseCodes.indexOf(code);
+      if (idx >= 0) {
+        selectedCourseCodes.splice(idx, 1);
+      } else if (selectedCourseCodes.length < MAX_BOOKING_COURSES) {
+        selectedCourseCodes.push(code);
+      } else if (courseHelp) {
+        courseHelp.classList.add("error");
+        courseHelp.textContent = `You can select a maximum of ${MAX_BOOKING_COURSES} courses.`;
+      }
+      enforceCourseLimit();
+    });
+
+    courseSearchInput?.addEventListener("input", () => {
+      renderCourseChips(courseSearchInput.value || "");
+    });
+
+    renderCourseChips("");
+    enforceCourseLimit();
 
     bookingForm?.addEventListener("submit", (event) => {
       event.preventDefault();
 
       const formData = new FormData(bookingForm);
+      const selectedCodes = getSelectedCourseCodes();
+      if (!selectedCodes.length) {
+        if (bookingResponse) bookingResponse.textContent = "Please select at least one course.";
+        courseSearchInput?.focus();
+        return;
+      }
+
       const bookingPayload = {
         sessionType: String(formData.get("sessionType") || ""),
-        courseCode: String(formData.get("courseCode") || ""),
+        courseCode: selectedCodes[0],
+        courseCodes: selectedCodes,
         preferredDate: String(formData.get("preferredDate") || ""),
         preferredTime: String(formData.get("preferredTime") || ""),
         notes: String(formData.get("notes") || "").trim()
@@ -398,6 +530,9 @@
         bookingResponse.textContent = "An Admin would reach out to you.";
       }
       bookingForm.reset();
+      selectedCourseCodes = [];
+      if (courseSearchInput) courseSearchInput.value = "";
+      enforceCourseLimit();
     });
   });
 </script>
@@ -405,3 +540,4 @@
 <script src="../js/theme.js"></script>
 </body>
 </html>
+

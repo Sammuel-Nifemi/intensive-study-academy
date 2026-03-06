@@ -159,7 +159,7 @@
   const redirectAfterProfileCheck = async () => {
     const token = localStorage.getItem("staffToken");
     if (!token) {
-      window.location.href = "./staff-login.html";
+      window.location.href = "/frontend/pages/staff-login.html";
       return;
     }
 
@@ -167,18 +167,14 @@
       const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/staff/me", {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const data = await res.json();
+      await res.json();
       if (!res.ok) {
-        window.location.href = "./staff-login.html";
+        window.location.href = "/frontend/pages/staff-login.html";
         return;
       }
-      if (!data.profileCompleted) {
-        window.location.href = "./staff-profile.html";
-      } else {
-        window.location.href = "./staff-dashboard.html";
-      }
+      window.location.href = "/frontend/pages/staff-dashboard.html";
     } catch (err) {
-      window.location.href = "./staff-login.html";
+      window.location.href = "/frontend/pages/staff-login.html";
     }
   };
 

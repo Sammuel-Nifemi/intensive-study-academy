@@ -3,6 +3,58 @@ let allCourses = [];
 let selectedCourseForExplanation = "";
 let selectedCourseIdForExplanation = "";
 let renderedCourseCount = 0;
+let latestIntelResult = { title: "", content: "" };
+const INTEL_RESULT_STORAGE_KEY = "academicIntelLastResult";
+const AI_WARMUP_MESSAGE =
+  "AI Assistant is warming up :)\nSome features are still being connected.\nPlease try again later or contact support.";
+
+function ensureLockedFeatureModalApi() {
+  if (window.lockedFeatureModal?.open) return;
+  const overlay = document.createElement("div");
+  overlay.id = "lockedFeatureModal";
+  overlay.style.cssText =
+    "position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.6);z-index:9999;padding:16px;";
+  overlay.innerHTML = `
+    <div role="dialog" aria-modal="true" aria-labelledby="lfmTitle" style="width:min(420px,100%);background:#fff;border:1px solid #e2e8f0;border-radius:14px;box-shadow:0 18px 40px rgba(2,6,23,.32);padding:18px;text-align:center;">
+      <div aria-hidden="true" style="font-size:1.15rem;line-height:1;margin-bottom:8px;">&#128274;</div>
+      <h3 id="lfmTitle" style="margin:0;color:#0f172a;font-size:1.05rem;">Academic Intel is Temporarily Locked</h3>
+      <p id="lfmBody" style="margin:10px 0 16px;color:#334155;line-height:1.5;white-space:pre-line;">We are upgrading the intelligence engine.\nAI-powered course analysis will be available soon.</p>
+      <button id="lfmOkayBtn" type="button" class="primary-btn" style="min-width:96px;">Okay</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) overlay.style.display = "none";
+  });
+  overlay.querySelector("#lfmOkayBtn")?.addEventListener("click", () => {
+    overlay.style.display = "none";
+  });
+
+  window.lockedFeatureModal = {
+    open(options = {}) {
+      const title = String(options.title || "Academic Intel is Temporarily Locked");
+      const body = String(
+        options.body ||
+          "We are upgrading the intelligence engine.\nAI-powered course analysis will be available soon."
+      );
+      const titleEl = overlay.querySelector("#lfmTitle");
+      const bodyEl = overlay.querySelector("#lfmBody");
+      if (titleEl) titleEl.textContent = title;
+      if (bodyEl) bodyEl.textContent = body;
+      overlay.style.display = "flex";
+    },
+    close() {
+      overlay.style.display = "none";
+    }
+  };
+}
+
+function showLockedFeatureModal() {
+  ensureLockedFeatureModalApi();
+  if (window.lockedFeatureModal?.open) {
+    window.lockedFeatureModal.open();
+  }
+}
 
 function setCourseListMeta(text) {
   const meta = document.getElementById("courseListMeta");
@@ -34,6 +86,142 @@ function setText(id, value) {
   if (el) el.textContent = value;
 }
 
+function createAiUnavailableError() {
+  const err = new Error("AI_UNAVAILABLE");
+  err.code = "AI_UNAVAILABLE";
+  return err;
+}
+
+function isAiUnavailablePayload(data, resOk) {
+  const message = String(data?.message || "").toLowerCase();
+  if (data && data.success === false) return true;
+  if (!resOk) {
+    return (
+      message.includes("quota") ||
+      message.includes("billing") ||
+      message.includes("insufficient_quota") ||
+      message.includes("ai assistant is temporarily unavailable")
+    );
+  }
+  return false;
+}
+
+function showAiWarmupInCard(textEl, wrapEl) {
+  if (textEl) textEl.textContent = AI_WARMUP_MESSAGE;
+  if (wrapEl) wrapEl.hidden = false;
+}
+
+function ensureIntelResultView() {
+  let section = document.getElementById("intelResultView");
+  if (section) return section;
+
+  const main = document.querySelector(".dashboard-main");
+  if (!main) return null;
+
+  section = document.createElement("section");
+  section.id = "intelResultView";
+  section.className = "dashboard-section";
+  section.hidden = true;
+  section.innerHTML = `
+    <div class="intel-result-view">
+      <div class="intel-result-head">
+        <div>
+          <h2 id="intelResultTitle" class="intel-result-title">Academic Intel Response</h2>
+          <p id="intelResultSubtitle" class="intel-result-subtitle">Your generated guidance appears here.</p>
+        </div>
+        <button id="intelResultBackBtn" class="secondary-btn" type="button">Back</button>
+      </div>
+      <div id="intelResultBody" class="intel-result-body"></div>
+      <div class="intel-result-actions">
+        <button id="intelResultDownloadBtn" class="primary-btn" type="button">Download as PDF</button>
+      </div>
+    </div>
+  `;
+
+  const anchor = main.querySelector(".isa-notice-card");
+  if (anchor?.nextSibling) {
+    main.insertBefore(section, anchor.nextSibling);
+  } else {
+    main.prepend(section);
+  }
+
+  return section;
+}
+
+function openIntelResultView({ title, subtitle, content, canDownload, downloadTitle }) {
+  const resultSection = ensureIntelResultView();
+  const resultTitle = document.getElementById("intelResultTitle");
+  const resultSubtitle = document.getElementById("intelResultSubtitle");
+  const resultBody = document.getElementById("intelResultBody");
+  const downloadBtn = document.getElementById("intelResultDownloadBtn");
+  if (!resultSection || !resultTitle || !resultSubtitle || !resultBody || !downloadBtn) return;
+
+  resultTitle.textContent = title || "Academic Intel Response";
+  resultSubtitle.textContent = subtitle || "Your generated guidance appears here.";
+  resultBody.textContent = String(content || "").trim();
+  resultSection.hidden = false;
+  resultSection.classList.remove("hidden");
+  downloadBtn.disabled = !canDownload;
+  latestIntelResult = {
+    title: downloadTitle || resultTitle.textContent,
+    content: String(content || "").trim()
+  };
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function closeIntelResultView() {
+  const resultSection = document.getElementById("intelResultView");
+  if (!resultSection) return;
+  resultSection.hidden = true;
+  resultSection.classList.add("hidden");
+}
+
+function saveIntelResultAndRedirect({ title, subtitle, content, canDownload, downloadTitle, source, courseCode }) {
+  const payload = {
+    title: String(title || "Academic Intel Response"),
+    subtitle: String(subtitle || ""),
+    content: String(content || "").trim(),
+    canDownload: Boolean(canDownload),
+    downloadTitle: String(downloadTitle || title || "Academic Intel Response"),
+    source: String(source || "ask"),
+    courseCode: String(courseCode || ""),
+    createdAt: new Date().toISOString()
+  };
+
+  try {
+    localStorage.setItem(INTEL_RESULT_STORAGE_KEY, JSON.stringify(payload));
+  } catch (err) {
+    console.error("Failed to store Academic Intel result:", err);
+  }
+
+  window.location.href = "/frontend/pages/academic-intel-result.html";
+}
+
+function wireIntelResultView() {
+  ensureIntelResultView();
+  const backBtn = document.getElementById("intelResultBackBtn");
+  const downloadBtn = document.getElementById("intelResultDownloadBtn");
+  const status = document.getElementById("askAdvisorStatus");
+
+  backBtn?.addEventListener("click", closeIntelResultView);
+
+  downloadBtn?.addEventListener("click", async () => {
+    const title = String(latestIntelResult.title || "").trim();
+    const content = String(latestIntelResult.content || "").trim();
+    if (!content) return;
+    downloadBtn.disabled = true;
+    try {
+      await downloadAiResponsePdf({ title, content });
+    } catch (err) {
+      console.error(err);
+      if (status) status.textContent = err.message || "Failed to export PDF.";
+    } finally {
+      downloadBtn.disabled = false;
+    }
+  });
+}
+
 async function authFetch(url, options = {}) {
   const token = localStorage.getItem("studentToken");
   return fetch(url, {
@@ -52,6 +240,7 @@ async function askAdvisor(question, course) {
     body: JSON.stringify({ question, course: course || undefined })
   });
   const data = await res.json().catch(() => ({}));
+  if (isAiUnavailablePayload(data, res.ok)) throw createAiUnavailableError();
   if (!res.ok) throw new Error(data.message || "Failed to get advisor response.");
   return data.answer || "No response returned.";
 }
@@ -62,6 +251,7 @@ async function explainCourseById(courseId) {
     body: JSON.stringify({ courseId })
   });
   const data = await res.json().catch(() => ({}));
+  if (isAiUnavailablePayload(data, res.ok)) throw createAiUnavailableError();
   if (!res.ok) throw new Error(data.message || "Failed to explain course.");
   return data;
 }
@@ -103,6 +293,10 @@ async function loadAdvisorFeedbackFromMockAttempt(attemptId) {
       method: "GET"
     });
     const data = await res.json().catch(() => ({}));
+    if (data && data.success === false) {
+      setText("advisorFeedbackText", AI_WARMUP_MESSAGE);
+      return;
+    }
     if (!res.ok) {
       setText("advisorFeedbackText", data.message || "Failed to load advisor feedback.");
       return;
@@ -128,18 +322,17 @@ function showActionSection(action) {
 
   const input = document.getElementById("advisorQuestionInput");
   if (!input) return;
+  const promptByAction = {
+    "explain-course": "Explain this course in simple terms, with key topics I should focus on for exams.",
+    "exam-prep": "Give me a practical exam preparation plan for this week based on my mock performance.",
+    "summarize-materials": "Summarize my course material in simple language with real-life examples.",
+    "study-planning": "Create a simple daily study plan I can follow this week."
+  };
 
-  if (action === "exam-prep" && !input.value.trim()) {
-    input.value = "Give me a practical exam preparation plan for this week based on my mock performance.";
-  }
-
-  if (action === "summarize-materials" && !input.value.trim()) {
-    input.value = "Summarize my course material in simple language with real-life examples.";
-  }
-
-  if (action === "study-planning" && !input.value.trim()) {
-    input.value = "Create a simple daily study plan I can follow this week.";
-  }
+  input.value = promptByAction[action] || "";
+  input.focus();
+  input.setSelectionRange(input.value.length, input.value.length);
+  input.scrollIntoView({ block: "center", behavior: "smooth" });
 }
 
 function renderCourseCards(filterText) {
@@ -227,6 +420,7 @@ function wireCourseExplainFlow() {
   const grid = document.getElementById("courseGrid");
   const resultWrap = document.getElementById("courseExplainResult");
   const resultText = document.getElementById("courseExplainText");
+  if (resultWrap) resultWrap.hidden = true;
   const downloadBtn = document.getElementById("downloadCourseExplainPdfBtn");
   if (downloadBtn) {
     downloadBtn.textContent = "\uD83D\uDCC4 Download as PDF";
@@ -265,13 +459,37 @@ function wireCourseExplainFlow() {
       selectedCourseForExplanation = courseCode;
       const response = await explainCourseById(courseId);
       const answer = String(response.answer || "").trim();
-      if (resultText) resultText.textContent = answer;
-      if (resultWrap) resultWrap.hidden = false;
+      if (resultText) resultText.textContent = "";
+      if (resultWrap) resultWrap.hidden = true;
       if (downloadBtn) downloadBtn.disabled = !String(answer || "").trim();
+      saveIntelResultAndRedirect({
+        title: "Course Explanation",
+        subtitle: `Course: ${courseCode}`,
+        content: answer,
+        canDownload: Boolean(String(answer || "").trim()),
+        downloadTitle: `Course Explanation - ${courseCode}`,
+        source: "course_explain",
+        courseCode
+      });
       setText("courseSearchStatus", "");
     } catch (err) {
       if (downloadBtn) downloadBtn.disabled = true;
-      setText("courseSearchStatus", err.message);
+      if (err && err.code === "AI_UNAVAILABLE") {
+        setText("courseSearchStatus", "");
+        if (resultText) resultText.textContent = "";
+        if (resultWrap) resultWrap.hidden = true;
+        saveIntelResultAndRedirect({
+          title: "Course Explanation",
+          subtitle: `Course: ${courseCode}`,
+          content: AI_WARMUP_MESSAGE,
+          canDownload: false,
+          downloadTitle: `Course Explanation - ${courseCode}`,
+          source: "course_explain",
+          courseCode
+        });
+      } else {
+        setText("courseSearchStatus", err.message);
+      }
     }
   });
 
@@ -300,6 +518,7 @@ function wireAskAdvisor() {
   const status = document.getElementById("askAdvisorStatus");
   const wrap = document.getElementById("advisorAnswerWrap");
   const text = document.getElementById("advisorAnswerText");
+  if (wrap) wrap.hidden = true;
   let downloadBtn = document.getElementById("downloadAdvisorReplyPdfBtn");
 
   if (!downloadBtn && wrap) {
@@ -316,29 +535,14 @@ function wireAskAdvisor() {
     wrap.appendChild(downloadBtn);
   }
 
-  btn?.addEventListener("click", async () => {
-    const question = String(input?.value || "").trim();
-    if (!question) {
-      setText("askAdvisorStatus", "Please enter a question.");
-      return;
-    }
-
-    setText("askAdvisorStatus", "Thinking...");
-    if (btn) btn.disabled = true;
-    try {
-      const answer = await askAdvisor(question, "");
-      if (text) text.textContent = answer;
-      if (wrap) wrap.hidden = false;
-      if (downloadBtn) {
-        downloadBtn.disabled = !String(answer || "").trim();
-      }
-      setText("askAdvisorStatus", "");
-    } catch (err) {
-      if (downloadBtn) downloadBtn.disabled = true;
-      setText("askAdvisorStatus", err.message);
-    } finally {
-      if (btn) btn.disabled = false;
-    }
+  btn?.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setText("askAdvisorStatus", "");
+    if (text) text.textContent = "";
+    if (wrap) wrap.hidden = true;
+    if (downloadBtn) downloadBtn.disabled = true;
+    showLockedFeatureModal();
   });
 
   downloadBtn?.addEventListener("click", async () => {
@@ -347,7 +551,7 @@ function wireAskAdvisor() {
     downloadBtn.disabled = true;
     try {
       await downloadAiResponsePdf({
-        title: "AI Advisor Response",
+        title: "Academic Intel Response",
         content
       });
     } catch (err) {
@@ -373,6 +577,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   wireQuickActions();
+  wireIntelResultView();
   initCourseListAccordion();
   setCourseListPanelOpen(false);
   wireCourseExplainFlow();

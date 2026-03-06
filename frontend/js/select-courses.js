@@ -4,6 +4,7 @@ let studentProfile = null;
 let searchTimer = null;
 let curriculumCodes = new Set();
 let persistedCourseIds = new Set();
+let baseCourseStatusText = "";
 
 document.addEventListener("DOMContentLoaded", async () => {
   applyTheme();
@@ -83,6 +84,26 @@ function updateSelectedCount(count) {
   countEl.textContent = `Total courses selected: ${count}`;
 }
 
+function updateCourseStatusText(checkedInputs) {
+  const statusEl = document.getElementById("courseStatus");
+  const selectedCodesEl = document.getElementById("selectedCourseCodesText");
+  if (!statusEl || !selectedCodesEl) return;
+
+  const selectedCodes = checkedInputs
+    .map((input) => String(input.dataset.courseCode || "").trim().toUpperCase())
+    .filter(Boolean);
+
+  if (selectedCodes.length) {
+    // Hide the "No courses available..." message once user has selections.
+    statusEl.textContent = "";
+    selectedCodesEl.textContent = selectedCodes.join(", ");
+    return;
+  }
+
+  selectedCodesEl.textContent = "";
+  statusEl.textContent = baseCourseStatusText;
+}
+
 function updateSelectionSummary(checkedInputs) {
   const summaryCard = document.getElementById("courseSelectionSummary");
   const selectedCoursesList = document.getElementById("selectedCoursesList");
@@ -130,6 +151,7 @@ function syncSelectionState() {
   const inputs = getAllCourseCheckboxes();
   const checkedInputs = inputs.filter((input) => input.checked);
   updateSelectedCount(checkedInputs.length);
+  updateCourseStatusText(checkedInputs);
   updateSelectionSummary(checkedInputs);
 }
 
@@ -177,13 +199,15 @@ async function loadCourses(token) {
   const semester = studentProfile?.semester || "";
 
   if (!semester) {
-    if (statusEl) statusEl.textContent = "Complete your profile to load courses.";
+    baseCourseStatusText = "Complete your profile to load courses.";
+    if (statusEl) statusEl.textContent = baseCourseStatusText;
     renderCourses([]);
     syncSelectionState();
     return;
   }
 
-  if (statusEl) statusEl.textContent = "Loading courses...";
+  baseCourseStatusText = "Loading courses...";
+  if (statusEl) statusEl.textContent = baseCourseStatusText;
 
   try {
     const res = await fetch(`${((window.ISA_API_ORIGIN || "") + "")}/courses/available`, {
@@ -196,7 +220,8 @@ async function loadCourses(token) {
         window.location.href = "/pages/student-login.html";
         return;
       }
-      if (statusEl) statusEl.textContent = data?.message || "Unable to load courses.";
+      baseCourseStatusText = data?.message || "Unable to load courses.";
+      if (statusEl) statusEl.textContent = baseCourseStatusText;
       renderCourses([]);
       syncSelectionState();
       return;
@@ -204,14 +229,15 @@ async function loadCourses(token) {
 
     const courses = Array.isArray(data) ? data : [];
     renderCourses(courses);
-    if (statusEl) {
-      statusEl.textContent = courses.length
-        ? "Showing all courses for the selected semester."
-        : "No courses available for the selected semester.";
-    }
+    baseCourseStatusText = courses.length
+      ? "Showing all courses for the selected semester."
+      : "No courses available for the selected semester.";
+    if (statusEl) statusEl.textContent = baseCourseStatusText;
+    syncSelectionState();
   } catch (err) {
     console.error(err);
-    if (statusEl) statusEl.textContent = "Unable to load courses.";
+    baseCourseStatusText = "Unable to load courses.";
+    if (statusEl) statusEl.textContent = baseCourseStatusText;
     renderCourses([]);
     syncSelectionState();
   }

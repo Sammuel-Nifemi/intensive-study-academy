@@ -1,5 +1,6 @@
-require("dotenv").config(); // ✅ MUST be first
 
+
+require("dotenv").config(); // ✅ MUST be first
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -95,12 +96,19 @@ app.use(
   })
 );
 
+// Paystack webhook must receive raw body for signature verification.
+app.use("/api/payments", webhookRoutes);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   "/frontend",
   express.static(path.join(__dirname, "..", "frontend"))
 );
+app.get("/pages/:page", (req, res) => {
+  const page = String(req.params.page || "").replace(/^\//, "");
+  return res.redirect(302, `/frontend/pages/${page}`);
+});
 
 // 🧾 Request logger (debug-friendly)
 app.use((req, res, next) => {
@@ -115,7 +123,6 @@ app.use("/api/semesters", semesterRoutes);
 app.use("/api/materials", materialRoutes);
 app.use("/api", studentAcademicMeRoutes);
 app.use("/api/entitlements", entitlementsRoutes);
-app.use("/api/webhooks", webhookRoutes);
 app.use("/api/past-questions", pastQuestionRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/student", require("./routes/gpa.routes"));
@@ -164,8 +171,7 @@ app.use("/api/payments", paymentsRoutes);
 app.use("/api/access", accessLogsRoutes);
 app.use("/api/pdf", pdfExportRoutes);
 app.use("/api/academic-support", academicSupportRoutes);
-
-
+app.use("/api/payments", require("./routes/webhook"));
 
 // ❤️ Health check
 app.get("/", (req, res) => {
@@ -178,33 +184,9 @@ app.get("/api/health", (req, res) => {
 
 // ⚠️ TEMP ADMIN CREATOR — REMOVE AFTER USE
 app.get("/__seed_admin", async (req, res) => {
-  try {
-    const Staff = require("./models/Staff");
-    const bcrypt = require("bcryptjs");
-
-    const email = "oluwanifemis283@gmail.com";
-    const password = "omogbemi123";
-
-    const existing = await Staff.findOne({ email });
-    if (existing) {
-      return res.json({ message: "Admin already exists" });
-    }
-
-    const hashed = await bcrypt.hash(password, 10);
-
-    await Staff.create({
-      email,
-      password: hashed,
-      role: "staff",
-      name: "Super Admin"
-    });
-
-    res.json({ success: true, message: "Admin created successfully" });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
+  return res.status(410).json({
+    message: "Disabled. Use Admin model seed scripts for admin provisioning."
+  });
 });
 
 // 🚀 Start server (LAST)

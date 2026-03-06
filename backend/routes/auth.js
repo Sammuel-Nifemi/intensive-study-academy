@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const authController = require("../controllers/authController");
 const authRoles = require("../middleware/authRoles");
 const authStudent = require("../middleware/authStudent");
-const User = require("../models/User"); // ADD THIS AT TOP
+const Admin = require("../models/Admin");
 
 /* ======================
    TEMP SEED ROUTES
@@ -12,16 +12,14 @@ const User = require("../models/User"); // ADD THIS AT TOP
 
 router.post("/seed-admin", async (req, res) => {
   try {
-    const exists = await User.findOne({ email: "admin@isa.com" });
+    const exists = await Admin.findOne({ email: "admin@isa.com" });
     if (exists) return res.json({ message: "Admin already exists" });
 
     const hashed = await bcrypt.hash("admin123", 10);
 
-    const admin = await User.create({
-      fullName: "Super Admin",
+    const admin = await Admin.create({
       email: "admin@isa.com",
-      password: hashed,
-      role: "admin"
+      password: hashed
     });
 
     res.json(admin);

@@ -1,28 +1,20 @@
-
-
 const originalFetch = window.fetch.bind(window);
-window.ISA_API_ORIGIN = "https://intensive-study-backend.onrender.com";
 
 (function configureApiBase() {
-  const apiOrigin = window.ISA_API_ORIGIN || "https://intensive-study-backend.onrender.com";
   const host = window.location.hostname;
-  const isLocalHost =
-    host === "localhost" ||
-    host === "127.0.0.1";
+  const isLocalHost = host === "localhost" || host === "127.0.0.1";
+
+  const apiOrigin = isLocalHost
+    ? "http://127.0.0.1:5000"
+    : "https://intensive-study-backend.onrender.com";
 
   window.ISA_API_ORIGIN = apiOrigin;
-  window.ISA_API_BASE = `${apiOrigin}/api`;
+  window.ISA_API_BASE = apiOrigin + "/api";
 
   if (!window.__ISA_FETCH_PATCHED) {
-    const originalFetch = window.fetch.bind(window);
     const localOrigins = ["http://localhost:5000", "http://127.0.0.1:5000"];
 
     window.fetch = (input, init) => {
-      const shouldRewrite = true;
-      if (!shouldRewrite) {
-        return originalFetch(input, init);
-      }
-
       try {
         if (typeof input === "string") {
           let url = input;

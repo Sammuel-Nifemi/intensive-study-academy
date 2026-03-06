@@ -29,6 +29,15 @@ async function generateIsaStudentId(Model) {
   return `ISA-${Date.now().toString().slice(-5)}`;
 }
 
+async function generateReferralCode(Model) {
+  for (let i = 0; i < 10; i += 1) {
+    const candidate = `ISA-REF-${crypto.randomBytes(4).toString("hex").toUpperCase()}`;
+    const exists = await Model.exists({ referralCode: candidate });
+    if (!exists) return candidate;
+  }
+  return `ISA-REF-${Date.now().toString().slice(-8)}`;
+}
+
 const studentSchema = new mongoose.Schema(
   {
     user_id: {
@@ -79,6 +88,10 @@ const studentSchema = new mongoose.Schema(
       type: String,
       trim: true
     },
+    studyCenter: {
+      type: String,
+      trim: true
+    },
     gender: {
       type: String,
       trim: true
@@ -86,6 +99,26 @@ const studentSchema = new mongoose.Schema(
     phone: {
       type: String,
       trim: true
+    },
+    lastLogin: {
+      type: Date,
+      default: null
+    },
+    loginCount: {
+      type: Number,
+      default: 0
+    },
+    referralCode: {
+      type: String,
+      unique: true,
+      sparse: true,
+      trim: true,
+      uppercase: true
+    },
+    referredBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Student",
+      default: null
     },
     title: {
       type: String,
@@ -117,6 +150,14 @@ const studentSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+    walletBalance: {
+      type: Number,
+      default: 0
+    },
+    walletCreditRefs: {
+      type: [String],
+      default: []
+    },
     courseUsage: {
       mock: { type: Map, of: Number, default: {} },
       summary: { type: Map, of: Number, default: {} },
@@ -138,33 +179,37 @@ const studentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-studentSchema.pre("validate", async function preValidateStudent(next) {
-  try {
-    if (!this.isaStudentId) {
-      this.isaStudentId = await generateIsaStudentId(this.constructor);
-    }
-
-    const shouldRefreshAlias =
-      !this.studentAlias || this.isNew || this.isModified("title");
-    if (!shouldRefreshAlias) {
-      return next();
-    }
-
-    let fullName = "";
-    if (this.user_id) {
-      const UserModel = mongoose.models.User || mongoose.model("User");
-      const user = await UserModel.findById(this.user_id).select("fullName").lean();
-      fullName = user?.fullName || "";
-    }
-
-    const prefix = normalizeTitle(this.title);
-    const initial = pickInitial(fullName, this.email);
-    this.studentAlias = `${prefix} ${initial}`;
-
-    return next();
-  } catch (err) {
-    return next(err);
+studentSchema.pre("validate", async function preValidateStudent() {
+  if (!this.studyCenter && this.study_center) {
+    this.studyCenter = String(this.study_center).trim();
   }
+  if (!this.study_center && this.studyCenter) {
+    this.study_center = String(this.studyCenter).trim();
+  }
+
+  if (!this.isaStudentId) {
+    this.isaStudentId = await generateIsaStudentId(this.constructor);
+  }
+  if (!this.referralCode) {
+    this.referralCode = await generateReferralCode(this.constructor);
+  }
+
+  const shouldRefreshAlias =
+    !this.studentAlias || this.isNew || this.isModified("title");
+  if (!shouldRefreshAlias) {
+    return;
+  }
+
+  let fullName = "";
+  if (this.user_id) {
+    const UserModel = mongoose.models.User || mongoose.model("User");
+    const user = await UserModel.findById(this.user_id).select("fullName").lean();
+    fullName = user?.fullName || "";
+  }
+
+  const prefix = normalizeTitle(this.title);
+  const initial = pickInitial(fullName, this.email);
+  this.studentAlias = `${prefix} ${initial}`;
 });
 
 module.exports = mongoose.models.Student || mongoose.model("Student", studentSchema);

@@ -61,63 +61,6 @@ function toggleProgress(el, isLoading) {
   el.classList.toggle("loading", Boolean(isLoading));
 }
 
-function fillProfileForm(data) {
-  const form = document.getElementById("staffProfileForm");
-  if (!form || !data) return;
-
-  form.fullName.value = data.fullName || "";
-  form.title.value = data.title || "";
-  form.role.value = data.role || "";
-  form.dobDay.value = data.dobDay || "";
-  form.dobMonth.value = data.dobMonth || "";
-  document.getElementById("avatarUrl").value = data.avatarUrl || "";
-}
-
-async function saveProfile(form) {
-  const token = getStaffToken();
-  if (!token || !form) return;
-
-  const statusEl = document.getElementById("profileStatus");
-  const payload = {
-    fullName: form.fullName.value.trim(),
-    title: form.title.value.trim(),
-    role: form.role.value.trim(),
-    dobDay: form.dobDay.value,
-    dobMonth: form.dobMonth.value,
-    avatarUrl: document.getElementById("avatarUrl").value.trim()
-  };
-
-  if (!payload.fullName || !payload.title || !payload.role || !payload.dobDay || !payload.dobMonth) {
-    setStatus(statusEl, "All profile fields are required.", "error");
-    return;
-  }
-
-  setStatus(statusEl, "Saving profile...", "loading");
-
-  try {
-    const res = await fetch((window.ISA_API_ORIGIN || "") + "/api/staff/me", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(payload)
-    });
-    const data = await res.json();
-    if (res.status === 401) {
-      throw new Error("Unauthorized staff session");
-    }
-    if (!res.ok || !data?.success) {
-      setStatus(statusEl, data.message || "Failed to save profile", "error");
-      return;
-    }
-    setStatus(statusEl, "Profile saved.", "success");
-    loadDashboardStats();
-  } catch (err) {
-    handleSessionError(err);
-  }
-}
-
 function renderAnnouncements(listEl, items) {
   if (!listEl) return;
   listEl.innerHTML = "";
@@ -305,8 +248,7 @@ async function loadNotifications() {
   }
 }
 
-async function loadDashboard(meData) {
-  fillProfileForm(meData);
+async function loadDashboard() {
   await loadDashboardStats();
   await loadMockSummary();
 }
@@ -382,11 +324,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   }, 5000);
 
   try {
-    const me = await fetchStaffMe();
+    await fetchStaffMe();
     clearTimeout(loaderTimeoutId);
     showDashboard();
 
-    await loadDashboard(me);
+    await loadDashboard();
     await loadAnnouncements();
     await loadNotifications();
   } catch (err) {
@@ -397,24 +339,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const materialsForm = document.getElementById("materialsForm");
   const mocksForm = document.getElementById("mocksForm");
   const cbtForm = document.getElementById("cbtForm");
-  const profileForm = document.getElementById("staffProfileForm");
   const announcementForm = document.getElementById("announcementForm");
-  const avatarFile = document.getElementById("avatarFile");
-
-  avatarFile?.addEventListener("change", () => {
-    const file = avatarFile.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      document.getElementById("avatarUrl").value = reader.result || "";
-    };
-    reader.readAsDataURL(file);
-  });
-
-  profileForm?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    saveProfile(profileForm);
-  });
 
   materialsForm?.addEventListener("submit", (e) => {
     e.preventDefault();

@@ -1,7 +1,7 @@
 const token = localStorage.getItem("studentToken");
 
 if (!token) {
-  window.location.href = "/pages/student-login.html";
+  window.location.href = "/frontend/pages/student-login.html";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -40,6 +40,7 @@ async function loadTimetables() {
     statusEl.textContent = "Failed to load timetables.";
   }
 }
+
 
 
 

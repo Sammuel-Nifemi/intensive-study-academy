@@ -5,7 +5,7 @@ const authAdmin = require("../middleware/authAdmin");
 const authStudent = require("../middleware/authStudent");
 const AssignmentRequest = require("../models/AssignmentRequest");
 const Assignment = require("../models/Assignment");
-const User = require("../models/User");
+const Admin = require("../models/Admin");
 const { notifyUsers } = require("../utils/notifyUsers");
 
 router.get("/", authAdmin, async (req, res) => {
@@ -70,9 +70,9 @@ router.post("/respond", authStudent, async (req, res) => {
     assignment.respondedAt = new Date();
     await assignment.save();
 
-    const admins = await User.find({ role: "admin" }).select("_id role").lean();
+    const admins = await Admin.find().select("_id").lean();
     await notifyUsers(
-      admins,
+      admins.map((admin) => ({ id: admin._id, role: "admin" })),
       "assignment-response",
       "Assignment Response",
       `Student ${normalized} the assignment`,

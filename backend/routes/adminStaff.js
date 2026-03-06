@@ -6,6 +6,7 @@ const authAdmin = require("../middleware/authAdmin");
 const Staff = require("../models/Staff");
 const { generateOtp, generateTempPassword, normalizeOtp } = require("../utils/staffAuth");
 const { sendMail } = require("../utils/mailer");
+const { APP_BASE_URL } = process.env;
 
 router.post("/staff", authAdmin, async (req, res) => {
   try {
@@ -47,7 +48,7 @@ router.post("/staff", authAdmin, async (req, res) => {
       `Email: ${staff.email}`,
       `Temporary Password: ${tempPassword}`,
       `OTP Code: ${otpCode}`,
-      "Login link: http://localhost:5000/pages/staff-login.html",
+      `Login link: ${(APP_BASE_URL || "http://localhost:5000").replace(/\/$/, "")}/frontend/pages/staff-login.html`,
       "",
       "This code expires in 7 days."
     ].join("\n");

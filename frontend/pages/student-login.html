@@ -10,6 +10,34 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
   />
   <link rel="stylesheet" href="../css/auth.css" />
+  <style>
+    .password-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .password-row input {
+      flex: 1;
+    }
+    .toggle-password-btn {
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #fff;
+      padding: 8px 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .auth-link-btn {
+      background: none;
+      border: none;
+      color: #2563eb;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 0;
+      margin: 6px 0 0;
+      font-size: 0.9rem;
+    }
+  </style>
 
 <script src="../js/api-base.js"></script>
 </head>
@@ -30,6 +58,23 @@
           required
         />
       </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <div class="password-row">
+          <input
+            id="password"
+            type="password"
+            placeholder="Enter your password"
+            required
+          />
+          <button id="togglePasswordBtn" class="toggle-password-btn" type="button">Show</button>
+        </div>
+      </div>
+
+      <button id="forgotPasswordBtn" class="auth-link-btn" type="button">
+        Forgot password?
+      </button>
        
       <p class="auth-note">
      New student?
@@ -48,146 +93,6 @@
       </a>
     </p>
   </div>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("studentLoginForm");
-    if (!form) return;
-
-    const message = document.createElement("p");
-    message.className = "auth-note";
-    form.appendChild(message);
-
-    async function recovery(email) {
-      if (!email) {
-        alert("Please enter your email first");
-        return;
-      }
-      try {
-        const res = await fetch((window.ISA_API_ORIGIN || "") + "/auth/recovery", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email })
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          alert(data.message || "Recovery failed");
-          return;
-        }
-        alert("Check your email for login link");
-      } catch (err) {
-        console.error(err);
-        alert("Server error. Please try again.");
-      }
-    }
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const email = document.getElementById("email").value.trim();
-      const submitBtn = form.querySelector('button[type="submit"]');
-      if (!email) {
-        alert("Please enter your email");
-        return;
-      }
-
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Logging in...";
-      }
-      message.textContent = "Signing you in. Please wait...";
-
-      try {
-        const res = await fetch((window.ISA_API_ORIGIN || "") + "/auth/quick-login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email })
-        });
-
-        const data = await res.json();
-
-        if (res.status === 404) {
-          message.textContent = "Email not found. Please create account.";
-          return;
-        }
-
-        if (!res.ok) {
-          alert(data.message || "Login failed");
-          return;
-        }
-
-       // SAVE TOKEN
-       localStorage.setItem("studentToken", data.token);
-
-       // VERIFY SESSION BEFORE REDIRECT
-       const profileRes = await fetch((window.ISA_API_ORIGIN || "") + "/api/student/me", {
-         headers: { Authorization: `Bearer ${data.token}` }
-       });
-
-       if (profileRes.status === 401) {
-         localStorage.removeItem("studentToken");
-         message.textContent = "Login failed. Please try again.";
-         return;
-       }
-
-       if (profileRes.status === 403) {
-         const payload = await profileRes.json().catch(() => ({}));
-         if (payload?.redirectUrl) {
-           window.location.href = payload.redirectUrl;
-           return;
-         }
-       }
-
-       if (!profileRes.ok) {
-         localStorage.removeItem("studentToken");
-         message.textContent = "Unable to start session. Please try again.";
-         return;
-       }
-
-       const profile = await profileRes.json();
-       if (profile?.profileCompleted === false) {
-        window.location.href = "/frontend/pages/complete-profile.html";
-         return;
-       }
-
-       // THEN GO DASHBOARD (NO TOKEN IN URL)
-        window.location.href = "/frontend/pages/student-dashboard.html";
-      } catch (err) {
-        console.error(err);
-        message.textContent = "Server error. Please try again.";
-      } finally {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Login";
-        }
-      }
-    });
-
-    const resetLink = document.createElement("button");
-    resetLink.type = "button";
-    resetLink.className = "resend-btn";
-    resetLink.textContent = "Reset email";
-    resetLink.addEventListener("click", () => {
-      const email = document.getElementById("email").value.trim();
-      recovery(email);
-    });
-
-    const forgotLink = document.createElement("button");
-    forgotLink.type = "button";
-    forgotLink.className = "resend-btn";
-    forgotLink.textContent = "Forgot email";
-    forgotLink.addEventListener("click", () => {
-      const email = document.getElementById("email").value.trim();
-      recovery(email);
-    });
-
-    const linksWrap = document.createElement("div");
-    linksWrap.style.marginTop = "8px";
-    linksWrap.appendChild(resetLink);
-    linksWrap.appendChild(document.createTextNode("  "));
-    linksWrap.appendChild(forgotLink);
-    form.appendChild(linksWrap);
-  });
-</script>
-
+<script src="../js/student-login.js"></script>
+</body>
 </html>
-

@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("studentToken");
 
   if (!token) {
-    window.location.href = "/pages/student-login.html";
+    window.location.href = "/frontend/pages/student-login.html";
     return;
   }
 
@@ -12,12 +12,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     const cached = window.readStudentCache ? window.readStudentCache() : null;
     const student = cached || (window.loadStudent ? await window.loadStudent() : null);
     if (!student) {
-      window.location.href = "/pages/student-login.html";
+      window.location.href = "/frontend/pages/student-login.html";
     }
-    // Student name is not shown on non-dashboard pages
+    const hour = new Date().getHours();
+    const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+    const name = student.fullName || student.name || "Student";
+    const studentNameEl = document.getElementById("studentName");
+    if (studentNameEl) {
+      studentNameEl.textContent = `${greeting}, ${name}`;
+    }
+    if (window.hydrateStudentHeader) {
+      window.hydrateStudentHeader(student);
+    }
   } catch (err) {
     console.error("Profile load error:", err);
-    window.location.href = "/pages/student-login.html";
+    window.location.href = "/frontend/pages/student-login.html";
   }
 
   const academicForm = document.getElementById("academicChangeForm");
@@ -119,7 +128,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     localStorage.removeItem("token");
     localStorage.removeItem("authToken");
     localStorage.removeItem("role");
-    window.location.href = "/pages/student-login.html";
+    window.location.href = "/frontend/pages/student-login.html";
   };
 
   document.getElementById("logoutBtn")?.addEventListener("click", (e) => {
@@ -152,7 +161,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       localStorage.removeItem("token");
       localStorage.removeItem("authToken");
       localStorage.removeItem("role");
-      window.location.href = "/pages/student-login.html";
+      window.location.href = "/frontend/pages/student-login.html";
     } catch (err) {
       console.error("Delete account error:", err);
       alert("Server error. Please try again.");
@@ -179,5 +188,6 @@ function applyTheme() {
   const theme = localStorage.getItem("theme") || "classic";
   document.body.setAttribute("data-theme", theme);
 }
+
 
 

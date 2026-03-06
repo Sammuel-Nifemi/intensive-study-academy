@@ -7,16 +7,119 @@
   <link rel="stylesheet" href="../css/student-dashboard.css" />
   <link rel="stylesheet" href="../css/theme.css" />
   <style>
-    .history-item {
+    .history-toolbar {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .history-search {
+      width: min(460px, 100%);
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      min-height: 42px;
+      padding: 0 12px;
+      font-size: 0.95rem;
+    }
+    .course-accordion {
       background: #fff;
       border-radius: 12px;
       padding: 14px;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
       margin-bottom: 12px;
-      display: grid;
-      grid-template-columns: 1fr auto auto;
-      gap: 16px;
+    }
+    .course-accordion-head {
+      display: flex;
+      justify-content: space-between;
       align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .course-accordion-head h3 {
+      margin: 0 0 4px;
+    }
+    .course-meta {
+      margin: 0;
+      color: #475569;
+      font-size: 0.92rem;
+    }
+    .course-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .toggle-btn {
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .attempt-item {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+    .attempt-meta {
+      margin: 0 0 8px;
+      color: #475569;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .attempt-head {
+      width: 100%;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      background: #f8fafc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: left;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .attempt-head-label {
+      display: block;
+    }
+    .attempt-body {
+      margin-top: 8px;
+    }
+    .qa-row {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 8px;
+      background: #f8fafc;
+    }
+    .qa-row p {
+      margin: 0 0 6px;
+      line-height: 1.4;
+    }
+    .qa-row p:last-child {
+      margin-bottom: 0;
+    }
+    .qa-label {
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .qa-empty {
+      color: #475569;
+      font-style: italic;
+    }
+    .empty-state {
+      color: #475569;
+      font-style: italic;
+      padding: 8px 0;
+    }
+    .hidden {
+      display: none;
     }
   </style>
 <script src="../js/api-base.js"></script>
@@ -39,40 +142,182 @@
     <main class="dashboard-main">
       <section class="page-header">
         <h1>History</h1>
-        <p>Track your previous attempts and improvements.</p>
+        <p>Review recent attempts (max 3 per course, retained for 7 days).</p>
       </section>
 
       <section class="dashboard-section" id="historyList"></section>
     </main>
   </div>
 
-  <script src="/js/student-auth-guard.js"></script>
+  <script src="/frontend/js/student-auth-guard.js"></script>
   <script src="../js/theme.js"></script>
   <script src="../js/mock-post-exam.js"></script>
+  <script src="../js/pdf-export.js"></script>
   <script>
     window.MockPostExam.renderMockPostSidebar("history");
     const all = window.MockPostExam.getMockHistory();
     const list = document.getElementById("historyList");
 
-    if (!all.length) {
-      list.innerHTML = "<p>No attempts yet.</p>";
-    } else {
-      list.innerHTML = all.map((attempt, index) => {
-        const previous = all[index + 1];
-        const improvement = previous ? Number(attempt.accuracy || 0) - Number(previous.accuracy || 0) : 0;
-        const sign = improvement > 0 ? "+" : "";
-        return `
-          <article class="history-item">
-            <div>
-              <p><strong>${window.MockPostExam.escapeHtml(attempt.courseCode || "Mock")}</strong></p>
-              <p>${new Date(attempt.submittedAt).toLocaleString()}</p>
-            </div>
-            <div><strong>${Number(attempt.accuracy || 0).toFixed(1)}%</strong></div>
-            <div>${sign}${improvement.toFixed(1)}%</div>
-          </article>
-        `;
-      }).join("");
+    function groupByCourse(rows) {
+      const map = new Map();
+      rows.forEach((attempt) => {
+        const normalizedAttempt = {
+          ...attempt,
+          _id: String(attempt?._id || attempt?.attemptId || "").trim()
+        };
+        const code = String(normalizedAttempt.courseCode || "MOCK").toUpperCase();
+        if (!map.has(code)) map.set(code, []);
+        map.get(code).push(normalizedAttempt);
+      });
+      return Array.from(map.entries()).map(([courseCode, attempts]) => ({ courseCode, attempts }));
     }
+
+    function render(groups) {
+      if (!groups.length) {
+        list.innerHTML = "<p class='empty-state'>No attempts yet.</p>";
+        return;
+      }
+
+      list.innerHTML = `
+        <div class="history-toolbar">
+          <input id="historySearchInput" class="history-search" type="text" placeholder="Search by course code (e.g. NOU107)" />
+        </div>
+        <div id="historyGroupsWrap"></div>
+      `;
+
+      const wrap = document.getElementById("historyGroupsWrap");
+
+      function draw(filteredGroups) {
+        if (!filteredGroups.length) {
+          wrap.innerHTML = "<p class='empty-state'>No course matches your search.</p>";
+          return;
+        }
+
+        wrap.innerHTML = filteredGroups.map((group, idx) => `
+          <article class="course-accordion" data-course="${window.MockPostExam.escapeHtml(group.courseCode)}">
+            <div class="course-accordion-head">
+              <div>
+                <h3>${window.MockPostExam.escapeHtml(group.courseCode)}</h3>
+                <p class="course-meta">${group.attempts.length} attempt(s) in last 7 days</p>
+              </div>
+              <div class="course-actions">
+                <button type="button" class="toggle-btn" data-idx="${idx}" aria-expanded="false">Open</button>
+              </div>
+            </div>
+            <div class="course-body hidden" data-body="${idx}">
+              ${group.attempts.map((attempt) => {
+                const questions = Array.isArray(attempt.questions) ? attempt.questions : [];
+                const wrongOnly = questions.filter((q) => q && q.isCorrect === false);
+                const rowsToRender = wrongOnly.length ? wrongOnly : questions;
+                const courseCodeText = window.MockPostExam.escapeHtml(String(attempt.courseCode || group.courseCode || "MOCK").toUpperCase());
+                const submittedAtText = window.MockPostExam.escapeHtml(new Date(attempt.submittedAt).toLocaleString());
+                const attemptIdText = window.MockPostExam.escapeHtml(attempt._id || "-");
+                const qaHtml = rowsToRender.length
+                  ? rowsToRender.map((q, qIndex) => `
+                      <div class="qa-row">
+                        <p><span class="qa-label">Question ${qIndex + 1}:</span> ${window.MockPostExam.escapeHtml(q.questionText || "-")}</p>
+                        <p><span class="qa-label">Your Answer:</span> ${window.MockPostExam.escapeHtml(q.studentAnswer || "(No answer)")}</p>
+                        <p><span class="qa-label">Correct Answer:</span> ${window.MockPostExam.escapeHtml(q.correctAnswer || "-")}</p>
+                      </div>
+                    `).join("")
+                  : `<p class="qa-empty">No question details stored for this attempt.</p>`;
+
+                const attemptBodyId = `attempt-${String(attempt._id || "").trim()}`;
+                return `
+                  <div class="attempt-item" data-attempt-id="${window.MockPostExam.escapeHtml(attempt._id)}">
+                    <div class="attempt-head" onclick="toggleAttempt('${window.MockPostExam.escapeHtml(attemptBodyId)}')">
+                      <span class="attempt-head-label">
+                        <strong>${courseCodeText}</strong><br>
+                        <span>${submittedAtText}</span><br>
+                        <small>Attempt ID: ${attemptIdText}</small>
+                      </span>
+                      <span>Open</span>
+                    </div>
+                    <div class="attempt-body" id="${window.MockPostExam.escapeHtml(attemptBodyId)}" style="display:none;">
+                      <div class="course-actions" style="margin-bottom: 8px;">
+                        <button type="button" class="primary-btn download-attempt-pdf-btn" data-attempt-id="${window.MockPostExam.escapeHtml(attempt._id)}" ${attempt._id ? "" : "disabled"}>Download as PDF (&#8358;200)</button>
+                      </div>
+                      ${qaHtml}
+                    </div>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </article>
+        `).join("");
+      }
+
+      draw(groups);
+
+      if (wrap.dataset.listenerBound === "1") return;
+      wrap.dataset.listenerBound = "1";
+
+      wrap.addEventListener("click", async (event) => {
+        const toggle = event.target.closest(".toggle-btn");
+        if (toggle) {
+          const idx = toggle.getAttribute("data-idx");
+          const body = wrap.querySelector(`[data-body="${idx}"]`);
+          if (!body) return;
+          const isOpen = body.classList.toggle("hidden") === false;
+          toggle.textContent = isOpen ? "Hide" : "Open";
+          toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+          return;
+        }
+
+        const pdfBtn = event.target.closest(".download-attempt-pdf-btn");
+        if (!pdfBtn) return;
+        event.preventDefault();
+        event.stopPropagation();
+
+        const selectedAttemptId = String(pdfBtn.getAttribute("data-attempt-id") || "").trim();
+        if (!selectedAttemptId) return;
+
+        const selectedAttempt = groups
+          .flatMap((group) => group.attempts)
+          .find((attempt) => String(attempt._id || "").trim() === selectedAttemptId);
+
+        if (!selectedAttempt?._id) return;
+
+        pdfBtn.disabled = true;
+        try {
+          await window.PDFExport.payAndExport({
+            attemptId: selectedAttempt._id,
+            title: "Mock Attempt Report"
+          });
+        } catch (err) {
+          alert(err.message || "PDF export failed.");
+        } finally {
+          pdfBtn.disabled = false;
+        }
+      });
+
+      const searchInput = document.getElementById("historySearchInput");
+      searchInput?.addEventListener("input", () => {
+        const q = String(searchInput.value || "").trim().toLowerCase();
+        const filtered = groups.filter((group) => group.courseCode.toLowerCase().includes(q));
+        draw(filtered);
+      });
+    }
+
+    if (!all.length) {
+      list.innerHTML = "<p class='empty-state'>No attempts yet.</p>";
+    } else {
+      render(groupByCourse(all));
+    }
+
+    window.toggleAttempt = function toggleAttempt(id) {
+      const allBodies = document.querySelectorAll(".attempt-body");
+
+      allBodies.forEach((body) => {
+        if (body.id !== id) {
+          body.style.display = "none";
+        }
+      });
+
+      const selected = document.getElementById(id);
+      if (!selected) return;
+      selected.style.display = selected.style.display === "block" ? "none" : "block";
+    };
   </script>
 </body>
 </html>

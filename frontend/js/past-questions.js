@@ -9,9 +9,48 @@ if (!token) {
 let studentProfile = null;
 let registeredCourses = new Set();
 let searchTimeout = null;
+let hasPdfButton = false;
 
 const courseInput = document.getElementById("courseInput");
 const resultsEl = document.getElementById("pqResults");
+
+function togglePdfButton(shouldShow) {
+  const host = document.querySelector(".page-header");
+  if (!host) return;
+
+  const existingBtn = host.querySelector(".isa-download-btn");
+
+  if (shouldShow) {
+    if (hasPdfButton || existingBtn) {
+      hasPdfButton = true;
+      return;
+    }
+
+    window.ISA_LearningProtection?.addPdfDownloadButton({
+      hostSelector: ".page-header",
+      buttonText: "Download as PDF",
+      fileName: () => {
+        const code = normalizeCourseCode(document.getElementById("courseInput")?.value || "past-questions");
+        return `${code.toLowerCase()}-past-questions.pdf`;
+      },
+      courseCode: () => normalizeCourseCode(document.getElementById("courseInput")?.value || "PASTQ"),
+      title: "Past Questions & Summaries",
+      getContentText: () => {
+        const heading = document.querySelector(".page-header h1")?.innerText || "";
+        const query = document.getElementById("courseInput")?.value || "";
+        const results = document.getElementById("pqResults")?.innerText || "";
+        return [heading, `Course: ${query}`, results].filter(Boolean).join("\n\n");
+      }
+    });
+
+    hasPdfButton = true;
+    return;
+  }
+
+  if (existingBtn) existingBtn.remove();
+  hasPdfButton = false;
+  host.classList.remove("isa-download-host");
+}
 
 function normalizeCourseCode(value) {
   return value.replace(/\s+/g, "").toUpperCase();
@@ -226,9 +265,12 @@ function renderPastQuestions(courseCode, items) {
   if (!resultsEl) return;
 
   if (!Array.isArray(items) || items.length === 0) {
+    togglePdfButton(false);
     resultsEl.innerHTML = `<p>${COMING_SOON_MESSAGE.replace("\n", "<br>")}</p>`;
     return;
   }
+
+  togglePdfButton(true);
 
   resultsEl.innerHTML = items
     .map((item) => {
@@ -280,6 +322,7 @@ window.searchCourse = function searchCourse() {
 
   const raw = courseInput.value.trim();
   if (!raw) {
+    togglePdfButton(false);
     resultsEl.innerHTML = "";
     return;
   }
@@ -325,22 +368,7 @@ document.addEventListener("click", async (event) => {
 
 document.addEventListener("DOMContentLoaded", async () => {
   await window.ISA_LearningProtection?.activateWatermark();
-  await window.ISA_LearningProtection?.addPdfDownloadButton({
-    hostSelector: ".page-header",
-    buttonText: "Download as PDF",
-    fileName: () => {
-      const code = normalizeCourseCode(document.getElementById("courseInput")?.value || "past-questions");
-      return `${code.toLowerCase()}-past-questions.pdf`;
-    },
-    courseCode: () => normalizeCourseCode(document.getElementById("courseInput")?.value || "PASTQ"),
-    title: "Past Questions & Summaries",
-    getContentText: () => {
-      const heading = document.querySelector(".page-header h1")?.innerText || "";
-      const query = document.getElementById("courseInput")?.value || "";
-      const results = document.getElementById("pqResults")?.innerText || "";
-      return [heading, `Course: ${query}`, results].filter(Boolean).join("\n\n");
-    }
-  });
+  togglePdfButton(false);
 
   const watermarkEl = document.querySelector(".system-watermark");
   if (!watermarkEl) return;

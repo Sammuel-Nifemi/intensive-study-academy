@@ -2,7 +2,7 @@ const token = localStorage.getItem("studentToken");
 
 
 if (!token) {
-  window.location.href = "/pages/student-login.html";
+  window.location.href = "/frontend/pages/student-login.html";
 }
 
 const params = new URLSearchParams(window.location.search);
@@ -223,4 +223,5 @@ document.addEventListener("DOMContentLoaded", () => {
     submitExam();
   });
 });
+
 
