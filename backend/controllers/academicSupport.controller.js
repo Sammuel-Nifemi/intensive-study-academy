@@ -6,14 +6,21 @@ const User = require("../models/User");
 const AdminCourse = require("../models/AdminCourse");
 const OPENAI_MODEL = "gpt-4o-mini";
 const AI_UNAVAILABLE_MESSAGE = "AI assistant is temporarily unavailable.";
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const OPENAI_API_KEY = String(process.env.OPENAI_API_KEY || "").trim();
+let client = null;
+
+if (!OPENAI_API_KEY) {
+  console.warn("[AcademicSupport] OPENAI_API_KEY is missing. AI endpoints are disabled.");
+} else {
+  client = new OpenAI({ apiKey: OPENAI_API_KEY });
+}
 
 function isAiConfigured() {
-  return Boolean(process.env.OPENAI_API_KEY);
+  return Boolean(client);
 }
 
 function sendAiUnavailable(res) {
-  return res.status(200).json({
+  return res.status(503).json({
     success: false,
     message: AI_UNAVAILABLE_MESSAGE
   });
@@ -32,7 +39,7 @@ function isAiProviderUnavailableError(err) {
 }
 
 async function generateAcademicSupportAnswer(prompt) {
-  if (!process.env.OPENAI_API_KEY) {
+  if (!client) {
     throw new Error("OPENAI_API_KEY is not configured");
   }
 
