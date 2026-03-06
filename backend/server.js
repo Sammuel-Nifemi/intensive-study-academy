@@ -116,6 +116,26 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get("/health", (req, res) => {
+  res.json({
+    status: "ok",
+    service: "intensive-study-backend",
+    time: new Date().toISOString()
+  });
+});
+
+app.get("/api/status", (req, res) => {
+  const readyState = mongoose.connection.readyState;
+  const database = readyState === 1 ? "connected" : "disconnected";
+
+  res.json({
+    server: "running",
+    database,
+    uptime: process.uptime(),
+    timestamp: new Date()
+  });
+});
+
 // 🔐 Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/resources", resourceRoutes);
